@@ -1,6 +1,8 @@
 import React from "react";
 import styles from "./TelaDashboard.module.css";
 import { Package, CheckCircle, Clock } from "lucide-react";
+// 1. Importe o componente Link do react-router-dom
+import { Link } from "react-router-dom";
 
 function TelaDashboard() {
   return (
@@ -61,34 +63,37 @@ function TelaDashboard() {
 
         {/* Botão */}
         <div className={styles["button-wrapper"]}>
-          <button className={styles["new-request-button"]}>
-            + Solicitar Nova Peça
-          </button>
+          {/* 2. Envolva o botão com o componente Link e defina a rota no 'to' */}
+          <Link to="/assistencia/parts-request">
+            <button className={styles["new-request-button"]}>
+              + Solicitar Nova Peça
+            </button>
+          </Link>
         </div>
       </div>
 
       <div className={styles["orders-section"]}>
         <div className={styles["orders-header"]}>
-        <h1>Meus Pedidos de Peças</h1>
-        <p>Histórico e status dos seus pedidos de peças</p>
+          <h1>Meus Pedidos de Peças</h1>
+          <p>Histórico e status dos seus pedidos de peças</p>
         </div>
 
         <div className={styles["orders-mid"]}>
-        <Package className={styles["orders-icon"]}/>
-        <p>Nenhum pedido de peça encontrado</p>
+          <Package className={styles["orders-icon"]} />
+          <p>Nenhum pedido de peça encontrado</p>
         </div>
 
-         {/* Botão */}
+        {/* Botão */}
         <div className={styles["button-orders"]}>
-          <button className={styles["new-request-button-down"]}>
-            + Fazer Primeiro Pedido
-          </button>
+           {/* 3. Faça o mesmo para o segundo botão */}
+          <Link to="/assistencia/parts-request">
+            <button className={styles["new-request-button-down"]}>
+              + Fazer Primeiro Pedido
+            </button>
+          </Link>
         </div>
       </div>
-
-
     </div>
-    
   );
 }
 
