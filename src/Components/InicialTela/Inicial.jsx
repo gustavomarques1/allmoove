@@ -14,7 +14,7 @@ function Inicial() {
     if (email.trim().toLowerCase() === "entregador") {
       navigate("/entregador");
     } else if (email.trim().toLowerCase() === "assistencia") {
-      navigate("/assistencia");
+      navigate("/assistencia/dashboard");
     } else if (email.trim().toLowerCase() === "distribuidor") {
       alert("Rota de distribuidor não implementada!");
     } else if (email.trim().toLowerCase() === "allmoove") {
