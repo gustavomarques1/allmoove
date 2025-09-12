@@ -5,6 +5,7 @@ import TelaDashboard from "./Components/TelaDashboard/TelaDashboard";
 
 // 1. Importe o componente da nova rota
 import TelaPartsRequest from "./Components/TelaAssistenciaPartsRequest/TelaPartsRequest";
+import DistribuidorDashboard from "./Components/TelaDistribuidor/TelaDistribuidorDashboard/DistribuidorDashboard";
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
           path="/assistencia/parts-request" 
           element={<TelaPartsRequest />} 
         />
+
+        <Route path="/distribuidor/dashboard" element={<DistribuidorDashboard/>} />
         
         {/* Outras rotas */}
       </Routes>

@@ -16,7 +16,7 @@ function Inicial() {
     } else if (email.trim().toLowerCase() === "assistencia") {
       navigate("/assistencia/dashboard");
     } else if (email.trim().toLowerCase() === "distribuidor") {
-      alert("Rota de distribuidor não implementada!");
+      navigate("/distribuidor/dashboard");
     } else if (email.trim().toLowerCase() === "allmoove") {
       alert("Rota de administração não implementada!");
     } else {

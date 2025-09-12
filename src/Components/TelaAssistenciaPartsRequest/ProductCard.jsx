@@ -15,7 +15,6 @@ export default function ProductCard({ produto, adicionarAoCarrinho }) {
       </div>
       <button
         className={styles.adicionarBtn}
-        // A função é chamada no evento de clique, passando o produto
         onClick={() => adicionarAoCarrinho(produto)}
       >
         <ShoppingCart size={20} />

@@ -1,0 +1,460 @@
+/* Container principal da página */
+.distribuidor-page {
+  max-width: 1200px; /* Ajuste para caber bem o conteúdo */
+  margin: 0 auto;
+  padding: 30px 20px; /* Mais padding para o topo */
+  font-family: 'Inter', sans-serif; /* Uma fonte mais moderna */
+  background-color: #f9fafb; /* Cor de fundo levemente cinza */
+  color: #374151;
+}
+
+/* Header principal Allmoove + Distribuidor */
+.distribuidor-main-header {
+  display: flex;
+  flex-direction: column; /* Em colunas para empilhar logo e título */
+  margin-bottom: 30px;
+}
+
+.distribuidor-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #4b5563; /* Cor mais suave para o logo */
+}
+
+.distribuidor-logo-icon {
+  color: white; /* Cor azul para o ícone do logo */
+  padding: 6px;
+  background-color: #F97415;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.distribuidor-app-name {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.distribuidor-title-section {
+  margin-top: 5px; /* Espaço entre o logo e o título do dashboard */
+}
+
+.distribuidor-main-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0;
+  color: #111827;
+}
+
+.distribuidor-main-subtitle {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 5px 0 0;
+}
+
+/* Seção de Cards Superiores */
+.distribuidor-top-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.distribuidor-top-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px; /* Altura mínima para manter a consistência */
+}
+
+.distribuidor-top-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.distribuidor-top-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4b5563;
+  margin: 0;
+}
+
+.distribuidor-top-card-icon {
+  color: #9ca3af; /* Cor neutra para a maioria dos ícones */
+}
+
+.distribuidor-top-card-icon-green {
+  color: #22c55e; /* Ícone verde para "Concluídos" */
+}
+
+.distribuidor-top-card-number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111827;
+  margin: 5px 0;
+}
+
+.distribuidor-top-card-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Estilização específica para o botão de estoque */
+.distribuidor-stock-button {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;  
+  background-color: #f97316; /* Laranja */
+  color: white;
+  font-weight: 600;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+  align-self: flex-start; /* Alinha o botão à esquerda */
+  margin-bottom: 8px; /* Espaço abaixo do botão */
+}
+
+.distribuidor-stock-button:hover {
+  background-color: #ea580c;
+}
+
+.distribuidor-stock-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Seção do meio (Faturamento e Peças por Segmento) */
+.distribuidor-middle-section-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* 2 colunas */
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.distribuidor-middle-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.distribuidor-middle-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.distribuidor-middle-card-icon {
+  color: #4b5563;
+}
+
+.distribuidor-middle-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.distribuidor-middle-card-subtitle {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0 0 20px 0;
+}
+
+/* Estilos para Faturamento */
+.distribuidor-fat-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.distribuidor-fat-label {
+  flex-basis: 30%; /* Largura fixa para os rótulos */
+  color: #4b5563;
+  margin: 0;
+}
+
+.distribuidor-fat-progress-bar {
+  flex-grow: 1; /* Ocupa o espaço restante */
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 10px;
+}
+
+.distribuidor-fat-progress-fill-green {
+  height: 100%;
+  background-color: #22c55e; /* Verde */
+  border-radius: 4px;
+}
+
+.distribuidor-fat-progress-fill-orange {
+  height: 100%;
+  background-color: #f97316; /* Laranja */
+  border-radius: 4px;
+}
+
+.distribuidor-fat-value {
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.distribuidor-fat-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.distribuidor-fat-value-total {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+
+/* Estilos para Peças por Segmento */
+.distribuidor-segment-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.distribuidor-segment-label {
+  flex-basis: 30%; /* Largura fixa para os rótulos */
+  color: #4b5563;
+  margin: 0;
+}
+
+.distribuidor-segment-progress-bar {
+  flex-grow: 1; /* Ocupa o espaço restante */
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 10px;
+}
+
+.distribuidor-segment-progress-fill {
+  height: 100%;
+  background-color: #22c55e; /* Verde */
+  border-radius: 4px;
+}
+
+.distribuidor-segment-value {
+  font-weight: 500;
+  color: #4b5563;
+  margin: 0;
+}
+
+/* Seção Painel de Controle - Entregas de Peças */
+.distribuidor-control-panel-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-top: 30px;
+}
+
+.distribuidor-control-panel-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.distribuidor-control-panel-subtitle {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 5px 0 20px 0;
+}
+
+/* Item de Pedido Individual */
+.distribuidor-order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid #f3f4f6;
+}
+
+.distribuidor-order-item:first-of-type {
+  border-top: none; /* Remove a borda superior do primeiro item */
+}
+
+.distribuidor-order-details {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.distribuidor-order-icon {
+  color: #4b5563;
+}
+
+.distribuidor-order-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.distribuidor-order-plate {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.distribuidor-order-model {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 2px 0 5px 0;
+}
+
+.distribuidor-order-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.distribuidor-order-tag-eletronicos,
+.distribuidor-order-tag-novo {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.distribuidor-order-tag-eletronicos {
+  background-color: #eff6ff; /* Azul claro */
+  color: #3b82f6; /* Azul */
+}
+
+.distribuidor-order-tag-novo {
+  background-color: #fefce8; /* Amarelo claro */
+  color: #facc15; /* Amarelo */
+}
+
+.distribuidor-order-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.distribuidor-order-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.distribuidor-order-date {
+  font-size: 14px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.distribuidor-order-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.distribuidor-order-button-accept {
+  background-color: #22c55e;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.distribuidor-order-button-accept:hover {
+  background-color: #16a34a;
+}
+
+.distribuidor-order-button-details {
+  background-color: #e5e7eb;
+  color: #374151;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.distribuidor-order-button-details:hover {
+  background-color: #d1d5db;
+}
+
+/* Responsividade básica */
+@media (max-width: 768px) {
+  .distribuidor-top-cards-grid,
+  .distribuidor-middle-section-grid {
+    grid-template-columns: 1fr; /* Uma coluna em telas menores */
+  }
+
+  .distribuidor-order-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .distribuidor-order-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .distribuidor-order-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .distribuidor-order-button-accept,
+  .distribuidor-order-button-details {
+    flex-grow: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .distribuidor-main-title {
+    font-size: 28px;
+  }
+  .distribuidor-top-card-number {
+    font-size: 28px;
+  }
+  .distribuidor-control-panel-title {
+    font-size: 18px;
+  }
+}   

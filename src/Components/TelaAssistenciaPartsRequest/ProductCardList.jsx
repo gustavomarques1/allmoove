@@ -3,8 +3,6 @@ import styles from './ProductCardList.module.css'; // CSS para o layout da lista
 import ProductCard from './ProductCard'; // Importa o card individual
 
 export default function ProductList({ categoriaId, adicionarAoCarrinho }) {
-  // Dados de produtos de exemplo. Em uma aplicação real, você faria uma chamada de API
-  // para buscar produtos com base no categoriaId.
   const produtos = [
     { id: 101, nome: "Câmera Frontal", descricao: "Compatível com modelo X", preco: 38.90, categoriaId: 1 },
     { id: 102, nome: "Câmera Traseira", descricao: "Compatível com modelo X", preco: 78.50, categoriaId: 1 },
@@ -27,7 +25,6 @@ export default function ProductList({ categoriaId, adicionarAoCarrinho }) {
           <ProductCard
             key={produto.id}
             produto={produto}
-            // A prop é repassada para o componente filho aqui
             adicionarAoCarrinho={adicionarAoCarrinho}
           />
         ))}
