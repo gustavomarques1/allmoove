@@ -30,7 +30,7 @@ function TelaDashboard() {
           <div className={styles["card"]}>
             <div className={styles["card-header"]}>
               <h3>Meus Pedidos</h3>
-              <Package size={16} />
+              <Package className={styles["card-icon"]} />
             </div>
             <p className={styles["card-number"]}>0</p>
             <p className={styles["card-description"]}>
@@ -41,7 +41,7 @@ function TelaDashboard() {
           <div className={styles["card"]}>
             <div className={styles["card-header"]}>
               <h3>Pedidos Encerrados</h3>
-              <CheckCircle size={16} />
+              <CheckCircle className={styles["card-icon"]}/>
             </div>
             <p className={styles["card-number"]}>0</p>
             <p className={styles["card-description"]}>
@@ -52,7 +52,7 @@ function TelaDashboard() {
           <div className={styles["card"]}>
             <div className={styles["card-header"]}>
               <h3>Pedidos em Andamento</h3>
-              <Clock size={16} />
+              <Clock className={styles["card-icon"]} />
             </div>
             <p className={styles["card-number"]}>0</p>
             <p className={styles["card-description"]}>

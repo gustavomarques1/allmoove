@@ -208,3 +208,9 @@
   justify-content: center;
   align-items: center;
 }
+
+.card-icon {
+  width: 18px;
+  height: 18px;
+  color: #22c55e; /* cor verde */
+}

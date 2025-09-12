@@ -1,0 +1,163 @@
+.carrinhoContainer {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 100%;
+}
+
+.carrinhoHeader {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+}
+
+.carrinhoVazio {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px 0;
+}
+
+.carrinhoLista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Estilo para cada "caixinha" de item do carrinho */
+.carrinhoItemCard {
+  background: #f9fafb; /* Fundo levemente cinza */
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Espaçamento entre as seções internas */
+}
+
+.itemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alinha o título e o botão de lixeira */
+}
+
+.itemTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.2;
+}
+
+.itemDescription {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  display: flex; /* Para centralizar o ícone */
+  align-items: center;
+  justify-content: center;
+  color: #ef4444; /* Cor do ícone */
+}
+
+.removeButton:hover {
+  background-color: #fee2e2; /* Fundo vermelho claro no hover */
+}
+
+.itemControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end; /* Alinha os controles de quantidade e preços */
+  flex-wrap: wrap; /* Permite quebrar linha em telas menores */
+  gap: 10px; /* Espaçamento entre os blocos de controle */
+}
+
+.quantityControl {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden; /* Garante que as bordas dos botões se unam */
+}
+
+.quantityButton {
+  background: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #666;
+  transition: background-color 0.2s;
+}
+
+.quantityButton:hover {
+  background-color: #f0f0f0;
+}
+
+.quantityDisplay {
+  padding: 8px 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  border-left: 1px solid #e2e8f0;
+  border-right: 1px solid #e2e8f0;
+}
+
+.itemPrices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.itemPriceEach {
+  margin-bottom: 2px;
+}
+
+.itemPriceTotal {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.carrinhoTotal {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #333;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.finalizarBtn {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.finalizarBtn:hover {
+  background-color: #1d4ed8;
+}

@@ -31,6 +31,7 @@ function Inicial() {
   return (
     <> {/* Use um Fragment para agrupar os elementos sem adicionar um nó extra ao DOM */}
       <div className="inicial_container">
+        
         <Package className="inicial_icon" />
         <h1 className="inicial_title">AllMoove - Delivery</h1>
         <p className="inicial_description">

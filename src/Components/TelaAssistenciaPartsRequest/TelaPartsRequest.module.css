@@ -1,3 +1,74 @@
-.teste {
-    color: blue
+/* Layout Geral */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  font-family: sans-serif;
+  padding: 0 1rem;
+}
+
+/* --- */
+
+/* Cabeçalho com Ícone e Título */
+.header {
+  display: flex;
+  align-items: center; /* Alinha o ícone e o texto verticalmente */
+  gap: 1rem; /* Espaço entre o ícone e o texto */
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0; /* Remove a margem padrão para evitar problemas de alinhamento */
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  color: #333;
+  cursor: pointer;
+  padding: 12px; /* Aumenta a área de clique */
+  border-radius: 20%; /* Transforma o fundo em um círculo */
+  transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave para o efeito */
+}
+
+.icon:hover {
+  background-color: #28a745; /* Cor de fundo verde ao passar o mouse */
+  color: #fff; /* Altera a cor do ícone para branco */
+}
+
+/* --- */
+
+/* Conteúdo Principal (Produtos e Carrinho) */
+.mainContent {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.productsSection {
+  flex: 3; /* Ocupa 75% do espaço */
+}
+
+.cartSection {
+  flex: 1; /* Ocupa 25% do espaço */
+  position: sticky; /* Deixa o carrinho fixo na tela */
+  top: 2rem;
+}
+
+/* --- */
+
+/* Media Query para Responsividade */
+@media (max-width: 768px) {
+  .mainContent {
+    flex-direction: column; /* Empilha as seções verticalmente */
+    gap: 1.5rem; /* Ajusta o espaçamento */
+  }
+
+  .cartSection {
+    position: static; /* Remove a posição fixa em telas menores */
+    top: auto;
+  }
 }

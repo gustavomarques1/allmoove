@@ -6,7 +6,9 @@
   justify-content: flex-start;
   padding-top: 48px;
   background: none;
+  background-color: #FCFDFF;
 }
+
 
 .inicial_icon {
   background: #4d8cff;
@@ -43,7 +45,7 @@
 .inicial_form {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 6px -2px rgba(0,0,0,0.18);
   padding: 20px 40px 12px 40px; /* Menos altura, mais largura */
   width: 100%;
   max-width: 480px; /* Mais largo */
