@@ -11,7 +11,7 @@
 
 
 .inicial_icon {
-  background: #4d8cff;
+  background: #ff6400;
   color: #fff;
   border-radius: 50%;
   padding: 18px;
@@ -93,13 +93,13 @@
 }
 
 .inicial_input:focus {
-  border: 1.5px solid #4d8cff;
+  border: 1.5px solid #da5802;
   outline: none;
   color: #222;
 }
 
 .inicial_button {
-  background: #4d8cff;
+  background: #ff6400;
   color: #fff;
   font-weight: 600;
   font-size: 17px;
@@ -116,7 +116,7 @@
 }
 
 .inicial_button:hover {
-  background: #2563eb;
+  background: #da5802;
 }
 
 .inicial_links {
@@ -142,18 +142,18 @@
   background: #f6faff;
   justify-content: center;
   align-items: center;
-  border: 1.5px solid #cfe2ff;
+  border: 1.5px solid #da580238;
   border-radius: 12px;
   padding: 16px 14px;
   margin: 18px 0 0 0;
   font-size: 14px;
-  color: #2563eb;
+  color: #ff6400;
   text-align: center;
 }
 
 .inicial_acessos strong {
   display: block;
-  color: #2563eb;
+  color: #222;
   margin-bottom: 6px;
   font-size: 14px;
 }
@@ -166,7 +166,7 @@
 
 .inicial_acessos li {
   margin-bottom: 4px;
-  color: #2563eb;
+  color: #222;
 }
 
 .inicial_contato {
@@ -177,7 +177,7 @@
 }
 
 .inicial_contato a {
-  color: #2563eb;
+  color: #ff6400;
   text-decoration: none;
   font-weight: 500;
 }

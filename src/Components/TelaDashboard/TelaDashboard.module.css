@@ -1,4 +1,4 @@
-/* Página principal que engloba cabeçalho + cards */
+/* TelaDashboard.module.css (Completo) */
 .dashboard-page {
   max-width: 1100px;
   margin: 0 auto;
@@ -6,7 +6,6 @@
   font-family: sans-serif;
 }
 
-/* Cabeçalho */
 .dashboard-header-section {
   display: flex;
   flex-direction: column;
@@ -16,14 +15,14 @@
 
 .dashboard-header {
   display: flex;
-  flex-direction: row; /* ícone e texto lado a lado */
-  align-items: center; /* centraliza verticalmente */
-  gap: 10px; /* espaço entre ícone e texto */
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 8px;
 }
 
 .dashboard-icon {
-  background-color: #22c55e; /* cor de fundo verde */
+  background-color: #ff6400;
   color: white;
   padding: 10px;
   border-radius: 50%;
@@ -36,7 +35,15 @@
   font-size: 20px;
   color: #333;
   font-weight: 600;
-  margin: 0; /* remove margens extras */
+  margin: 0;
+}
+
+.dashboard-subtitle-and-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 4px;
 }
 
 .dashboard-subtitle {
@@ -44,7 +51,6 @@
   font-weight: 700;
   color: #333;
   margin: 0;
-  margin-bottom: 4px;
 }
 
 .dashboard-description {
@@ -53,24 +59,62 @@
   margin: 0;
 }
 
-/* Linha divisória */
+.header-actions-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* <-- ALTERADO DE 'flex-end' PARA 'center' */
+}
+
+.icons-submenu {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.category-icon {
+  color: #ff6400;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.category-icon:hover {
+  color: #da5802;
+  transform: scale(1.1);
+}
+
+.new-request-link-header {
+  text-decoration: none;
+}
+
+.new-request-button-header {
+  background-color: #ff6400;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.new-request-button-header:hover {
+  background-color: #da5802;
+}
+
 .divider {
   border-bottom: 1px solid #e5e7eb;
   margin: 16px 0;
-  width: 100vw;       /* ocupa toda a largura da tela */
-  margin-left: -50vw; /* centraliza em relação ao container */
-  left: 50%;
-  position: relative;
 }
 
-/* Cards */
 .cards-section {
   margin-top: 20px;
 }
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
   gap: 20px;
   margin-bottom: 30px;
 }
@@ -113,25 +157,8 @@
   margin: 0;
 }
 
-/* Botão */
-.button-wrapper {
-  display: flex;
-  justify-content: center;
-}
-
-.new-request-button {
-  background-color: #22c55e;
-  color: white;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  padding: 24px 24px;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
 .new-request-button-down {
-  background-color: #22c55e;
+  background-color: #ff6400;
   color: white;
   font-weight: 600;
   border: none;
@@ -141,66 +168,60 @@
   transition: background 0.2s;
 }
 
-.new-request-button:hover {
-  background-color: #16a34a;
+.new-request-button-down:hover {
+  background-color: #da5802;
 }
 
-/* Orders Section */
 .orders-section {
-  margin-top: 24px;  
+  margin-top: 24px;
   background: white;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 16px 24px 24px; /* padding menor e mais compacto */
+  padding: 16px 24px 24px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
 }
 
-.orders-section h1 {
+.orders-section h1, .orders-section p {
   color: black;
+  margin: 0;
+  padding: 0;
+}
+.orders-section h1 {
   font-weight: 600;
-  margin: 0px;
-  padding: 0px;
   font-size: 24px;
 }
-
 .orders-section p {
-  color: black;
-  margin: 0px;
-  padding: 0px;
   font-weight: 400;
   font-size: 16px;
 }
 
 .orders-header {
-  margin: 10px 0; /* menos espaço superior/inferior */
+  margin: 10px 0;
   padding: 0px;
-  font-size: 32px;
 }
 
 .orders-header p {
-  margin-top: -8px; /* reduz ainda mais a distância */
-  padding-top: 4px;
+  margin-top: 4px;
   font-size: 14px;
   font-weight: 300;
 }
 
-/* Ícone acima do texto */
 .orders-mid {
   display: flex;
-  flex-direction: column; /* ícone em cima do texto */
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 10px 0; /* reduz margem */
+  margin: 10px 0;
   text-align: center;
 }
 
 .orders-icon {
-  width: 48px;  /* tamanho do ícone */
+  width: 48px;
   height: 48px;
   color: #9CA3AF;
-  margin-bottom: 8px; /* espaço entre ícone e texto */
+  margin-bottom: 8px;
 }
 
 .button-orders {
@@ -212,5 +233,5 @@
 .card-icon {
   width: 18px;
   height: 18px;
-  color: #22c55e; /* cor verde */
+  color: #ff6400;
 }
