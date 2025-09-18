@@ -1,7 +1,10 @@
 import React from "react";
 import styles from "./TelaDashboard.module.css";
-import { Package, CheckCircle, Clock, Monitor, Smartphone, Car } from "lucide-react";
+import { Package, CheckCircle, Clock } from "lucide-react"; // Removi os ícones não utilizados
 import { Link } from "react-router-dom";
+
+// 1. Importe o novo componente que você criou
+import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada"; // Ajuste o caminho se necessário
 
 function TelaDashboard() {
   return (
@@ -18,23 +21,12 @@ function TelaDashboard() {
         <div className={styles["dashboard-subtitle-and-button"]}>
           <h2 className={styles["dashboard-subtitle"]}>Assistência Técnica</h2>
           
-          {/* Grupo que alinha o botão e os ícones à direita */}
           <div className={styles["header-actions-group"]}>
-            
-            {/* Botão na "linha de cima" do grupo */}
             <Link to="/assistencia/loja" className={styles["new-request-link-header"]}>
               <button className={styles["new-request-button-header"]}>
                 Buscar Produtos
               </button>
             </Link>
-
-            {/* Sub-grupo para os ícones na "linha de baixo" */}
-            {/* <div className={styles["icons-submenu"]}>
-              <Monitor className={styles["category-icon"]} size={22} />
-              <Smartphone className={styles["category-icon"]} size={22} />
-              <Car className={styles["category-icon"]} size={22} />
-            </div> */}
-
           </div>
         </div>
 
@@ -43,12 +35,12 @@ function TelaDashboard() {
         </p>
       </div>
 
-      {/* A seção de ícones separada foi removida daqui */}
-
       {/* Linha divisória */}
       <div className={styles["divider"]}></div>
 
-      {/* O resto do arquivo permanece o mesmo... */}
+      {/* 2. Adicione o componente BuscaSegmentada aqui */}
+      <BuscaSegmentada />
+
       {/* Cards de Resumo */}
       <div className={styles["cards-section"]}>
         <div className={styles["cards-grid"]}>
@@ -84,6 +76,7 @@ function TelaDashboard() {
           </div>
         </div>
       </div>
+      
       {/* Seção Meus Pedidos */}
       <div className={styles["orders-section"]}>
         <div className={styles["orders-header"]}>

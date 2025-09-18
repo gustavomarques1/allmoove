@@ -1,0 +1,200 @@
+/* Estilo geral do painel com sombra mais suave */
+.painelContainer {
+  font-family: sans-serif;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 900px;
+  margin: 2rem auto;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+/* Container do carrossel com borda mais sutil */
+.carouselWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+/* Botões de navegação mais discretos, com sombra no hover */
+.navButton {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #6b7280;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.navButton:hover {
+  background-color: #f9fafb;
+  color: #111827;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+/* Grade rolável do carrossel */
+.segmentosGrid {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.segmentosGrid::-webkit-scrollbar {
+  display: none;
+}
+
+/* Botões de segmento com estilo mais leve */
+.segmentoBotao {
+  padding: 10px 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Hover para botões NÃO selecionados */
+.segmentoBotao:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+  color: #111827;
+}
+
+/* --- MUDANÇA APLICADA AQUI --- */
+/* Estilo para o botão SELECIONADO */
+.segmentoBotao.selecionado {
+  background-color: white; /* Fundo branco */
+  color: #ff6400; /* Texto laranja */
+  border-color: #ff6400; /* Borda laranja */
+  font-weight: 600;
+  box-shadow: none; /* Garante que não haja sombra laranja */
+}
+
+/* Hover para o botão SELECIONADO */
+.segmentoBotao.selecionado:hover {
+  background-color: #fffaf7; /* Tom de branco com fundo laranja bem sutil */
+  color: #ff6400;
+  border-color: #ff6400;
+}
+
+
+/* Layout de duas colunas */
+.interacaoContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.pedidosContainer, .distribuidorContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.colunaTitulo {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 15px 0;
+}
+
+.listaWrapper {
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 15px;
+  min-height: 150px;
+}
+
+.listaPedidos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.listaPedidos li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 5px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  color: #374151;
+}
+.listaPedidos li span:first-child {
+  font-weight: 600;
+}
+
+.listaPedidos li:last-child {
+  border-bottom: none;
+}
+
+.listaVazia {
+  color: #6b7280;
+  text-align: center;
+  padding-top: 40px;
+}
+
+.distribuidorContainer {
+  align-items: center;
+}
+
+.distribuidorSelecionado {
+  font-size: 1rem;
+  color: #374151;
+  margin-bottom: 15px;
+}
+
+.distribuidorSelecionado span {
+  font-weight: 700;
+}
+
+.botoesDistribuidor {
+  display: flex;
+  gap: 15px;
+  padding-top: 42px;
+}
+
+/* Estilo Padrão / Secundário (Vazado/Outline) */
+.botaoAcao {
+  padding: 12px 25px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background-color: white;
+  border: 1px solid #ff6400;
+  color: #ff6400;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.botaoAcao:hover {
+  background-color: #fff7f2;
+  border-color: #da5802;
+}
+
+/* Modificador para o Botão Primário (Sólido) */
+.botaoAcao.primary {
+  background-color: #ff6400;
+  border-color: #ff6400;
+  color: white;
+}
+.botaoAcao.primary:hover {
+  background-color: #da5802;
+  border-color: #da5802;
+}
