@@ -22,24 +22,24 @@ function TelaDashboard() {
           <div className={styles["header-actions-group"]}>
             
             {/* Botão na "linha de cima" do grupo */}
-            <Link to="/assistencia/parts-request" className={styles["new-request-link-header"]}>
+            <Link to="/assistencia/loja" className={styles["new-request-link-header"]}>
               <button className={styles["new-request-button-header"]}>
-                + Solicitar Nova Peça
+                Buscar Produtos
               </button>
             </Link>
 
             {/* Sub-grupo para os ícones na "linha de baixo" */}
-            <div className={styles["icons-submenu"]}>
+            {/* <div className={styles["icons-submenu"]}>
               <Monitor className={styles["category-icon"]} size={22} />
               <Smartphone className={styles["category-icon"]} size={22} />
               <Car className={styles["category-icon"]} size={22} />
-            </div>
+            </div> */}
 
           </div>
         </div>
 
         <p className={styles["dashboard-description"]}>
-          Painel de controle técnico
+          Página principal
         </p>
       </div>
 

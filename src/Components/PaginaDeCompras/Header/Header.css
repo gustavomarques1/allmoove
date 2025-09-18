@@ -1,0 +1,24 @@
+/* Header.css (Completo e Corrigido) */
+
+.header {
+  background-color: #ff6400; /* A cor laranja de fundo */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1;
+  padding: 15px 20px; /* Espaçamento vertical e nas laterais para telas pequenas */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+/* Este é o container que alinha o conteúdo */
+.header .container {
+  display: flex;
+  justify-content: space-between; /* Empurra a busca para a esquerda e o carrinho para a direita */
+  align-items: center;
+  
+  /* A MÁGICA DO ALINHAMENTO:
+     Mesma largura máxima e centralização da sua grade de produtos. */
+  max-width: 1200px;
+  margin: 0 auto;
+}

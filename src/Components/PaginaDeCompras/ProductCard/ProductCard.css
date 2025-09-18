@@ -1,0 +1,88 @@
+/* ProductCard.css */
+
+.product-card {
+  width: 100%;
+  max-width: 300px;
+  background-color: white;
+  display: flex;
+  flex-direction: column; /* Organiza os itens (imagem, infos) em uma coluna vertical */
+  cursor: pointer;
+  margin: 0 auto;
+  position: relative; /* Essencial para posicionar o botão de carrinho dentro dele */
+  
+  /* MELHORIA: Adiciona bordas e sombra para um visual mais limpo */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden; /* Garante que a imagem não "vaze" das bordas arredondadas */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+/* CORREÇÃO PRINCIPAL PARA A IMAGEM: 
+  Garante que a área da imagem sempre ocupe espaço, mesmo antes de carregar.
+  object-fit: cover faz com que a imagem preencha a área sem se distorcer.
+*/
+.card__image {
+  width: 100%;
+  height: 250px; /* Defina uma altura fixa para todas as imagens */
+  object-fit: cover;
+}
+
+.card__infos {
+  padding: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.card__price {
+  font-size: 2rem; /* Mantive um tamanho grande para o preço */
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.card__title {
+  font-size: 1rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.button__add-cart {
+  position: absolute; /* O botão fica "flutuando" sobre o card */
+  top: 15px;
+  right: 15px;
+  
+  /* Estilos para deixar o botão redondo e centralizado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  
+  font-size: 1.5rem;
+  color: #0c5dd6;
+  cursor: pointer;
+  
+  /* MELHORIA PARA O EFEITO HOVER:
+    Em vez de 'display: none', usamos visibilidade e opacidade. 
+    Isso permite adicionar uma transição suave.
+  */
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* O botão aparece suavemente quando o mouse passa sobre o card inteiro */
+.product-card:hover .button__add-cart {
+  visibility: visible;
+  opacity: 1;
+}
+
+.icone_cor {
+  color:#ff6400
+}

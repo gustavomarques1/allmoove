@@ -1,0 +1,47 @@
+.cart {
+  width: 100%;
+  max-width: 330px;
+  background-color: white;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 100px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translate(110%, 0);
+  transition: all 400ms ease;
+}
+
+.cart--active {
+  transform: translate(0, 0);
+}
+
+.cart-items {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.cart-empty {
+  text-align: center;
+  font-weight: 500;
+  color: #555;
+  margin-top: 50px;
+}
+
+/* --- A CORREÇÃO ESTÁ AQUI --- */
+.cart-resume {
+  font-size: 1.8rem;
+  font-weight: 700; /* Deixando o texto mais forte como na referência */
+  padding: 20px; /* Padding ajustado para ficar mais limpo */
+  border-top: 1px solid #f0f0f0; /* Borda mais suave */
+  
+  color: #333; /* <-- A CORREÇÃO PRINCIPAL! Define a cor do texto. */
+  
+  text-align: right; /* Alinha o total à direita como na referência */
+}
+
+.cart-items .cart-item:last-child {
+  border-bottom: none;
+}

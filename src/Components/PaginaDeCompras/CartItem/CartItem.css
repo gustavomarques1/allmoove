@@ -1,0 +1,54 @@
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+}
+
+.cart-item-image {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.cart-item-content {
+  flex-grow: 1; 
+  padding: 0 15px;
+}
+
+/* Estilo para o título (menor e mais claro) */
+.cart-item-title {
+  font-size: 0.9rem; /* 14.4px */
+  font-weight: 500;
+  color: #555;
+  margin: 0 0 5px 0;
+}
+
+/* Estilo para o preço (maior e em negrito) */
+.cart-item-price {
+  font-size: 1.2rem; /* 19.2px */
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.button__remove-item {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.button__remove-item:hover {
+  color: #ff6400; /* Cor laranja no hover */
+}
