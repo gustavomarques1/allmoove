@@ -1,7 +1,7 @@
 .cart-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
   padding: 20px 0;
   border-bottom: 1px solid #f0f0f0;
 }
@@ -11,30 +11,108 @@
 }
 
 .cart-item-image {
-  width: 70px;
+  width: 70px; /* Um pouco menor para caber melhor no carrinho mais estreito */
   height: 70px;
   object-fit: contain;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  flex-shrink: 0;
 }
 
 .cart-item-content {
-  flex-grow: 1; 
-  padding: 0 15px;
+  flex-grow: 1;
 }
 
-/* Estilo para o título (menor e mais claro) */
 .cart-item-title {
-  font-size: 0.9rem; /* 14.4px */
-  font-weight: 500;
-  color: #555;
-  margin: 0 0 5px 0;
-}
-
-/* Estilo para o preço (maior e em negrito) */
-.cart-item-price {
-  font-size: 1.2rem; /* 19.2px */
+  font-size: 0.95rem; /* Levemente menor */
   font-weight: 600;
   color: #333;
-  margin: 0;
+  margin: 0 0 3px 0; /* Espaço menor */
+}
+
+.cart-item-description {
+  font-size: 0.75rem; /* Levemente menor */
+  color: #888;
+  margin-bottom: 10px; /* Espaço menor */
+}
+
+.cart-item-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Alinha no centro */
+  margin-top: 5px; /* Adiciona um pequeno espaço superior */
+}
+
+/* --- CORREÇÕES APLICADAS AQUI --- */
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px; /* Mantém o arredondamento no container */
+  overflow: hidden;
+  height: 32px; /* Altura fixa para os botões */
+}
+
+.quantity-button {
+  background-color: transparent;
+  border: none;
+  color: #555; /* Cor inicial mais suave */
+  padding: 0 8px; /* Padding ajustado para o novo height */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ocupa a altura total do .quantity-control */
+  transition: background-color 0.2s ease, color 0.2s ease; /* Transição mais suave */
+}
+
+.quantity-button:hover {
+  background-color: #ff6400; /* Cor laranja no hover */
+  color: white; /* Texto branco no hover */
+}
+
+/* Arredondamento dos botões de canto para que o hover preencha */
+.quantity-button:first-child {
+  border-top-left-radius: 7px; /* Levemente menor que o container */
+  border-bottom-left-radius: 7px;
+}
+
+.quantity-button:last-child {
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+
+.quantity-display {
+  padding: 0 10px; /* Padding ajustado para o novo height */
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-left: 1px solid #e0e0e0;
+  border-right: 1px solid #e0e0e0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.price-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+  gap: 2px; /* Pequeno espaço entre os preços */
+}
+
+.item-price-each {
+  font-size: 0.7rem; /* Ainda menor */
+  color: #888;
+}
+
+.item-price-total {
+  font-size: 0.95rem; /* Menor e mais alinhado */
+  font-weight: 600;
+  color: #333;
 }
 
 .button__remove-item {
@@ -43,12 +121,10 @@
   color: #888;
   cursor: pointer;
   padding: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-left: 10px;
   transition: color 0.2s ease;
 }
 
 .button__remove-item:hover {
-  color: #ff6400; /* Cor laranja no hover */
+  color: #ff6400;
 }
