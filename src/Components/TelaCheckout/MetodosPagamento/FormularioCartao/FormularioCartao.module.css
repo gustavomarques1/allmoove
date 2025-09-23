@@ -1,0 +1,55 @@
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.formLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.formInput, 
+.selectInput {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #1f2937;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  
+  /* CORREÇÃO 1: Garante que o padding não 'estoure' a largura do elemento */
+  box-sizing: border-box;
+}
+
+.formInput:focus, 
+.selectInput:focus {
+  outline: none;
+  border-color: #ff6400;
+  box-shadow: 0 0 0 3px rgba(255, 100, 0, 0.15);
+}
+
+/* CORREÇÃO 2: Deixando o texto do placeholder mais leve */
+.formInput::placeholder, 
+.selectInput::placeholder {
+  color: #b0b6c3;
+  font-weight: 400;
+}
+
+.formRow {
+  display: flex;
+  
+  /* CORREÇÃO 3: Adiciona o espaço entre os campos 'Validade' e 'CVV' */
+  gap: 16px;
+}

@@ -1,0 +1,47 @@
+.card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #333;
+}
+
+/* Container das abas com fundo cinza claro */
+.tabs {
+  display: flex;
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+/* Botão da aba (estado inativo) */
+.tabButton {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #6b7280; /* Cor cinza para texto inativo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Botão da aba (estado ativo) */
+.tabButton.active {
+  background-color: white;
+  color: #333;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}

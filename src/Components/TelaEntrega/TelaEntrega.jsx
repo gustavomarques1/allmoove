@@ -1,23 +1,21 @@
-    import React, { useState, useEffect, useMemo  } from 'react';
-    import { useLocation, useNavigate } from 'react-router-dom';
-    import styles from './TelaEntrega.module.css';
-    import { ArrowLeft, ShoppingCart, Truck, Zap } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import styles from './TelaEntrega.module.css';
+import { ArrowLeft, Truck, Zap } from 'lucide-react';
 
-    
-    import ResumoPedido from './ResumoPedido/ResumoPedido';
-    import OpcaoEntregaCard from './OperacaoEntregaCard/OpcaoEntregaCard';
+// Suas importações originais mantidas
+import ResumoPedido from './ResumoPedido/ResumoPedido';
+import OpcaoEntregaCard from './OperacaoEntregaCard/OpcaoEntregaCard';
 
-    const mockOpcoesEntrega = [
-  { id: 1, tipo: 'normal', titulo: 'Entrega Normal', descricao: 'Entrega padrão via correios', prazo: '5-7 dias úteis', origem: 'TechParts SP - 12 km', preco: 25.90, icone: <Truck /> },
-  { id: 2, tipo: 'urgente', titulo: 'Entrega Urgente', descricao: 'Entrega expressa com motoboy', prazo: '1-2 dias úteis', origem: 'TechParts SP - 12 km', preco: 51.80, icone: <Zap />, tag: 'Urgente' },
+const mockOpcoesEntrega = [
+  { id: 1, tipo: 'normal', titulo: 'Entrega Normal', descricao: 'Entrega padrão via correios', prazo: '5-7 dias úteis', origem: 'TechParts SP', preco: 25.90, icone: 'truck' },
+  { id: 2, tipo: 'urgente', titulo: 'Entrega Urgente', descricao: 'Entrega expressa com motoboy', prazo: '1-2 dias úteis', origem: 'TechParts SP', preco: 51.80, icone: 'zap', tag: 'Urgente' },
 ];
 
 function TelaEntrega() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // 2. CORREÇÃO APLICADA: Envolvemos a inicialização de 'cartItems' com o useMemo.
-  //    Ele só irá recalcular 'cartItems' se 'location.state' mudar.
   const cartItems = useMemo(() => location.state?.cartItems || [], [location.state]);
 
   const valorProdutos = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
@@ -30,12 +28,22 @@ function TelaEntrega() {
     setOpcoesEntrega(mockOpcoesEntrega);
   }, []);
 
-  // Este useEffect agora usa a variável memorizada e o aviso deve sumir.
   useEffect(() => {
     if (cartItems.length === 0) {
       navigate('/assistencia/loja'); 
     }
   }, [cartItems, navigate]);
+
+  const handleGoToPayment = () => {
+    if (opcaoSelecionada) {
+      navigate('/assistencia/pagamento', { 
+        state: { 
+          cartItems, 
+          opcaoSelecionada 
+        } 
+      });
+    }
+  };
 
   const generateHeaderText = () => {
     if (cartItems.length === 0) return '';
@@ -81,8 +89,12 @@ function TelaEntrega() {
       </main>
 
       <footer className={styles.footer}>
-        <button className={styles.actionButton + ' ' + styles.secondary} onClick={() => navigate(-1)}>Voltar</button>
-        <button className={styles.actionButton + ' ' + styles.primary} disabled={!opcaoSelecionada}>
+        <button className={`${styles.actionButton} ${styles.secondary}`} onClick={() => navigate(-1)}>Voltar</button>
+        <button 
+          className={`${styles.actionButton} ${styles.primary}`} 
+          disabled={!opcaoSelecionada}
+          onClick={handleGoToPayment}
+        >
           Finalizar Pedido
         </button>
       </footer>
