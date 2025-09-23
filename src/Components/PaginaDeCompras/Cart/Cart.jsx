@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { ShoppingCart } from 'lucide-react'; // Ícone para o cabeçalho
+import { useNavigate } from 'react-router-dom'; // 1. Importe o useNavigate
 
 import './Cart.css';
 import CartItem from '../CartItem/CartItem';
@@ -7,11 +8,18 @@ import AppContext from '../../../context/AppContext';
 import formatCurrency from '../../../utils/formatCurrency';
 
 function Cart() {
-  // 1. Pegamos a função 'setIsCartVisible' do contexto, além dos outros dados.
   const { cartItems, isCartVisible, setIsCartVisible } = useContext(AppContext);
+  const navigate = useNavigate(); // Hook para navegação
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
   const totalPrice = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+  // Função para navegar para a próxima tela, passando os dados
+  const handleContinue = () => {
+    setIsCartVisible(false);
+    // A mágica está aqui: 'state: { cartItems }' envia os dados para a próxima rota
+    navigate('/assistencia/delivery-options', { state: { cartItems } });
+  };
 
   return (
     <section className={`cart ${isCartVisible ? 'cart--active' : ''}`}>
@@ -39,9 +47,13 @@ function Cart() {
             <span>{formatCurrency(totalPrice, 'BRL')}</span>
           </div>
           <div className="cart__actions">
-            <button type="button" className="action-button primary">Continuar Pedido</button>
-            
-            {/* 2. Adicionamos o onClick para chamar setIsCartVisible(false) */}
+            <button 
+              type="button" 
+              className="action-button primary" 
+              onClick={handleContinue} // Adicionamos o onClick aqui
+            >
+              Continuar Pedido
+            </button>
             <button 
               type="button" 
               className="action-button secondary"

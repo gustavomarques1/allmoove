@@ -1,0 +1,84 @@
+.optionCard {
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.optionCard:hover {
+  transform: translateY(-2px);
+}
+
+.optionCard.selected {
+  border-color: #ff6400; /* Verde para selecionado */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.optionIcon {
+  color: #888;
+  background-color: #f3f4f6;
+  padding: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.optionDetails {
+  flex-grow: 1;
+}
+
+.optionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+}
+.optionTitle h4 {
+  margin: 0;
+}
+
+.tag {
+  background-color: #ef4444; /* Vermelho para urgente */
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.optionDescription {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 5px 0 10px 0;
+}
+
+.optionSubdetails {
+  display: flex;
+  gap: 15px;
+  font-size: 0.8rem;
+  color: #888;
+}
+.optionSubdetails div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.optionPrice {
+  text-align: right;
+  font-size: 0.9rem;
+  color: #555;
+}
+.optionPrice strong {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+}
