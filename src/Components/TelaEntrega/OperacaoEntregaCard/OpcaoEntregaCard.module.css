@@ -16,7 +16,7 @@
 }
 
 .optionCard.selected {
-  border-color: #ff6400; /* Verde para selecionado */
+  border-color: #ff6600; /* Verde para selecionado */
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 

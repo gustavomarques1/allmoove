@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './TelaEntrega.module.css';
-import { ArrowLeft, Truck, Zap } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
-// Suas importações originais mantidas
 import ResumoPedido from './ResumoPedido/ResumoPedido';
 import OpcaoEntregaCard from './OperacaoEntregaCard/OpcaoEntregaCard';
 
+// CORREÇÃO: 'icone' agora é um texto simples (string), e não um componente JSX.
 const mockOpcoesEntrega = [
   { id: 1, tipo: 'normal', titulo: 'Entrega Normal', descricao: 'Entrega padrão via correios', prazo: '5-7 dias úteis', origem: 'TechParts SP', preco: 25.90, icone: 'truck' },
   { id: 2, tipo: 'urgente', titulo: 'Entrega Urgente', descricao: 'Entrega expressa com motoboy', prazo: '1-2 dias úteis', origem: 'TechParts SP', preco: 51.80, icone: 'zap', tag: 'Urgente' },
@@ -36,6 +36,7 @@ function TelaEntrega() {
 
   const handleGoToPayment = () => {
     if (opcaoSelecionada) {
+      // Agora o objeto 'opcaoSelecionada' só contém dados simples e pode ser clonado
       navigate('/assistencia/pagamento', { 
         state: { 
           cartItems, 

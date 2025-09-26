@@ -28,7 +28,8 @@
   color: #333; /* Adicionado */
 }
 .backButton:hover {
-  background-color: #f3f4f6;
+  background-color: #FF6400;
+  color: white;
 }
 
 .mainContent {
