@@ -1,0 +1,52 @@
+/* DetalhesPedido.module.css */
+
+.card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333; /* COR DO TÍTULO ALTERADA */
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px 20px;
+  align-items: center;
+  color: #333; /* COR PADRÃO PARA OS VALORES */
+}
+
+.label, .labelTotal {
+  font-weight: 500;
+  color: #555; /* Cor dos labels um pouco mais suave */
+  text-align: right;
+}
+
+.labelTotal {
+  font-weight: 700;
+  color: #333;
+}
+
+.valueTotal {
+  font-weight: 700;
+  color: #16a34a;
+  font-size: 1.1rem;
+}
+
+.status {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  justify-self: start;
+}

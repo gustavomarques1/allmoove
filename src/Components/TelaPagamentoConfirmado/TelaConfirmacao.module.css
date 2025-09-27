@@ -1,0 +1,51 @@
+/* TelaConfirmacao.module.css */
+
+.pageContainer {
+  max-width: 600px; /* LARGURA DO CONTAINER AJUSTADA */
+  margin: 2rem auto;
+  padding: 20px;
+  background-color: #f9fafb;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.header h1 {
+  margin: 10px 0 5px;
+  font-size: 1.8rem;
+  color: #16a34a; /* COR DO TÍTULO ALTERADA PARA VERDE */
+}
+.header p {
+  color: #333; /* COR DO TEXTO ALTERADA */
+  font-size: 1rem;
+}
+.successIcon {
+  color: #16a34a;
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.footer {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.actionButton {
+  width: 100%;
+  padding: 12px 24px; /* PADDING DOS BOTÕES REDUZIDO */
+  font-size: 0.9rem; /* TAMANHO DA FONTE REDUZIDO */
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.actionButton:hover { opacity: 0.9; }
+.primary { background-color: #16a34a; color: white; border: none; }
+.secondary { background-color: white; color: #333; border: 1px solid #ccc; }

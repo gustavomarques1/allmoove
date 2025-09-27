@@ -1,0 +1,59 @@
+/* CodigoEntrega.module.css */
+
+.card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid #e5e7eb;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #333; /* COR DO TEXTO ALTERADA */
+}
+.cardHeader h3 { margin: 0; }
+
+.deliveryCodeWrapper {
+  background-color: #eefbf3;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 15px;
+}
+.deliveryCode {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #15803d;
+  letter-spacing: 2px;
+}
+
+.copyButton {
+  width: 100%;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  padding: 10px; /* PADDING REDUZIDO */
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  color: #374151;
+}
+.copyButton:hover {
+  background-color: #f9fafb;
+}
+
+.importantNote {
+  font-size: 0.8rem;
+  text-align: center;
+  color: #888;
+  margin-top: 15px;
+}

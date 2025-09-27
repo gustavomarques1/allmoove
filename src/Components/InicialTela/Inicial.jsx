@@ -25,7 +25,7 @@ function Inicial() {
   };
 
   // Funções para abrir e fechar o modal
-  const openModal = () => setIsModalOpen(true);
+  // const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -67,15 +67,15 @@ function Inicial() {
             Entrar no Sistema
           </button>
 
-          <div className="inicial_links">
+          {/* <div className="inicial_links"> */}
             {/* 3. Adicione o evento onClick para abrir o modal */}
-            <span className="inicial_rec" onClick={openModal} style={{cursor: 'pointer'}}>
+            {/* <span className="inicial_rec" onClick={openModal} style={{cursor: 'pointer'}}>
               Esqueci minha senha
             </span>
             <span className="inicial_cadastrar">Cadastrar</span>
-          </div>
-
-          <div className="inicial_acessos">
+          </div> */}
+    
+          {/* <div className="inicial_acessos">
             <strong>Acessos rápidos:</strong>
             <ul>
               <li>• "entregador" - Sistema de entregas</li>
@@ -83,7 +83,7 @@ function Inicial() {
               <li>• "distribuidor" - Distribuição de peças</li>
               <li>• "allmoove" - Administração</li>
             </ul>
-          </div>
+          </div> */}
 
           <div className="inicial_contato">
             Problemas para acessar? <a href="#">Entre em contato</a>

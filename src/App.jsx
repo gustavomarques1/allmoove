@@ -6,10 +6,11 @@ import TelaPartsRequest from "./Components/TelaAssistenciaPartsRequest/TelaParts
 import PaginaLoja from "./Components/PaginaDeCompras/PaginaLoja";
 import DistribuidorDashboard from "./Components/TelaDistribuidor/TelaDistribuidorDashboard/DistribuidorDashboard";
 import TelaEntrega from "./Components/TelaEntrega/TelaEntrega";
-
-// 1. Importe o componente da nova tela de Pagamento
-// (Ajuste o caminho se você salvou o arquivo em outro lugar)
 import TelaPagamento from "./Components/TelaCheckout/TelaPagamento";
+
+// 1. Importe o componente da nova tela de Confirmação
+// (Ajuste o caminho se você salvou o arquivo em outro lugar)
+import TelaConfirmacao from "./Components/TelaPagamentoConfirmado/TelaConfirmacao";
 
 function App() {
   return (
@@ -34,10 +35,15 @@ function App() {
           element={<TelaEntrega />}
         />
 
-        {/* 2. Adicione a nova rota para a tela de Pagamento aqui */}
         <Route
           path="/assistencia/pagamento"
           element={<TelaPagamento />}
+        />
+
+        {/* 2. Rota para a tela de Pagamento Confirmado adicionada aqui */}
+        <Route 
+          path="/assistencia/payment-success"
+          element={<TelaConfirmacao />}
         />
 
         <Route path="/distribuidor/dashboard" element={<DistribuidorDashboard/>} />
