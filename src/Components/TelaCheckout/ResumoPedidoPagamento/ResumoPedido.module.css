@@ -66,16 +66,19 @@
   color: #6b7280;
 }
 
-/* Linha do subtotal de cada fornecedor */
-.subtotalRow {
-  display: flex;
-  justify-content: space-between;
-  padding-top: 10px;
+/* Container para os totais de cada fornecedor */
+.subtotalSection {
   margin-top: 10px;
-  font-weight: 600;
-  color: #4b5563;
+  padding-top: 10px;
   border-top: 1px solid #f3f4f6;
-  font-size: 0.95rem;
+}
+
+/* Linha de "Total do Pedido" de cada fornecedor */
+.totalFornecedorRow {
+  font-weight: 700;
+  color: #374151;
+  margin-top: 5px;
+  font-size: 1rem; 
 }
 
 /* Container da seção final com o total geral */
@@ -85,17 +88,22 @@
   border-top: 1px solid #d1d5db; /* Borda mais forte */
 }
 
-/* Linhas normais dentro do resumo final */
+/* Linhas normais dentro do resumo final e das subseções */
 .summaryRow {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 4px 0;
   font-size: 0.95rem;
+  /* --- AJUSTE: Define a cor do texto para preto/cinza escuro --- */
+  color: #1f2937;
 }
 .label {
   font-weight: 500;
-  color: #4b5563;
+  /* --- AJUSTE: Garante que o rótulo também seja preto/cinza escuro --- */
+  color: #1f2937;
+  flex-shrink: 0;
+  margin-right: 16px;
 }
 
 /* Linha do Total Geral com máximo destaque */
