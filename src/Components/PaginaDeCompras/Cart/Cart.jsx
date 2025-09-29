@@ -18,7 +18,7 @@ function Cart() {
   const handleContinue = () => {
     setIsCartVisible(false);
     // A mágica está aqui: 'state: { cartItems }' envia os dados para a próxima rota
-    navigate('/assistencia/delivery-options', { state: { cartItems } });
+    navigate('/assistencia/pagamento', { state: { cartItems } });
   };
 
   return (

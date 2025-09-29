@@ -33,7 +33,7 @@ function TelaConfirmacao() {
       <main className={styles.mainContent}>
         {/* Usando os componentes filhos e passando os dados */}
         <CodigoEntrega codigo={pedido.codigoEntrega} />
-        <DetalhesPedido pedido={pedido} />
+        {/* <DetalhesPedido pedido={pedido} /> */}
       </main>
 
       <footer className={styles.footer}>

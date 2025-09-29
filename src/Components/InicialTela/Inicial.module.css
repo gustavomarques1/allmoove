@@ -1,0 +1,166 @@
+/* Container principal da página de login */
+.inicial_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  padding: 50px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Ícone principal da AllMoove no topo */
+.inicial_icon {
+  width: 64px;
+  height: 64px;
+  color: #f97316;
+  margin-bottom: 16px;
+}
+
+/* Título principal "AllMoove - Delivery" */
+.inicial_title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+/* Descrição abaixo do título */
+.inicial_description {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-top: 8px;
+  margin-bottom: 32px;
+}
+
+/* Card do formulário de login */
+.inicial_form {
+  background-color: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Título "Fazer Login" dentro do card */
+.inicial_subtitle {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+/* Texto de informação abaixo do subtítulo */
+.inicial_info {
+  text-align: center;
+  color: #6b7280;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+/* Rótulos (labels) dos campos de input */
+.inicial_form label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+/* Campos de input (Email, Senha) */
+.inicial_input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.inicial_input:focus {
+  outline: none;
+  border-color: #f97316;
+  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+}
+
+.inicial_input::placeholder {
+  color: #9ca3af;
+}
+
+/* Botão principal de "Entrar no Sistema" */
+.inicial_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  background-color: #f97316;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.inicial_button:hover {
+  background-color: #ea580c;
+}
+
+/* Ícone dentro do botão */
+.icon_button {
+  width: 20px;
+  height: 20px;
+}
+
+/* Container para o link "Entre em contato" */
+.inicial_contato {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* Estilo para o link que abre o modal de contato */
+.linkContato {
+  color: #f97316;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.linkContato:hover {
+  text-decoration: underline;
+}
+
+/* --- CORREÇÃO ROBUSTA PARA O AUTOCOMPLETE DO NAVEGADOR --- */
+/* Esta regra especial mira nos inputs que foram preenchidos automaticamente */
+.inicial_input:-webkit-autofill,
+.inicial_input:-webkit-autofill:hover,
+.inicial_input:-webkit-autofill:focus,
+.inicial_input:-webkit-autofill:active {
+    /* Força a cor do texto a ser escura para garantir legibilidade */
+    -webkit-text-fill-color: #1f2937 !important;
+
+    /* NOVO: Remove explicitamente qualquer imagem ou cor de fundo que o navegador tente adicionar */
+    background-image: none !important;
+    background-color: transparent !important;
+    
+    /* O TRUQUE: Usamos uma box-shadow interna gigante para "pintar" o fundo do input.
+       A cor #fff7ed é o laranja bem clarinho que você pediu. */
+    box-shadow: 0 0 0 1000px #fff7ed inset !important;
+    
+    /* Tenta evitar a transição de cor padrão do navegador */
+    transition: background-color 5000s ease-in-out 0s;
+}
+

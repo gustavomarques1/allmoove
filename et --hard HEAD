@@ -1,0 +1,89 @@
+[33mcommit 91deefd27b61df99d7e827d877bef37850fa110f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Sat Sep 27 17:37:58 2025 -0300
+
+    Adicionada nova tela de confirmacao de pagamento
+
+[33mcommit 371c3d3de17e244902501ca70272f5efca0fd5c1[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Fri Sep 26 16:30:38 2025 -0300
+
+    Fix: Adiciona lucide-react às dependências
+
+[33mcommit 97ef8c172f14844eefb72fe4172aa1e2ee1f04d5[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Fri Sep 26 16:22:52 2025 -0300
+
+    Projeto para subir no versel
+
+[33mcommit b6581638cfbe2731f73d8cb68e7c24fd703eb3c0[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Tue Sep 23 15:47:27 2025 -0300
+
+    Tela pagamento adicionada + Axios
+
+[33mcommit 0b61ca6acfbafa47e7e160e3bab8c6be67ab2685[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Tue Sep 23 12:02:54 2025 -0300
+
+    Tela para escolha de entrega concluida
+
+[33mcommit e1c6fb0b7a9ef821a74360c5c030bb9b3088d081[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Mon Sep 22 00:50:05 2025 -0300
+
+    Preço final e adicionar/remover concluido no carrinho
+
+[33mcommit d3e64c2cec92c90c902a4d86a33c9ac0f18ec203[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Thu Sep 18 18:39:38 2025 -0300
+
+    Filtro de categorias aplicado
+
+[33mcommit 479edfd6b3fb175fd1088a52bedb26cc4ab151a9[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Thu Sep 18 15:49:00 2025 -0300
+
+    Adicionada nova tela de produtos
+
+[33mcommit 15dd0734d2a3e43bdcf76b56f2eb01bf7f052248[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Wed Sep 17 17:30:57 2025 -0300
+
+    Alterado as cores para o laranja
+
+[33mcommit 619e530753497faa4aa3ad34ee33546425c87e37[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Wed Sep 17 11:26:08 2025 -0300
+
+    Começando troca de cores
+
+[33mcommit 0532b109d0a9a4598cf290c99bff7a409e324ac4[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Fri Sep 12 13:04:15 2025 -0300
+
+    Tela dashboard distribuidor adicionada
+
+[33mcommit 180ecc56de3dc239589c69faaf597922ea3cef61[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Fri Sep 12 00:37:30 2025 -0300
+
+    Atualização função excluir produto do carrinho
+
+[33mcommit d904e6c90e7a551f63c892deeed739c2683c67f4[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Wed Sep 10 17:32:08 2025 -0300
+
+    Rota parts-request adicionada
+
+[33mcommit 0358d62908d59f4a1fd0817b0821dbfc3a48b5e8[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Wed Sep 10 16:59:28 2025 -0300
+
+    Adicionei a tela de Dashboard
+
+[33mcommit 478fc491b7dd750ea253c97aa1d4419a533d7ada[m
+Author: Gustavo Marques <gustavocode.dev@gmail.com>
+Date:   Wed Sep 10 14:52:20 2025 -0300
+
+    feat: Adiciona hover verde e cor condicional aos botões do modal

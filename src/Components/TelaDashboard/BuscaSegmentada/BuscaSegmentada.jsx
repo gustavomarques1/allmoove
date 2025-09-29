@@ -85,7 +85,7 @@ function BuscaSegmentada() {
       <div className={styles.interacaoContainer}>
         <div className={styles.pedidosContainer}>
           {/* <h3 className={styles.colunaTitulo}>Nenhum distribuidor selecionado [selecionar]</h3> */}
-          <h3 className={styles.colunaTitulo}>Digite o nome do distribuidor...</h3>
+          <h3 className={styles.colunaTitulo}>Últimos Pedidos</h3>
           <div className={styles.listaWrapper}>
             {ultimosPedidos.length > 0 ? (
               <ul className={styles.listaPedidos}>

@@ -1,0 +1,103 @@
+/* Fundo escurecido que cobre a tela inteira */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+/* O card do modal em si */
+.modalContent {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 450px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Cabeçalho com título e botão de fechar */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  padding: 4px;
+}
+.closeButton:hover {
+  color: #333;
+}
+
+/* Corpo do modal com as informações */
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Cada linha de informação (email, telefone) */
+.contactItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.contactIcon {
+  color: #6c757d;
+  flex-shrink: 0;
+}
+
+.contactText {
+  font-size: 1rem;
+  color: #495057;
+  word-break: break-all;
+  flex-grow: 1;
+}
+
+.copyButton {
+  background: none;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+.copyButton:hover {
+  background-color: #e9ecef;
+}
+

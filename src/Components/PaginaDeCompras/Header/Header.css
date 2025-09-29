@@ -22,3 +22,21 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+/* Adicione essas regras ao seu Header.css existente */
+
+.search-section {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+  flex: 1;
+}
+
+/* Responsivo para mobile */
+@media (max-width: 768px) {
+  .search-section {
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+}

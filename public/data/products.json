@@ -1,338 +1,386 @@
 [
   {
     "id": 1,
-    "nome": "Samsung A50",
+    "nome": "6S BRANCO",
     "categoria": "celulares",
     "price": 9999.90,
-    "imagem": "/images/celulares/celular1.png"
+    "imagem": "/images/celulares/celular1.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 2,
-    "nome": "Samsung Galaxy S25 Ultra",
+    "nome": "E20 PRETO C/ARO WE KEEP",
     "categoria": "celulares",
     "price": 9499.90,
-    "imagem": "/images/celulares/celular2.png"
+    "imagem": "/images/celulares/celular2.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 3,
-    "nome": "Google Pixel 9 Pro",
+    "nome": "A51 PRETO C/ ARO OLED WE KEEP 1.1",
     "categoria": "celulares",
     "price": 7899.00,
-    "imagem": "/images/celulares/celular3.png"
+    "imagem": "/images/celulares/celular3.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 4,
-    "nome": "Xiaomi 15",
+    "nome": "IPHONE X PRETO OLED (HOX1) WE KEEP",
     "categoria": "celulares",
     "price": 5499.99,
-    "imagem": "/images/celulares/celular4.png"
+    "imagem": "/images/celulares/celular4.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 5,
-    "nome": "Samsung Galaxy Z Fold 7",
+    "nome": "REDMINOTE13 4G  PRETO S/ ARO INCELL NN",
     "categoria": "celulares",
     "price": 12999.90,
-    "imagem": "/images/celulares/celular5.png"
+    "imagem": "/images/celulares/celular5.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 6,
-    "nome": "Motorola Edge 50",
+    "nome": "REDMI9 PRETO C/ARO NN",
     "categoria": "celulares",
     "price": 3999.00,
-    "imagem": "/images/celulares/celular6.png"
+    "imagem": "/images/celulares/celular6.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 7,
-    "nome": "Asus ROG Phone 8",
+    "nome": "REDMINOTE8 PRETO C/ARO NN",
     "categoria": "celulares",
     "price": 6999.00,
-    "imagem": "/images/celulares/celular7.png"
+    "imagem": "/images/celulares/celular7.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 8,
-    "nome": "iPhone 16",
+    "nome": "REDMINOTE8 AZUL C/ARO NN",
     "categoria": "celulares",
     "price": 7499.90,
-    "imagem": "/images/celulares/celular8.png"
+    "imagem": "/images/celulares/celular8.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 9,
     "nome": "Samsung Galaxy A56",
     "categoria": "celulares",
     "price": 2499.50,
-    "imagem": "/images/celulares/celular9.png"
+    "imagem": "/images/celulares/celular9.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 10,
     "nome": "iPhone 15 Pro Max",
     "categoria": "celulares",
     "price": 8999.90,
-    "imagem": "/images/celulares/celular10.png"
+    "imagem": "/images/celulares/celular10.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 11,
     "nome": "OnePlus 13",
     "categoria": "celulares",
     "price": 4999.00,
-    "imagem": "/images/celulares/celular11.png"
+    "imagem": "/images/celulares/celular11.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 12,
     "nome": "Huawei P70 Pro",
     "categoria": "celulares",
     "price": 6500.00,
-    "imagem": "/images/celulares/celular12.png"
+    "imagem": "/images/celulares/celular12.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 13,
     "nome": "Macbook Pro 16 M4",
     "categoria": "notebooks",
     "price": 24999.90,
-    "imagem": "/images/notebooks/notebook1.png"
+    "imagem": "/images/notebooks/notebook1.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 14,
     "nome": "Dell XPS 15",
     "categoria": "notebooks",
     "price": 14599.00,
-    "imagem": "/images/notebooks/notebook2.png"
+    "imagem": "/images/notebooks/notebook2.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 15,
     "nome": "Lenovo ThinkPad X1 Carbon",
     "categoria": "notebooks",
     "price": 12999.00,
-    "imagem": "/images/notebooks/notebook3.png"
+    "imagem": "/images/notebooks/notebook3.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 16,
     "nome": "HP Spectre x360",
     "categoria": "notebooks",
     "price": 9999.90,
-    "imagem": "/images/notebooks/notebook4.png"
+    "imagem": "/images/notebooks/notebook4.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 17,
     "nome": "Asus ROG Strix Scar 17",
     "categoria": "notebooks",
     "price": 17899.00,
-    "imagem": "/images/notebooks/notebook5.png"
+    "imagem": "/images/notebooks/notebook5.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 18,
     "nome": "Razer Blade 16",
     "categoria": "notebooks",
     "price": 19999.00,
-    "imagem": "/images/notebooks/notebook6.png"
+    "imagem": "/images/notebooks/notebook6.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 19,
     "nome": "Microsoft Surface Laptop Studio",
     "categoria": "notebooks",
     "price": 15699.00,
-    "imagem": "/images/notebooks/notebook7.png"
+    "imagem": "/images/notebooks/notebook7.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 20,
     "nome": "Macbook Air 15 M3",
     "categoria": "notebooks",
     "price": 11999.00,
-    "imagem": "/images/notebooks/notebook8.png"
+    "imagem": "/images/notebooks/notebook8.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 21,
     "nome": "Samsung Galaxy Book4 Ultra",
     "categoria": "notebooks",
     "price": 13500.00,
-    "imagem": "/images/notebooks/notebook9.png"
+    "imagem": "/images/notebooks/notebook9.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 22,
     "nome": "Acer Predator Helios",
     "categoria": "notebooks",
     "price": 11500.00,
-    "imagem": "/images/notebooks/notebook10.png"
+    "imagem": "/images/notebooks/notebook10.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 23,
     "nome": "LG Gram SuperSlim",
     "categoria": "notebooks",
     "price": 8999.00,
-    "imagem": "/images/notebooks/notebook11.png"
+    "imagem": "/images/notebooks/notebook11.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 24,
     "nome": "Lenovo Yoga Slim 7",
     "categoria": "notebooks",
     "price": 7899.00,
-    "imagem": "/images/notebooks/notebook12.png"
+    "imagem": "/images/notebooks/notebook12.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 25,
     "nome": "Hub USB-C Multiportas",
     "categoria": "acessorios",
     "price": 249.90,
-    "imagem": "/images/acessorios/acessorio1.png"
+    "imagem": "/images/acessorios/acessorio1.png",
+    "fornecedor": "Display Brasil"
   },
   {
     "id": 26,
     "nome": "Kit Carregador USB-C + Cabo Lightning",
     "categoria": "acessorios",
     "price": 199.90,
-    "imagem": "/images/acessorios/acessorio2.png"
+    "imagem": "/images/acessorios/acessorio2.png",
+    "fornecedor": "Display Brasil"
   },
   {
     "id": 27,
     "nome": "Cabo USB-C Aviador Coiled",
     "categoria": "acessorios",
     "price": 189.50,
-    "imagem": "/images/acessorios/acessorio3.png"
+    "imagem": "/images/acessorios/acessorio3.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 28,
     "nome": "Carregador de Parede Rápido com Cabo USB-C",
     "categoria": "acessorios",
     "price": 149.90,
-    "imagem": "/images/acessorios/acessorio4.png"
+    "imagem": "/images/acessorios/acessorio4.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 29,
     "nome": "Cabo USB 3.0 para HD Externo",
     "categoria": "acessorios",
     "price": 79.90,
-    "imagem": "/images/acessorios/acessorio5.png"
+    "imagem": "/images/acessorios/acessorio5.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 30,
     "nome": "Cabo de Dados USB-A para USB-C",
     "categoria": "acessorios",
     "price": 59.90,
-    "imagem": "/images/acessorios/acessorio6.png"
+    "imagem": "/images/acessorios/acessorio6.png",
+    "fornecedor": "Display Brasil"
   },
   {
     "id": 31,
     "nome": "Cabo USB-C Reforçado (Nylon)",
     "categoria": "acessorios",
     "price": 89.90,
-    "imagem": "/images/acessorios/acessorio7.png"
+    "imagem": "/images/acessorios/acessorio7.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 32,
     "nome": "Carregador de Parede + Cabo USB-C",
     "categoria": "acessorios",
     "price": 129.90,
-    "imagem": "/images/acessorios/acessorio8.png"
+    "imagem": "/images/acessorios/acessorio8.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 33,
     "nome": "Fonte / Carregador para Notebook",
     "categoria": "acessorios",
     "price": 299.00,
-    "imagem": "/images/acessorios/acessorio9.png"
+    "imagem": "/images/acessorios/acessorio9.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 34,
     "nome": "Carregador Universal para Notebook",
     "categoria": "acessorios",
     "price": 349.90,
-    "imagem": "/images/acessorios/acessorio10.png"
+    "imagem": "/images/acessorios/acessorio10.png",
+    "fornecedor": "Display Brasil"
   },
   {
     "id": 35,
     "nome": "Adaptador de Vídeo DVI para HDMI",
     "categoria": "acessorios",
     "price": 65.00,
-    "imagem": "/images/acessorios/acessorio11.png"
+    "imagem": "/images/acessorios/acessorio11.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 36,
     "nome": "Cabo de Impressora USB 2.0",
     "categoria": "acessorios",
     "price": 49.90,
-    "imagem": "/images/acessorios/acessorio12.png"
+    "imagem": "/images/acessorios/acessorio12.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 37,
     "nome": "Monitor Dell UltraSharp 27\" 4K",
     "categoria": "telas",
     "price": 3899.00,
-    "imagem": "/images/telas/tela1.png"
+    "imagem": "/images/telas/tela1.png",
+    "fornecedor": "Display Brasil"
   },
   {
     "id": 38,
     "nome": "Monitor Gamer LG UltraGear 27\" 144Hz",
     "categoria": "telas",
     "price": 1899.90,
-    "imagem": "/images/telas/tela2.png"
+    "imagem": "/images/telas/tela2.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 39,
     "nome": "Monitor Curvo Samsung Odyssey G7 32\"",
     "categoria": "telas",
     "price": 4200.00,
-    "imagem": "/images/telas/tela3.png"
+    "imagem": "/images/telas/tela3.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 40,
     "nome": "Monitor LG Ultrawide 29\"",
     "categoria": "telas",
     "price": 1499.90,
-    "imagem": "/images/telas/tela4.png"
+    "imagem": "/images/telas/tela4.png",
+    "fornecedor": "Display Brasil"
   },
   {
     "id": 41,
     "nome": "Monitor Portátil USB-C 15.6\"",
     "categoria": "telas",
     "price": 999.00,
-    "imagem": "/images/telas/tela5.png"
+    "imagem": "/images/telas/tela5.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 42,
     "nome": "Monitor BenQ para Designers 27\"",
     "categoria": "telas",
     "price": 2899.00,
-    "imagem": "/images/telas/tela6.png"
+    "imagem": "/images/telas/tela6.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 43,
     "nome": "Monitor Gamer AOC Hero 24\" 144Hz",
     "categoria": "telas",
     "price": 1299.00,
-    "imagem": "/images/telas/tela7.png"
+    "imagem": "/images/telas/tela7.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 44,
     "nome": "Monitor Samsung Smart M7 32\"",
     "categoria": "telas",
     "price": 2400.00,
-    "imagem": "/images/telas/tela8.png"
+    "imagem": "/images/telas/tela8.png",
+    "fornecedor": "Display Brasil"
   },
   {
     "id": 45,
     "nome": "Monitor Gamer Asus TUF 27\" 165Hz",
     "categoria": "telas",
     "price": 1999.90,
-    "imagem": "/images/telas/tela9.png"
+    "imagem": "/images/telas/tela9.png",
+    "fornecedor": "ImportaCell"
   },
   {
     "id": 46,
     "nome": "Monitor Philips 24\" Full HD",
     "categoria": "telas",
     "price": 899.00,
-    "imagem": "/images/telas/tela10.png"
+    "imagem": "/images/telas/tela10.png",
+    "fornecedor": "TechParts SP"
   },
   {
     "id": 47,
     "nome": "Monitor Profissional LG 34\" Ultrawide",
     "categoria": "telas",
     "price": 2999.00,
-    "imagem": "/images/telas/tela11.png"
+    "imagem": "/images/telas/tela11.png",
+    "fornecedor": "Global Peças RJ"
   },
   {
     "id": 48,
     "nome": "Monitor Gamer Alienware 25\" 360Hz",
     "categoria": "telas",
     "price": 5499.00,
-    "imagem": "/images/telas/tela12.png"
+    "imagem": "/images/telas/tela12.png",
+    "fornecedor": "Display Brasil"
   }
 ]

@@ -1,8 +1,9 @@
 .card {
   background-color: white;
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px 20px;
   border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .cardHeader {
@@ -11,56 +12,100 @@
   gap: 10px;
   font-size: 1.2rem;
   font-weight: 600;
-  padding-bottom: 15px;
+  color: #374151;
+  padding-bottom: 10px;
   margin-bottom: 15px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #e5e7eb;
 }
 .cardHeader h3 {
   margin: 0;
 }
 
-.summaryRow, .itemsList {
+/* Container de cada subseção de fornecedor */
+.fornecedorSection {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #e0e0e0; /* Divisão sutil entre fornecedores */
+}
+.fornecedorSection:last-child {
+  border-bottom: none;
+}
+
+/* Cabeçalho de cada fornecedor */
+.fornecedorHeader {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+.fornecedorNome {
+  font-weight: 600;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.itemsList, .itemsDetail, .itemRow {
+  display: flex;
+  width: 100%;
+}
+.itemsList {
   justify-content: space-between;
-  color: #666;
-  padding: 8px 0;
-  align-items: flex-start;
 }
-
-.label {
-  font-weight: 500;
-  color: #333;
-  flex-shrink: 0;
-  margin-right: 20px;
-}
-
 .itemsDetail {
-  display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
-  text-align: right;
+}
+.itemRow {
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
-.itemRow {
+/* Linha do subtotal de cada fornecedor */
+.subtotalRow {
   display: flex;
   justify-content: space-between;
-  width: 100%;
-  gap: 20px;
-}
-
-.divider {
-  border-bottom: 1px solid #f0f0f0;
-  margin: 8px 0;
-}
-
-.totalRow {
-  font-weight: 700;
-  color: #333;
-  font-size: 1.1rem;
+  padding-top: 10px;
   margin-top: 10px;
-  padding-top: 15px;
+  font-weight: 600;
+  color: #4b5563;
+  border-top: 1px solid #f3f4f6;
+  font-size: 0.95rem;
 }
-.totalRow strong {
+
+/* Container da seção final com o total geral */
+.resumoFinal {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #d1d5db; /* Borda mais forte */
+}
+
+/* Linhas normais dentro do resumo final */
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 0.95rem;
+}
+.label {
+  font-weight: 500;
+  color: #4b5563;
+}
+
+/* Linha do Total Geral com máximo destaque */
+.totalGeralRow {
+  font-weight: 700;
+  color: #1f2937;
+  font-size: 1.25rem;
+  margin-top: 8px;
+}
+.totalGeralRow strong {
   color: #16a34a;
 }
+

@@ -1,6 +1,6 @@
+// SearchBar.js - mantém o original
 import React, { useState, useContext } from 'react';
-// 1. Importando o ícone 'Search' da lucide-react
-import { Search } from 'lucide-react'; 
+import { Search } from 'lucide-react';
 import fetchProducts from '../../../api/fetchProdutos';
 import AppContext from '../../../context/AppContext';
 import './SearchBar.css';
@@ -30,7 +30,6 @@ function SearchBar() {
       />
 
       <button type="submit" className="search__button">
-        {/* 2. Usando o novo ícone */}
         <Search size={18} />
       </button>
     </form>
