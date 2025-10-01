@@ -93,6 +93,21 @@
   color: #9ca3af;
 }
 
+/* --- NOVO: ESTILO PARA A MENSAGEM DE ERRO --- */
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fef2f2; /* Fundo vermelho bem claro */
+  color: #b91c1c;            /* Texto vermelho escuro */
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid #fecaca; /* Borda vermelha clara */
+}
+
 /* Botão principal de "Entrar no Sistema" */
 .inicial_button {
   display: flex;
@@ -144,23 +159,14 @@
 }
 
 /* --- CORREÇÃO ROBUSTA PARA O AUTOCOMPLETE DO NAVEGADOR --- */
-/* Esta regra especial mira nos inputs que foram preenchidos automaticamente */
 .inicial_input:-webkit-autofill,
 .inicial_input:-webkit-autofill:hover,
 .inicial_input:-webkit-autofill:focus,
 .inicial_input:-webkit-autofill:active {
-    /* Força a cor do texto a ser escura para garantir legibilidade */
     -webkit-text-fill-color: #1f2937 !important;
-
-    /* NOVO: Remove explicitamente qualquer imagem ou cor de fundo que o navegador tente adicionar */
     background-image: none !important;
     background-color: transparent !important;
-    
-    /* O TRUQUE: Usamos uma box-shadow interna gigante para "pintar" o fundo do input.
-       A cor #fff7ed é o laranja bem clarinho que você pediu. */
     box-shadow: 0 0 0 1000px #fff7ed inset !important;
-    
-    /* Tenta evitar a transição de cor padrão do navegador */
     transition: background-color 5000s ease-in-out 0s;
 }
 

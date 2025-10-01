@@ -171,11 +171,14 @@
   background: none;
   border: none;
   color: #3483fa;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
-  padding: 4px 0;
-  text-align: left;
+  padding: 4px 8px;
+  text-align: right;
   transition: color 0.2s ease;
+  margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .dontKnowButton:hover {
@@ -186,6 +189,7 @@
 .addAddressButton {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   background: none;
   border: 1px solid #e5e5e5;
@@ -196,6 +200,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  width: 100%;
 }
 
 .addAddressButton:hover {
@@ -206,6 +211,7 @@
 .plusIcon {
   font-size: 16px;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 /* Loading state */
@@ -257,5 +263,15 @@
   .useButton {
     width: 100%;
     padding: 12px 20px;
+  }
+  
+  .addAddressButton {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .dontKnowButton {
+    align-self: flex-end;
+    margin-left: 0;
   }
 }

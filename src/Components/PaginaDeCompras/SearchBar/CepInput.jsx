@@ -118,13 +118,6 @@ function CepInput() {
                     {isLoading ? '' : 'Usar'}
                   </button>
                 </div>
-                <button 
-                  type="button" 
-                  className={styles.dontKnowButton}
-                  onClick={() => alert('Funcionalidade em desenvolvimento')}
-                >
-                  Não sei o meu CEP
-                </button>
               </div>
               
               <button 
@@ -133,7 +126,17 @@ function CepInput() {
                 onClick={() => alert('Funcionalidade em desenvolvimento')}
               >
                 <span className={styles.plusIcon}>+</span>
-                Adicionar endereço completo
+                <span>Adicionar endereço completo</span>
+                <button 
+                  type="button" 
+                  className={styles.dontKnowButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    alert('Funcionalidade em desenvolvimento');
+                  }}
+                >
+                  Não sei o meu CEP
+                </button>
               </button>
             </form>
           </div>

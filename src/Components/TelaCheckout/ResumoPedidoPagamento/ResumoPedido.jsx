@@ -3,7 +3,6 @@ import propTypes from 'prop-types';
 import styles from './ResumoPedido.module.css';
 import { ShoppingCart, Store } from 'lucide-react';
 
-// O componente continua recebendo todos os itens e o valor do frete
 function ResumoPedido({ cartItems, valorFrete = 0 }) {
 
   // 1. LÓGICA DE AGRUPAMENTO (permanece a mesma)
@@ -17,11 +16,11 @@ function ResumoPedido({ cartItems, valorFrete = 0 }) {
     return acc;
   }, {});
 
-  // 2. CÁLCULO DO TOTAL GERAL (agora mais inteligente)
-  // Ele soma o subtotal de todos os produtos + o valor do frete MULTIPLICADO pelo número de fornecedores
+  // 2. CÁLCULO DO TOTAL GERAL
   const numeroDeFornecedores = Object.keys(itensAgrupados).length;
   const valorTotalProdutos = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-  const valorTotalGeral = valorTotalProdutos + (valorFrete * numeroDeFornecedores);
+  const valorTotalFrete = valorFrete * numeroDeFornecedores;
+  const valorTotalGeral = valorTotalProdutos + valorTotalFrete;
 
   return (
     <div className={styles.card}>
@@ -32,7 +31,6 @@ function ResumoPedido({ cartItems, valorFrete = 0 }) {
 
       {/* 3. RENDERIZAÇÃO DAS SUBSEÇÕES */}
       {Object.keys(itensAgrupados).map(fornecedor => {
-        // Calcula o total para esta subseção específica
         const totalDoFornecedor = itensAgrupados[fornecedor].subtotal + valorFrete;
 
         return (
@@ -59,7 +57,6 @@ function ResumoPedido({ cartItems, valorFrete = 0 }) {
                 <span>Subtotal (produtos):</span>
                 <span>{itensAgrupados[fornecedor].subtotal.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
               </div>
-              {/* --- AJUSTE: LINHA DO FRETE MOVIDA PARA CÁ --- */}
               <div className={styles.summaryRow}>
                 <span>Frete Express:</span>
                 <span>{valorFrete.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
@@ -73,8 +70,12 @@ function ResumoPedido({ cartItems, valorFrete = 0 }) {
         );
       })}
       
-      {/* 5. SEÇÃO FINAL APENAS COM O TOTAL GERAL */}
+      {/* 5. SEÇÃO FINAL COM FRETE TOTAL E TOTAL GERAL */}
       <div className={styles.resumoFinal}>
+        <div className={styles.summaryRow}>
+          <span className={styles.label}>Frete Total:</span>
+          <span>{valorTotalFrete.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+        </div>
         <div className={`${styles.summaryRow} ${styles.totalGeralRow}`}>
           <strong>Total Geral:</strong>
           <strong>{valorTotalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</strong>
@@ -94,4 +95,3 @@ ResumoPedido.defaultProps = {
 };
 
 export default ResumoPedido;
-
