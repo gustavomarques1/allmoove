@@ -8,6 +8,7 @@
   max-width: 900px;
   margin: 2rem auto;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
 }
 
 /* Container do carrossel com borda mais sutil */
@@ -50,7 +51,10 @@
   flex-wrap: nowrap;
   scroll-behavior: smooth;
   scrollbar-width: none;
+  flex: 1;
+  min-width: 0;
 }
+
 .segmentosGrid::-webkit-scrollbar {
   display: none;
 }
@@ -76,23 +80,21 @@
   color: #111827;
 }
 
-/* --- MUDANÇA APLICADA AQUI --- */
 /* Estilo para o botão SELECIONADO */
 .segmentoBotao.selecionado {
-  background-color: white; /* Fundo branco */
-  color: #ff6400; /* Texto laranja */
-  border-color: #ff6400; /* Borda laranja */
+  background-color: white;
+  color: #ff6400;
+  border-color: #ff6400;
   font-weight: 600;
-  box-shadow: none; /* Garante que não haja sombra laranja */
+  box-shadow: none;
 }
 
 /* Hover para o botão SELECIONADO */
 .segmentoBotao.selecionado:hover {
-  background-color: #fffaf7; /* Tom de branco com fundo laranja bem sutil */
+  background-color: #fffaf7;
   color: #ff6400;
   border-color: #ff6400;
 }
-
 
 /* Layout de duas colunas */
 .interacaoContainer {
@@ -102,10 +104,12 @@
   align-items: flex-start;
 }
 
-.pedidosContainer, .distribuidorContainer {
+.pedidosContainer,
+.distribuidorContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-width: 0;
 }
 
 .colunaTitulo {
@@ -136,9 +140,16 @@
   border-bottom: 1px solid #e5e7eb;
   font-size: 0.9rem;
   color: #374151;
+  gap: 10px;
 }
+
 .listaPedidos li span:first-child {
   font-weight: 600;
+  word-break: break-word;
+}
+
+.listaPedidos li span:last-child {
+  white-space: nowrap;
 }
 
 .listaPedidos li:last-child {
@@ -159,6 +170,7 @@
   font-size: 1rem;
   color: #374151;
   margin-bottom: 15px;
+  word-break: break-word;
 }
 
 .distribuidorSelecionado span {
@@ -169,6 +181,7 @@
   display: flex;
   gap: 15px;
   padding-top: 42px;
+  flex-wrap: wrap;
 }
 
 /* Estilo Padrão / Secundário (Vazado/Outline) */
@@ -183,6 +196,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
 }
+
 .botaoAcao:hover {
   background-color: #fff7f2;
   border-color: #da5802;
@@ -194,7 +208,138 @@
   border-color: #ff6400;
   color: white;
 }
+
 .botaoAcao.primary:hover {
   background-color: #da5802;
   border-color: #da5802;
+}
+
+/* ===== MEDIA QUERIES PARA MOBILE ===== */
+
+/* Tablets e telas menores */
+@media (max-width: 768px) {
+  .painelContainer {
+    padding: 16px;
+    margin: 1rem;
+    border-radius: 8px;
+  }
+
+  .carouselWrapper {
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+
+  .navButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .segmentosGrid {
+    gap: 10px;
+  }
+
+  .segmentoBotao {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+
+  .interacaoContainer {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .colunaTitulo {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+
+  .listaWrapper {
+    padding: 12px;
+  }
+
+  .listaPedidos li {
+    font-size: 0.85rem;
+    padding: 8px 5px;
+    flex-wrap: wrap;
+  }
+
+  .botoesDistribuidor {
+    width: 100%;
+    padding-top: 20px;
+  }
+
+  .botaoAcao {
+    flex: 1;
+    min-width: 120px;
+    padding: 10px 20px;
+  }
+}
+
+/* Smartphones */
+@media (max-width: 480px) {
+  .painelContainer {
+    padding: 12px;
+    margin: 0.5rem;
+  }
+
+  .carouselWrapper {
+    gap: 6px;
+  }
+
+  .navButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .segmentosGrid {
+    gap: 8px;
+  }
+
+  .segmentoBotao {
+    padding: 6px 16px;
+    font-size: 0.85rem;
+  }
+
+  .interacaoContainer {
+    gap: 20px;
+  }
+
+  .colunaTitulo {
+    font-size: 0.95rem;
+  }
+
+  .listaWrapper {
+    padding: 10px;
+    min-height: 120px;
+  }
+
+  .listaPedidos li {
+    font-size: 0.8rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .listaPedidos li span:last-child {
+    color: #6b7280;
+    font-size: 0.75rem;
+  }
+
+  .distribuidorSelecionado {
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .botoesDistribuidor {
+    flex-direction: column;
+    padding-top: 16px;
+    gap: 10px;
+  }
+
+  .botaoAcao {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 0.85rem;
+  }
 }
