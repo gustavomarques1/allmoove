@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./TelaDashboard.module.css";
-import { Package, CheckCircle, Clock, AlertCircle, Loader } from "lucide-react";
+import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // Importe o hook personalizado
@@ -10,6 +10,12 @@ import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
 function TelaDashboard() {
   // Usa o hook para buscar pedidos e indicadores
   const { pedidos, isLoading, error, indicadores } = usePedidos();
+
+  // Estado para controlar expansão da lista de pedidos
+  const [showAllOrders, setShowAllOrders] = useState(false);
+
+  // Limita para 2 pedidos inicialmente
+  const displayedOrders = showAllOrders ? pedidos : pedidos.slice(0, 2);
 
   return (
     <div className={styles["dashboard-page"]}>
@@ -127,7 +133,7 @@ function TelaDashboard() {
         ) : (
           <>
             <div className={styles["orders-list"]}>
-              {pedidos.map((pedido) => (
+              {displayedOrders.map((pedido) => (
                 <div key={pedido.id} className={styles["order-item"]}>
                   <div className={styles["order-info"]}>
                     <div className={styles["order-header-item"]}>
@@ -154,6 +160,29 @@ function TelaDashboard() {
                 </div>
               ))}
             </div>
+
+            {/* Botão para expandir/colapsar pedidos se houver mais de 2 */}
+            {pedidos.length > 2 && (
+              <div className={styles["expand-orders-container"]}>
+                <button
+                  onClick={() => setShowAllOrders(!showAllOrders)}
+                  className={styles["expand-orders-button"]}
+                >
+                  {showAllOrders ? (
+                    <>
+                      <ChevronUp size={18} />
+                      <span>Mostrar menos pedidos</span>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown size={18} />
+                      <span>Ver todos os pedidos ({pedidos.length})</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
             <div className={styles["button-orders"]}>
               <Link to="/assistencia/loja">
                 <button className={styles["new-request-button-down"]}>

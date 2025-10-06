@@ -235,6 +235,39 @@
   align-items: center;
 }
 
+/* Botão de expandir/colapsar pedidos */
+.expand-orders-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.expand-orders-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.expand-orders-button:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: #374151;
+}
+
+.expand-orders-button span {
+  line-height: 1;
+}
+
 .card-icon {
   width: 18px;
   height: 18px;
