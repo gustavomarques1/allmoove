@@ -31,9 +31,28 @@ function Inicial() {
     try {
       const response = await api.post('api/account/loginuser', data);
 
+      // DEBUG: Veja exatamente o que a API está retornando
+      console.log('📦 Resposta completa da API:', response.data);
+
       localStorage.setItem('email', email);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('expiration', response.data.expiration);
+
+      // Salva o ID da pessoa/usuário (ajuste o nome do campo conforme sua API retorna)
+      // Pode ser: idPessoa, userId, id, personId, etc.
+      if (response.data.idPessoa) {
+        localStorage.setItem('idPessoa', response.data.idPessoa);
+        console.log('✅ idPessoa salvo:', response.data.idPessoa);
+      } else if (response.data.userId) {
+        localStorage.setItem('idPessoa', response.data.userId);
+        console.log('✅ userId salvo:', response.data.userId);
+      } else if (response.data.id) {
+        localStorage.setItem('idPessoa', response.data.id);
+        console.log('✅ id salvo:', response.data.id);
+      } else {
+        console.warn('⚠️ ATENÇÃO: Nenhum ID foi encontrado na resposta da API!');
+        console.warn('Campos disponíveis:', Object.keys(response.data));
+      }
 
       navigate('/assistencia/dashboard');
 

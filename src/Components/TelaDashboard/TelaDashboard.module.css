@@ -240,3 +240,173 @@
   height: 18px;
   color: #ff6400;
 }
+
+/* Loading e Error States */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 12px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  color: #ff6400;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.error-icon {
+  width: 32px;
+  height: 32px;
+  color: #ef4444;
+}
+
+/* Lista de Pedidos */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.order-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow 0.2s;
+}
+
+.order-item:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.order-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-header-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.order-header-item h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.order-date {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.order-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.order-details p {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.order-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+/* Status específicos */
+.status-entregue,
+.status-concluído,
+.status-finalizado {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-aceito,
+.status-em-trânsito,
+.status-em-separação {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-aguardando-aceite,
+.status-pendente {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-cancelado,
+.status-recusado {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.order-total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+  .order-item {
+    padding: 12px;
+  }
+
+  .order-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .order-status {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .order-details p {
+    font-size: 13px;
+  }
+}

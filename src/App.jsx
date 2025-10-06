@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Inicial from "./Components/InicialTela/Inicial";
 import TelaEntregador from "./Components/TelaEntregador/TelaEntregador";
 import TelaDashboard from "./Components/TelaDashboard/TelaDashboard";
-import TelaPartsRequest from "./Components/TelaAssistenciaPartsRequest/TelaPartsRequest"; 
 import PaginaLoja from "./Components/PaginaDeCompras/PaginaLoja";
 import DistribuidorDashboard from "./Components/TelaDistribuidor/TelaDistribuidorDashboard/DistribuidorDashboard";
 import TelaEntrega from "./Components/TelaEntrega/TelaEntrega";
@@ -20,10 +19,7 @@ function App() {
         <Route path="/entregador" element={<TelaEntregador />} />
         <Route path="/assistencia/dashboard" element={<TelaDashboard />} />
         
-        <Route 
-          path="/assistencia/parts-request" 
-          element={<TelaPartsRequest />} 
-        />
+        
 
         <Route 
           path="/assistencia/loja" 
