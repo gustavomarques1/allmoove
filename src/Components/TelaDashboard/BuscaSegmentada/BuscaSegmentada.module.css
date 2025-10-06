@@ -163,7 +163,122 @@
 }
 
 .distribuidorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.distribuidorSelector {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.distribuidorLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
   align-items: center;
+}
+
+.distribuidorSearchInput {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.distribuidorSearchInput:hover {
+  border-color: #9ca3af;
+}
+
+.distribuidorSearchInput:focus {
+  outline: none;
+  border-color: #ff6400;
+  box-shadow: 0 0 0 3px rgba(255, 100, 0, 0.1);
+}
+
+.distribuidorSearchInput::placeholder {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.clearButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  line-height: 1;
+}
+
+.clearButton:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.dropdownList {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  list-style: none;
+  padding: 4px;
+  margin: 0;
+}
+
+.dropdownItem {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #374151;
+  transition: all 0.15s ease;
+}
+
+.dropdownItem:hover {
+  background-color: #fff7f2;
+  color: #ff6400;
+}
+
+.dropdownEmpty {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  z-index: 1000;
 }
 
 .distribuidorSelecionado {
@@ -180,7 +295,6 @@
 .botoesDistribuidor {
   display: flex;
   gap: 15px;
-  padding-top: 42px;
   flex-wrap: wrap;
 }
 
