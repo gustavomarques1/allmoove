@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
 dist
 dist-ssr
@@ -22,3 +23,43 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code
+.claude/
+
+# Documentation (internal - keep organized in docs/)
+*_SPEC.md
+*_SETUP.md
+CORRIGIR_*.md
+EXECUTAR_*.md
+GUIA_*.md
+PLANO_*.md
+RESTAURAR_*.md
+SINCRONIZAR_*.md
+MIGRACAO_*.md
+RESUMO_*.md
+BACKEND_*.md
+CODIGO_*.cs
+
+# Excel files (keep in docs/data/)
+excel/
+*.xlsx
+*.xls
+
+# SQL scripts (keep in docs/sql/)
+scripts/*.sql
+scripts/produtos-*.sql
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Build
+build/
+*.tsbuildinfo
