@@ -13,26 +13,37 @@ function Products() {
   const [notification, setNotification] = useState('');
 
   useEffect(() => {
-    // Usamos uma função async para poder usar 'await' e simplificar a lógica
     const loadProducts = async () => {
       setLoading(true);
-      setNotification(''); // Limpa a notificação a cada nova busca
-      
+      setNotification('');
+
       const categoriaQuery = searchParams.get('categoria');
+      const fornecedorQuery = searchParams.get('fornecedor');
       const termoDeBusca = categoriaQuery || '';
 
-      // 1. Tenta buscar pela categoria especificada na URL
+      // 1. Busca produtos pela categoria
       let fetchedProducts = await fetchProducts(termoDeBusca);
 
-      // 2. Verifica se a busca não retornou nada E se não era uma busca por "todos"
-      if ((!fetchedProducts || fetchedProducts.length === 0) && termoDeBusca !== '') {
-        // Opcional: Avisa o usuário que a categoria não foi encontrada
+      // 2. Filtra por fornecedor se especificado
+      if (fornecedorQuery && fetchedProducts.length > 0) {
+        fetchedProducts = fetchedProducts.filter(
+          product => product.fornecedor === fornecedorQuery
+        );
+
+        // Se após filtrar por fornecedor não houver produtos
+        if (fetchedProducts.length === 0) {
+          setNotification(
+            `Nenhum produto encontrado para a categoria "${categoriaQuery || 'todas'}" do fornecedor "${fornecedorQuery}".`
+          );
+        }
+      }
+
+      // 3. Fallback se categoria não retornar nada
+      if ((!fetchedProducts || fetchedProducts.length === 0) && termoDeBusca !== '' && !fornecedorQuery) {
         setNotification(`Nenhum produto encontrado para "${termoDeBusca}". Exibindo todos os produtos.`);
-        
-        // 3. Plano B: Busca todos os produtos
         fetchedProducts = await fetchProducts('');
       }
-      
+
       setProducts(fetchedProducts || []);
       setLoading(false);
     };

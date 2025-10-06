@@ -1,7 +1,7 @@
 import React from 'react';
 import CartButton from '../../PaginaDeCompras/CartButtom/CartButtom';
 import SearchBar from '../SearchBar/SearchBar';
-import CepInput from '../SearchBar/CepInput'; // Adiciona a importação do CEP
+import CepInput from '../SearchBar/CepInput';
 
 import './Header.css';
 
@@ -15,7 +15,6 @@ function Header() {
           <CepInput />
           <CartButton />
         </div>
-        {/* <CartButton /> */}
       </div>
     </header>
   );
