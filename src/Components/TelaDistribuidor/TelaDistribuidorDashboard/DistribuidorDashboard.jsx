@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./DistribuidorDashboard.module.css";
 // Importações dos ícones que você precisará (ex: de 'lucide-react')
 import {
@@ -13,8 +13,27 @@ import {
   Info,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { usePedidosDistribuidor } from "../../../hooks/usePedidosDistribuidor";
+import { updateStatusPedido } from "../../../api/pedidosServices";
+import formatCurrency from "../../../utils/formatCurrency";
 
 function DistribuidorDashboard() {
+  const { pedidos, isLoading, error, indicadores } = usePedidosDistribuidor();
+  const [processandoPedido, setProcessandoPedido] = useState(null);
+
+  const handleAceitarPedido = async (pedidoId) => {
+    try {
+      setProcessandoPedido(pedidoId);
+      await updateStatusPedido(pedidoId, 'Aceito', 'Pedido aceito pelo distribuidor');
+      alert('Pedido aceito com sucesso!');
+      window.location.reload(); // Recarrega para atualizar a lista
+    } catch (err) {
+      console.error('Erro ao aceitar pedido:', err);
+      alert('Erro ao aceitar pedido. Tente novamente.');
+    } finally {
+      setProcessandoPedido(null);
+    }
+  };
   return (
     <div className={styles["distribuidor-page"]}>
       {/* Cabeçalho principal */}
@@ -41,7 +60,9 @@ function DistribuidorDashboard() {
             </h3>
             <Plus size={16} className={styles["distribuidor-top-card-icon"]} />
           </div>
-          <p className={styles["distribuidor-top-card-number"]}>1</p>
+          <p className={styles["distribuidor-top-card-number"]}>
+            {isLoading ? '...' : indicadores.novosPedidos}
+          </p>
           <p className={styles["distribuidor-top-card-description"]}>
             Aguardando aceite
           </p>
@@ -55,7 +76,9 @@ function DistribuidorDashboard() {
             </h3>
             <Clock size={16} className={styles["distribuidor-top-card-icon"]} />
           </div>
-          <p className={styles["distribuidor-top-card-number"]}>2</p>
+          <p className={styles["distribuidor-top-card-number"]}>
+            {isLoading ? '...' : indicadores.emAndamento}
+          </p>
           <p className={styles["distribuidor-top-card-description"]}>
             Aceitos ou em trânsito
           </p>
@@ -73,7 +96,9 @@ function DistribuidorDashboard() {
             />{" "}
             {/* Ícone verde */}
           </div>
-          <p className={styles["distribuidor-top-card-number"]}>1</p>
+          <p className={styles["distribuidor-top-card-number"]}>
+            {isLoading ? '...' : indicadores.concluidos}
+          </p>
           <p className={styles["distribuidor-top-card-description"]}>
             Entregas finalizadas
           </p>
@@ -217,41 +242,76 @@ function DistribuidorDashboard() {
           Gerencie pedidos e gere códigos para entregadores
         </p>
 
-        {/* Item de Pedido de Exemplo */}
-        <div className={styles["distribuidor-order-item"]}>
-          <div className={styles["distribuidor-order-details"]}>
-            <Package size={24} className={styles["distribuidor-order-icon"]} />
-            <div className={styles["distribuidor-order-text"]}>
-              <p className={styles["distribuidor-order-plate"]}>
-                Placa Principal
+        {/* Loading */}
+        {isLoading && (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <p>Carregando pedidos...</p>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && (
+          <div style={{ textAlign: 'center', padding: '2rem', color: '#e74c3c' }}>
+            <p>❌ {error}</p>
+          </div>
+        )}
+
+        {/* Lista de Pedidos */}
+        {!isLoading && !error && pedidos.length === 0 && (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <p>Nenhum pedido encontrado.</p>
+          </div>
+        )}
+
+        {!isLoading && !error && pedidos.map((pedido) => (
+          <div key={pedido.id} className={styles["distribuidor-order-item"]}>
+            <div className={styles["distribuidor-order-details"]}>
+              <Package size={24} className={styles["distribuidor-order-icon"]} />
+              <div className={styles["distribuidor-order-text"]}>
+                <p className={styles["distribuidor-order-plate"]}>
+                  Pedido #{pedido.id}
+                </p>
+                <p className={styles["distribuidor-order-model"]}>
+                  {pedido.items?.length || 0} {pedido.items?.length === 1 ? 'item' : 'itens'}
+                </p>
+                <div className={styles["distribuidor-order-tags"]}>
+                  <span className={
+                    pedido.status === 'Aguardando Aceite'
+                      ? styles["distribuidor-order-tag-novo"]
+                      : styles["distribuidor-order-tag-eletronicos"]
+                  }>
+                    {pedido.status}
+                  </span>
+                  <span className={styles["distribuidor-order-tag-eletronicos"]}>
+                    {pedido.tipoEntrega || 'Normal'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className={styles["distribuidor-order-info"]}>
+              <p className={styles["distribuidor-order-price"]}>
+                {formatCurrency(pedido.totalPago || 0, 'BRL')}
               </p>
-              <p className={styles["distribuidor-order-model"]}>
-                Samsung Galaxy A54
+              <p className={styles["distribuidor-order-date"]}>
+                {new Date(pedido.dataPedido).toLocaleDateString('pt-BR')}
               </p>
-              <div className={styles["distribuidor-order-tags"]}>
-                <span className={styles["distribuidor-order-tag-eletronicos"]}>
-                  Eletrônicos
-                </span>
-                <span className={styles["distribuidor-order-tag-novo"]}>
-                  Novo Pedido
-                </span>
+              <div className={styles["distribuidor-order-actions"]}>
+                {pedido.status === 'Aguardando Aceite' && (
+                  <button
+                    className={styles["distribuidor-order-button-accept"]}
+                    onClick={() => handleAceitarPedido(pedido.id)}
+                    disabled={processandoPedido === pedido.id}
+                  >
+                    {processandoPedido === pedido.id ? 'Aceitando...' : 'Aceitar Pedido'}
+                  </button>
+                )}
+                <button className={styles["distribuidor-order-button-details"]}>
+                  <Info size={16} /> Detalhes
+                </button>
               </div>
             </div>
           </div>
-          <div className={styles["distribuidor-order-info"]}>
-            <p className={styles["distribuidor-order-price"]}>R$ 25.90</p>
-            <p className={styles["distribuidor-order-date"]}>21/01/2024</p>
-            <div className={styles["distribuidor-order-actions"]}>
-              <button className={styles["distribuidor-order-button-accept"]}>
-                Aceitar Pedido
-              </button>
-              <button className={styles["distribuidor-order-button-details"]}>
-                <Info size={16} /> Detalhes
-              </button>
-            </div>
-          </div>
-        </div>
-        {/* Adicionar mais itens de pedido aqui, se houver */}
+        ))}
       </div>
     </div>
   );

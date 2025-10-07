@@ -12,6 +12,43 @@ import api from './api';
  */
 
 /**
+ * Busca todos os pedidos de um distribuidor/fornecedor específico
+ * @param {string} fornecedor - Nome do fornecedor (se não fornecido, busca do localStorage)
+ * @returns {Promise<Array>} Lista de pedidos destinados a este fornecedor
+ * @throws {Error} Se o usuário não estiver autenticado ou houver erro na requisição
+ */
+export const getPedidosDoDistribuidor = async (fornecedor = null) => {
+  try {
+    const token = localStorage.getItem('token');
+    const fornecedorNome = fornecedor || localStorage.getItem('fornecedor');
+
+    if (!token || !fornecedorNome) {
+      throw new Error('Usuário não autenticado ou fornecedor não identificado.');
+    }
+
+    console.log('📡 Buscando pedidos do distribuidor:', fornecedorNome);
+
+    const response = await api.get(`/api/Pedidos/distribuidor/${encodeURIComponent(fornecedorNome)}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    console.log('✅ Pedidos do distribuidor recebidos:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar pedidos do distribuidor:', error);
+
+    if (error.response) {
+      console.error('Status:', error.response.status);
+      console.error('Dados:', error.response.data);
+    }
+
+    throw error;
+  }
+};
+
+/**
  * Busca todos os pedidos de uma assistência técnica específica
  * @param {number|string} idPessoa - ID da assistência técnica (se não fornecido, busca do localStorage)
  * @returns {Promise<Array>} Lista de pedidos com todos os detalhes
