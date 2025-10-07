@@ -216,7 +216,7 @@ function BuscaSegmentada() {
       <div className={styles.interacaoContainer}>
         <div className={styles.pedidosContainer}>
           <h3 className={styles.colunaTitulo}>
-            {useAPI ? 'Produtos Disponíveis' : 'Últimos Pedidos'}
+            {useAPI ? 'Últimos Pedidos' : 'Últimos Pedidos'}
           </h3>
           <div className={styles.listaWrapper}>
             {isLoading ? (

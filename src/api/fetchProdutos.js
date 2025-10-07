@@ -24,7 +24,7 @@ async function fetchProducts(query = '') {
         return produtosPorCategoria;
       }
     } catch (error) {
-      console.log('⚠️ Categoria não encontrada na API, buscando por nome...');
+      console.log('⚠️ Categoria não encontrada na API, buscando por nome...', +error);
     }
 
     // Se não encontrar por categoria, busca todos e filtra por nome

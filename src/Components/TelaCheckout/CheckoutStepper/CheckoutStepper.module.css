@@ -1,0 +1,108 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.stepIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  transition: all 0.3s ease;
+}
+
+.step.active .stepIcon {
+  background-color: #ff6400;
+  color: white;
+  box-shadow: 0 0 0 4px rgba(255, 100, 0, 0.1);
+}
+
+.step.completed .stepIcon {
+  background-color: #16a34a;
+  color: white;
+}
+
+.stepLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.step.active .stepLabel {
+  color: #ff6400;
+  font-weight: 600;
+}
+
+.step.completed .stepLabel {
+  color: #16a34a;
+}
+
+.stepLine {
+  flex: 1;
+  height: 2px;
+  background-color: #e5e7eb;
+  margin: 0 8px;
+  transition: all 0.3s ease;
+  min-width: 20px;
+}
+
+.stepLine.completed {
+  background-color: #16a34a;
+}
+
+/* Responsivo */
+@media (max-width: 640px) {
+  .stepper {
+    padding: 16px 12px;
+  }
+
+  .stepIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .stepIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .stepLabel {
+    font-size: 10px;
+  }
+
+  .stepLine {
+    margin: 0 4px;
+    min-width: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stepLabel {
+    display: none;
+  }
+
+  .stepIcon {
+    width: 36px;
+    height: 36px;
+  }
+}
