@@ -26,6 +26,33 @@ npm run lint
 npm run preview
 ```
 
+## Specialized Agents
+
+This project uses specialized agents for complex tasks:
+
+### Frontend/UX Agent (`.claude/agents/frontend-ux.md`)
+**Use for:** Creating new screens, components, layouts, and UX improvements
+
+**How to use:**
+```
+@frontend-ux crie uma tela de perfil do usuário com foto, nome, email e botão de editar
+```
+
+**The agent will:**
+- Design consistent UI matching AllMoove's style
+- Create responsive layouts
+- Follow existing component patterns
+- Provide complete code (JSX + CSS Module)
+- Ensure accessibility compliance
+
+### API Agent (`.claude/agents/api.md`)
+**Use for:** Backend integration, API endpoints, data fetching
+
+**How to use:**
+```
+@api integre a listagem de produtos com a API do backend
+```
+
 ## Architecture & Key Patterns
 
 ### Route Structure
