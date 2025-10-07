@@ -58,9 +58,6 @@ function TelaPagamento() {
   const valorFrete = opcaoSelecionada?.preco || 0;
   const valorTotal = valorProdutos + valorFrete;
 
-  // Verifica se pode confirmar pagamento
-  const podeConfirmar = validarEndereco() && cartItems.length > 0 && !criandoPedido;
-
   /**
    * Valida se o endereço está completo
    */
@@ -69,6 +66,9 @@ function TelaPagamento() {
     const camposObrigatorios = ['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado'];
     return camposObrigatorios.every(campo => endereco[campo] && endereco[campo].trim() !== '');
   };
+
+  // Verifica se pode confirmar pagamento
+  const podeConfirmar = validarEndereco() && cartItems.length > 0 && !criandoPedido;
 
   /**
    * Abre modal de endereço
