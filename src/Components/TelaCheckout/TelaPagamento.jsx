@@ -6,18 +6,15 @@ import { ArrowLeft, MapPin } from 'lucide-react';
 // Importando os componentes filhos
 import ResumoPedido from './ResumoPedidoPagamento/ResumoPedido';
 import MetodosPagamento from './MetodosPagamento/MetodosPagamento';
-import TelaConfirmacao from '../TelaPagamentoConfirmado/TelaConfirmacao';
 
 // Importando service de pedidos
-import { createPedido } from '../../api/pedidosServices';
+import { createPedido, validarDadosPedido } from '../../api/pedidosServices';
 
 function TelaPagamento() {
   const navigate = useNavigate();
   const location = useLocation();
 
   // Estados
-  const [pagamentoConfirmado, setPagamentoConfirmado] = useState(false);
-  const [pedidoConfirmado, setPedidoConfirmado] = useState(null);
   const [endereco, setEndereco] = useState(null);
   const [metodoPagamento, setMetodoPagamento] = useState('Pix');
   const [criandoPedido, setCriandoPedido] = useState(false);
@@ -107,18 +104,27 @@ function TelaPagamento() {
 
       console.log('📤 Enviando pedido para API:', dadosPedido);
 
+      // Valida dados antes de enviar
+      const validacao = validarDadosPedido(dadosPedido);
+      if (!validacao.valid) {
+        throw new Error(`Dados inválidos: ${validacao.errors.join(', ')}`);
+      }
+
       // Chama API para criar pedido
       const pedidoCriado = await createPedido(dadosPedido);
 
       console.log('✅ Pedido criado com sucesso:', pedidoCriado);
 
-      // Define dados do pedido confirmado
-      setPedidoConfirmado({
-        ...pedidoCriado,
-        itens: cartItems,
-        prazoEstimado: opcaoSelecionada?.prazo || pedidoCriado.prazoEstimado
+      // Navega para tela de confirmação passando dados do pedido
+      navigate('/assistencia/payment-success', {
+        state: {
+          pedidoConfirmado: {
+            ...pedidoCriado,
+            itens: cartItems,
+            prazoEstimado: opcaoSelecionada?.prazo || pedidoCriado.prazoEstimado
+          }
+        }
       });
-      setPagamentoConfirmado(true);
 
     } catch (error) {
       console.error('❌ Erro ao criar pedido:', error);
@@ -195,32 +201,22 @@ function TelaPagamento() {
         )}
       </main>
 
-      {/* Só mostra o footer se o pagamento ainda não foi confirmado */}
-      {!pagamentoConfirmado && (
-        <footer className={styles.footer}>
-          <button
-            className={`${styles.actionButton} ${styles.secondary}`}
-            onClick={() => navigate(-1)}
-            disabled={criandoPedido}
-          >
-            Voltar
-          </button>
-          <button
-            className={`${styles.actionButton} ${styles.primary}`}
-            onClick={handleConfirmPayment}
-            disabled={criandoPedido}
-          >
-            {criandoPedido ? 'Processando...' : 'Confirmar Pagamento'}
-          </button>
-        </footer>
-      )}
-
-      {/* Renderiza a TelaConfirmacao quando o pagamento é confirmado */}
-      {pagamentoConfirmado && pedidoConfirmado && (
-        <div className={styles.confirmacaoContainer}>
-          <TelaConfirmacao pedidoData={pedidoConfirmado} />
-        </div>
-      )}
+      <footer className={styles.footer}>
+        <button
+          className={`${styles.actionButton} ${styles.secondary}`}
+          onClick={() => navigate(-1)}
+          disabled={criandoPedido}
+        >
+          Voltar
+        </button>
+        <button
+          className={`${styles.actionButton} ${styles.primary}`}
+          onClick={handleConfirmPayment}
+          disabled={criandoPedido}
+        >
+          {criandoPedido ? 'Processando...' : 'Confirmar Pagamento'}
+        </button>
+      </footer>
     </div>
   );
 }
