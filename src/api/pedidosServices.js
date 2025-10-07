@@ -110,7 +110,9 @@ export const createPedido = async (dadosPedido) => {
 
     // Monta payload completo conforme especificação da API
     const payload = {
-      assistenciaTecnicaId: dadosPedido.idPessoa || dadosPedido.assistenciaTecnicaId,
+      idPessoa: dadosPedido.idPessoa || dadosPedido.assistenciaTecnicaId, // ✅ Backend espera "idPessoa"
+      empresa: 1, // TODO: Buscar do contexto/usuário
+      estabelecimento: 1, // TODO: Buscar do contexto/usuário
       fornecedor: dadosPedido.fornecedor,
       tipoEntrega: dadosPedido.tipoEntrega,
       metodoPagamento: dadosPedido.metodoPagamento,
