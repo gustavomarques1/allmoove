@@ -11,29 +11,42 @@ function TelaConfirmacao() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Dados do pedido vêm do 'state' da navegação
+  // Dados do pedido vêm do 'state' da navegação (retornados pela API)
   const { pedidoConfirmado } = location.state || {};
-  
+
   // Fallback com dados de exemplo se a página for acessada diretamente
   const pedido = pedidoConfirmado || {
-    id: 105,
-    codigoEntrega: 'M501X8',
-    itens: [{ nome: 'Produto Exemplo', quantity: 1 }],
+    id: 0,
+    codigoEntrega: 'M000X0',
+    items: [{ nome: 'Produto Exemplo', quantidade: 1 }],
     totalPago: 0,
+    status: 'Aguardando Aceite',
+    fornecedor: 'N/A',
+    tipoEntrega: 'Normal',
+    prazoEstimado: 'N/A',
+    metodoPagamento: 'N/A'
   };
+
+  console.log('📦 Pedido confirmado recebido:', pedido);
 
   return (
     <div className={styles.pageContainer}>
       <header className={styles.header}>
         <CheckCircle size={48} className={styles.successIcon} />
         <h1>Pagamento Confirmado!</h1>
-        <p>Seu pedido foi criado com sucesso e já está sendo processado.</p>
+        <p>Seu pedido #{pedido.id} foi criado com sucesso e já está sendo processado.</p>
       </header>
 
       <main className={styles.mainContent}>
-        {/* Usando os componentes filhos e passando os dados */}
+        {/* Código de Entrega */}
         <CodigoEntrega codigo={pedido.codigoEntrega} />
-        {/* <DetalhesPedido pedido={pedido} /> */}
+
+        {/* Detalhes do Pedido */}
+        <DetalhesPedido pedido={{
+          ...pedido,
+          itens: pedido.items || pedido.itens, // Compatibilidade com API
+          pagamento: pedido.metodoPagamento
+        }} />
       </main>
 
       <footer className={styles.footer}>

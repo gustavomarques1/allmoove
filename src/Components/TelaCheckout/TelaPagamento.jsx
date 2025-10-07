@@ -201,19 +201,32 @@ function TelaPagamento() {
         throw new Error('Usuário não autenticado. Faça login novamente.');
       }
 
-      // Monta dados do pedido conforme API
+      // Determina fornecedor baseado nos itens do carrinho
+      // (assumindo que todos os itens são do mesmo fornecedor por enquanto)
+      const fornecedor = cartItems[0]?.fornecedor || 'TechParts SP';
+
+      // Determina tipo de entrega baseado na opção selecionada
+      const tipoEntrega = opcaoSelecionada?.tipo === 'urgente' ? 'Urgente' : 'Normal';
+
+      // Monta dados completos do pedido conforme especificação da API
       const dadosPedido = {
-        idPessoa: parseInt(idPessoa),  // ✅ CORRIGIDO: Backend espera idPessoa
-        empresa: 1, // TODO: Buscar do usuário logado
-        estabelecimento: 1, // TODO: Buscar do usuário logado
-        valorFrete: valorFrete
+        idPessoa: parseInt(idPessoa),
+        fornecedor: fornecedor,
+        tipoEntrega: tipoEntrega,
+        metodoPagamento: metodoPagamento, // "Pix" ou "Cartão de Crédito"
+        items: cartItems,
+        endereco: endereco,
+        valorFrete: valorFrete,
+        valorProdutos: valorProdutos,
+        totalPago: valorTotal
       };
 
-      console.log('📤 Enviando pedido para API:', dadosPedido);
+      console.log('📤 Enviando pedido completo para API:', dadosPedido);
 
       // Valida dados antes de enviar
       const validacao = validarDadosPedido(dadosPedido);
       if (!validacao.valid) {
+        console.error('❌ Erros de validação:', validacao.errors);
         throw new Error(`Dados inválidos: ${validacao.errors.join(', ')}`);
       }
 
@@ -222,14 +235,10 @@ function TelaPagamento() {
 
       console.log('✅ Pedido criado com sucesso:', pedidoCriado);
 
-      // Navega para tela de confirmação passando dados do pedido
+      // Navega para tela de confirmação passando dados do pedido retornados pela API
       navigate('/assistencia/payment-success', {
         state: {
-          pedidoConfirmado: {
-            ...pedidoCriado,
-            itens: cartItems,
-            prazoEstimado: opcaoSelecionada?.prazo || pedidoCriado.prazoEstimado
-          }
+          pedidoConfirmado: pedidoCriado
         }
       });
 
