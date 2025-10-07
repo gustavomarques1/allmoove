@@ -201,9 +201,15 @@ function TelaPagamento() {
         throw new Error('Usuário não autenticado. Faça login novamente.');
       }
 
+      // Debug: Verifica dados do carrinho
+      console.log('🛒 CartItems recebidos:', cartItems);
+      console.log('📍 Endereço:', endereco);
+      console.log('💳 Método de pagamento:', metodoPagamento);
+      console.log('🚚 Opção selecionada:', opcaoSelecionada);
+
       // Determina fornecedor baseado nos itens do carrinho
       // (assumindo que todos os itens são do mesmo fornecedor por enquanto)
-      const fornecedor = cartItems[0]?.fornecedor || 'TechParts SP';
+      const fornecedor = cartItems[0]?.fornecedor || cartItems[0]?.FORNECEDOR || 'TechParts SP';
 
       // Determina tipo de entrega baseado na opção selecionada
       const tipoEntrega = opcaoSelecionada?.tipo === 'urgente' ? 'Urgente' : 'Normal';
@@ -222,6 +228,7 @@ function TelaPagamento() {
       };
 
       console.log('📤 Enviando pedido completo para API:', dadosPedido);
+      console.log('📤 JSON stringified:', JSON.stringify(dadosPedido, null, 2));
 
       // Valida dados antes de enviar
       const validacao = validarDadosPedido(dadosPedido);
@@ -234,6 +241,12 @@ function TelaPagamento() {
       const pedidoCriado = await createPedido(dadosPedido);
 
       console.log('✅ Pedido criado com sucesso:', pedidoCriado);
+      console.log('✅ Resposta da API (JSON):', JSON.stringify(pedidoCriado, null, 2));
+
+      // Verifica se a resposta tem os campos esperados
+      if (!pedidoCriado || !pedidoCriado.id) {
+        console.warn('⚠️ Resposta da API não tem ID do pedido. Usando dados enviados como fallback.');
+      }
 
       // Navega para tela de confirmação passando dados do pedido retornados pela API
       navigate('/assistencia/payment-success', {
@@ -244,7 +257,15 @@ function TelaPagamento() {
 
     } catch (error) {
       console.error('❌ Erro ao criar pedido:', error);
-      setErro(error.message || 'Erro ao finalizar pedido. Tente novamente.');
+      console.error('❌ Erro completo:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+
+      if (error.response) {
+        console.error('❌ Status HTTP:', error.response.status);
+        console.error('❌ Dados do erro:', error.response.data);
+        setErro(`Erro ${error.response.status}: ${error.response.data?.message || error.message}`);
+      } else {
+        setErro(error.message || 'Erro ao finalizar pedido. Tente novamente.');
+      }
     } finally {
       setCriandoPedido(false);
     }
