@@ -79,6 +79,8 @@ function TelaPagamento() {
       // Monta dados do pedido conforme API
       const dadosPedido = {
         assistenciaTecnicaId: parseInt(idPessoa),
+        empresa: 1, // TODO: Buscar do usuário logado
+        estabelecimento: 1, // TODO: Buscar do usuário logado
         fornecedor: opcaoSelecionada?.origem || 'WEFIX',
         tipoEntrega: opcaoSelecionada?.titulo === 'Entrega Expressa' ? 'Urgente' : 'Normal',
         metodoPagamento: metodoPagamento,

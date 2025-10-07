@@ -27,6 +27,8 @@ function TestePedido() {
       const timestamp = Date.now();
       const pedidoTeste = {
         assistenciaTecnicaId: idPessoa,
+        empresa: 1, // ← ADICIONADO: Backend filtra por empresa/estabelecimento!
+        estabelecimento: 1, // ← ADICIONADO
         fornecedor: 'WEFIX',
         tipoEntrega: 'Normal',
         metodoPagamento: 'Pix',
