@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './TelaPagamento.module.css';
-import { ArrowLeft, MapPin } from 'lucide-react';
+import { ArrowLeft, MapPin, X } from 'lucide-react';
 
 // Importando os componentes filhos
 import ResumoPedido from './ResumoPedidoPagamento/ResumoPedido';
 import MetodosPagamento from './MetodosPagamento/MetodosPagamento';
-import CepInput from '../PaginaDeCompras/SearchBar/CepInput';
 
 // Importando service de pedidos
 import { createPedido, validarDadosPedido } from '../../api/pedidosServices';
@@ -20,37 +19,25 @@ function TelaPagamento() {
   const [metodoPagamento, setMetodoPagamento] = useState('Pix');
   const [criandoPedido, setCriandoPedido] = useState(false);
   const [erro, setErro] = useState('');
-  const [modalKey, setModalKey] = useState(0); // Para forçar re-render do CepInput
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [enderecoForm, setEnderecoForm] = useState({
+    cep: '',
+    logradouro: '',
+    numero: '',
+    complemento: '',
+    bairro: '',
+    cidade: '',
+    estado: ''
+  });
 
   // Carrega endereço do localStorage
   useEffect(() => {
-    const carregarEndereco = () => {
-      const enderecoSalvo = localStorage.getItem('endereco');
-      if (enderecoSalvo) {
-        setEndereco(JSON.parse(enderecoSalvo));
-      }
-    };
-
-    carregarEndereco();
-
-    // Escuta mudanças no localStorage (quando modal salva)
-    const handleStorageChange = () => {
-      carregarEndereco();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    // Também escuta um evento customizado para mudanças na mesma aba
-    const handleEnderecoUpdate = () => {
-      carregarEndereco();
-    };
-    window.addEventListener('enderecoUpdated', handleEnderecoUpdate);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('enderecoUpdated', handleEnderecoUpdate);
-    };
-  }, [modalKey]);
+    const enderecoSalvo = localStorage.getItem('endereco');
+    if (enderecoSalvo) {
+      setEndereco(JSON.parse(enderecoSalvo));
+    }
+  }, []);
 
   const { cartItems = [], opcaoSelecionada = null } = location.state || {};
 
@@ -65,6 +52,94 @@ function TelaPagamento() {
     if (!endereco) return false;
     const camposObrigatorios = ['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado'];
     return camposObrigatorios.every(campo => endereco[campo] && endereco[campo].trim() !== '');
+  };
+
+  /**
+   * Abre modal de endereço
+   */
+  const handleAbrirModal = () => {
+    // Preenche formulário com endereço atual se existir
+    if (endereco) {
+      setEnderecoForm(endereco);
+    }
+    setIsModalOpen(true);
+  };
+
+  /**
+   * Fecha modal de endereço
+   */
+  const handleFecharModal = () => {
+    setIsModalOpen(false);
+  };
+
+  /**
+   * Atualiza campo do formulário de endereço
+   */
+  const handleEnderecoChange = (campo, valor) => {
+    setEnderecoForm(prev => ({ ...prev, [campo]: valor }));
+  };
+
+  /**
+   * Busca CEP na API ViaCEP
+   */
+  const handleCepChange = async (e) => {
+    const valor = e.target.value;
+    const cepLimpo = valor.replace(/\D/g, '');
+
+    // Formata CEP
+    let cepFormatado = cepLimpo;
+    if (cepLimpo.length > 5) {
+      cepFormatado = `${cepLimpo.slice(0, 5)}-${cepLimpo.slice(5, 8)}`;
+    }
+
+    handleEnderecoChange('cep', cepFormatado);
+
+    // Busca automática quando CEP completo
+    if (cepLimpo.length === 8) {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+        const data = await response.json();
+
+        if (!data.erro) {
+          setEnderecoForm(prev => ({
+            ...prev,
+            logradouro: data.logradouro || prev.logradouro,
+            bairro: data.bairro || prev.bairro,
+            cidade: data.localidade || prev.cidade,
+            estado: data.uf || prev.estado
+          }));
+        }
+      } catch (error) {
+        console.error('Erro ao buscar CEP:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  /**
+   * Salva endereço do formulário
+   */
+  const handleSalvarEndereco = (e) => {
+    e.preventDefault();
+
+    // Valida campos obrigatórios
+    if (!enderecoForm.cep || !enderecoForm.logradouro || !enderecoForm.numero ||
+        !enderecoForm.bairro || !enderecoForm.cidade || !enderecoForm.estado) {
+      setErro('Por favor, preencha todos os campos obrigatórios do endereço.');
+      return;
+    }
+
+    // Salva no localStorage
+    localStorage.setItem('endereco', JSON.stringify(enderecoForm));
+    setEndereco(enderecoForm);
+
+    // Fecha modal
+    setIsModalOpen(false);
+    setErro('');
+
+    console.log('Endereço salvo:', enderecoForm);
   };
 
   /**
@@ -160,16 +235,23 @@ function TelaPagamento() {
                 {endereco.bairro} - {endereco.cidade}/{endereco.estado}
               </p>
               <p className={styles.enderecoCep}>CEP: {endereco.cep}</p>
-              <div className={styles.editarEnderecoContainer}>
-                <CepInput key={modalKey} onEnderecoChange={() => setModalKey(prev => prev + 1)} />
-              </div>
+              <button
+                className={styles.editarEnderecoButton}
+                onClick={handleAbrirModal}
+              >
+                Alterar endereço
+              </button>
             </div>
           ) : (
             <div className={styles.semEndereco}>
               <p>Nenhum endereço cadastrado</p>
-              <div className={styles.cepInputWrapper}>
-                <CepInput key={modalKey} onEnderecoChange={() => setModalKey(prev => prev + 1)} />
-              </div>
+              <button
+                className={styles.adicionarEnderecoButton}
+                onClick={handleAbrirModal}
+              >
+                <MapPin size={16} />
+                Cadastrar Endereço
+              </button>
             </div>
           )}
         </div>
@@ -192,6 +274,149 @@ function TelaPagamento() {
           </div>
         )}
       </main>
+
+      {/* Modal de Endereço */}
+      {isModalOpen && (
+        <div className={styles.modalOverlay} onClick={handleFecharModal}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={handleFecharModal}>
+              <X size={20} />
+            </button>
+
+            <div className={styles.modalHeader}>
+              <h3>Endereço de Entrega</h3>
+              <p className={styles.modalSubtitle}>
+                Preencha o endereço completo para entrega do pedido.
+              </p>
+            </div>
+
+            <form onSubmit={handleSalvarEndereco} className={styles.enderecoForm}>
+              <div className={styles.formGrid}>
+                <div className={styles.formGroup}>
+                  <label>CEP *</label>
+                  <input
+                    type="text"
+                    value={enderecoForm.cep}
+                    onChange={handleCepChange}
+                    placeholder="00000-000"
+                    maxLength={9}
+                    required
+                  />
+                </div>
+
+                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                  <label>Logradouro *</label>
+                  <input
+                    type="text"
+                    value={enderecoForm.logradouro}
+                    onChange={(e) => handleEnderecoChange('logradouro', e.target.value)}
+                    placeholder="Rua, Avenida, etc."
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Número *</label>
+                  <input
+                    type="text"
+                    value={enderecoForm.numero}
+                    onChange={(e) => handleEnderecoChange('numero', e.target.value)}
+                    placeholder="123"
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Complemento</label>
+                  <input
+                    type="text"
+                    value={enderecoForm.complemento}
+                    onChange={(e) => handleEnderecoChange('complemento', e.target.value)}
+                    placeholder="Apto, Sala..."
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Bairro *</label>
+                  <input
+                    type="text"
+                    value={enderecoForm.bairro}
+                    onChange={(e) => handleEnderecoChange('bairro', e.target.value)}
+                    placeholder="Centro"
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Cidade *</label>
+                  <input
+                    type="text"
+                    value={enderecoForm.cidade}
+                    onChange={(e) => handleEnderecoChange('cidade', e.target.value)}
+                    placeholder="São Paulo"
+                    required
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Estado *</label>
+                  <select
+                    value={enderecoForm.estado}
+                    onChange={(e) => handleEnderecoChange('estado', e.target.value)}
+                    required
+                  >
+                    <option value="">Selecione</option>
+                    <option value="AC">AC</option>
+                    <option value="AL">AL</option>
+                    <option value="AP">AP</option>
+                    <option value="AM">AM</option>
+                    <option value="BA">BA</option>
+                    <option value="CE">CE</option>
+                    <option value="DF">DF</option>
+                    <option value="ES">ES</option>
+                    <option value="GO">GO</option>
+                    <option value="MA">MA</option>
+                    <option value="MT">MT</option>
+                    <option value="MS">MS</option>
+                    <option value="MG">MG</option>
+                    <option value="PA">PA</option>
+                    <option value="PB">PB</option>
+                    <option value="PR">PR</option>
+                    <option value="PE">PE</option>
+                    <option value="PI">PI</option>
+                    <option value="RJ">RJ</option>
+                    <option value="RN">RN</option>
+                    <option value="RS">RS</option>
+                    <option value="RO">RO</option>
+                    <option value="RR">RR</option>
+                    <option value="SC">SC</option>
+                    <option value="SP">SP</option>
+                    <option value="SE">SE</option>
+                    <option value="TO">TO</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className={styles.formActions}>
+                <button
+                  type="button"
+                  className={styles.cancelButton}
+                  onClick={handleFecharModal}
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className={styles.saveButton}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Buscando...' : 'Salvar Endereço'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <footer className={styles.footer}>
         <button
