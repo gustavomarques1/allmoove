@@ -78,30 +78,10 @@ function TelaPagamento() {
 
       // Monta dados do pedido conforme API
       const dadosPedido = {
-        assistenciaTecnicaId: parseInt(idPessoa),
+        idPessoa: parseInt(idPessoa),  // ✅ CORRIGIDO: Backend espera idPessoa
         empresa: 1, // TODO: Buscar do usuário logado
         estabelecimento: 1, // TODO: Buscar do usuário logado
-        fornecedor: opcaoSelecionada?.origem || 'WEFIX',
-        tipoEntrega: opcaoSelecionada?.titulo === 'Entrega Expressa' ? 'Urgente' : 'Normal',
-        metodoPagamento: metodoPagamento,
-        items: cartItems.map(item => ({
-          produtoId: item.id,
-          nome: item.nome,
-          quantidade: item.quantity,
-          preco: item.price || 0
-        })),
-        endereco: {
-          cep: endereco.cep,
-          logradouro: endereco.logradouro,
-          numero: endereco.numero,
-          complemento: endereco.complemento || '',
-          bairro: endereco.bairro,
-          cidade: endereco.cidade,
-          estado: endereco.estado
-        },
-        valorFrete: valorFrete,
-        valorProdutos: valorProdutos,
-        totalPago: valorTotal
+        valorFrete: valorFrete
       };
 
       console.log('📤 Enviando pedido para API:', dadosPedido);

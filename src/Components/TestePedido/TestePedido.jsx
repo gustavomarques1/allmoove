@@ -24,40 +24,18 @@ function TestePedido() {
       console.log('   IDs:', pedidosAntes.map(p => p.id).join(', '));
 
       // 2. Criar pedido de teste
-      const timestamp = Date.now();
       const pedidoTeste = {
-        assistenciaTecnicaId: idPessoa,
-        empresa: 1, // ← ADICIONADO: Backend filtra por empresa/estabelecimento!
-        estabelecimento: 1, // ← ADICIONADO
-        fornecedor: 'WEFIX',
-        tipoEntrega: 'Normal',
-        metodoPagamento: 'Pix',
-        items: [
-          {
-            produtoId: 1,
-            nome: `Produto Teste ${timestamp}`,
-            quantidade: 1,
-            preco: 99.90
-          }
-        ],
-        endereco: {
-          cep: '01310-100',
-          logradouro: 'Avenida Paulista',
-          numero: '1000',
-          complemento: 'Teste',
-          bairro: 'Bela Vista',
-          cidade: 'São Paulo',
-          estado: 'SP'
-        },
-        valorFrete: 15.00,
-        valorProdutos: 99.90,
-        totalPago: 114.90
+        idPessoa: parseInt(idPessoa),  // ✅ CORRIGIDO: Backend espera idPessoa
+        empresa: 1,
+        estabelecimento: 1,
+        valorFrete: 15.00
       };
 
       console.log('\n📤 CRIANDO PEDIDO...');
-      console.log('   assistenciaTecnicaId:', pedidoTeste.assistenciaTecnicaId);
-      console.log('   fornecedor:', pedidoTeste.fornecedor);
-      console.log('   total:', pedidoTeste.totalPago);
+      console.log('   idPessoa:', pedidoTeste.idPessoa);
+      console.log('   empresa:', pedidoTeste.empresa);
+      console.log('   estabelecimento:', pedidoTeste.estabelecimento);
+      console.log('   valorFrete:', pedidoTeste.valorFrete);
 
       const pedidoCriado = await createPedido(pedidoTeste);
 
@@ -74,7 +52,9 @@ function TestePedido() {
       console.log('\n🔍 BUSCANDO PEDIDO CRIADO...');
       const pedidoBuscado = await getPedidoPorId(pedidoCriado.id);
       console.log('   Pedido encontrado:', pedidoBuscado.id);
-      console.log('   assistenciaTecnicaId:', pedidoBuscado.assistenciaTecnicaId);
+      console.log('   idPessoa:', pedidoBuscado.idPessoa);
+      console.log('   empresa:', pedidoBuscado.empresa);
+      console.log('   estabelecimento:', pedidoBuscado.estabelecimento);
 
       // 5. Buscar TODOS os pedidos DEPOIS de criar
       const pedidosDepois = await getPedidosDaAssistencia(idPessoa);

@@ -88,16 +88,11 @@ export const getPedidosDaAssistencia = async (idPessoa = null) => {
 /**
  * Cria um novo pedido de peças
  * @param {Object} dadosPedido - Dados completos do pedido
- * @param {number} dadosPedido.assistenciaTecnicaId - ID da assistência técnica
- * @param {string} dadosPedido.fornecedor - Nome do fornecedor
- * @param {string} dadosPedido.tipoEntrega - Tipo de entrega ("Normal" ou "Urgente")
- * @param {string} dadosPedido.metodoPagamento - Método de pagamento ("Pix" ou "Cartão de Crédito")
- * @param {Array} dadosPedido.items - Lista de itens do pedido
- * @param {Object} dadosPedido.endereco - Endereço de entrega
+ * @param {number} dadosPedido.idPessoa - ID da pessoa/assistência técnica
+ * @param {number} dadosPedido.empresa - ID da empresa
+ * @param {number} dadosPedido.estabelecimento - ID do estabelecimento
  * @param {number} dadosPedido.valorFrete - Valor do frete
- * @param {number} dadosPedido.valorProdutos - Valor total dos produtos
- * @param {number} dadosPedido.totalPago - Valor total do pedido (produtos + frete)
- * @returns {Promise<Object>} Dados do pedido criado com ID e código de entrega
+ * @returns {Promise<Object>} Dados do pedido criado com ID
  * @throws {Error} Se os dados forem inválidos ou houver erro na criação
  */
 export const createPedido = async (dadosPedido) => {
@@ -108,9 +103,17 @@ export const createPedido = async (dadosPedido) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Criando novo pedido:', dadosPedido);
+    // ✅ CORREÇÃO: Mapear assistenciaTecnicaId → idPessoa (campo correto do backend)
+    const payload = {
+      idPessoa: dadosPedido.idPessoa || dadosPedido.assistenciaTecnicaId,
+      empresa: dadosPedido.empresa,
+      estabelecimento: dadosPedido.estabelecimento,
+      valorFrete: dadosPedido.valorFrete
+    };
 
-    const response = await api.post('/api/Pedidos', dadosPedido, {
+    console.log('📡 Criando novo pedido:', payload);
+
+    const response = await api.post('/api/Pedidos', payload, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -287,85 +290,21 @@ export const validarDadosPedido = (dadosPedido) => {
   const errors = [];
 
   // Validações básicas
-  if (!dadosPedido.assistenciaTecnicaId) {
-    errors.push('ID da assistência técnica é obrigatório');
+  if (!dadosPedido.idPessoa && !dadosPedido.assistenciaTecnicaId) {
+    errors.push('ID da pessoa/assistência técnica é obrigatório');
   }
 
-  if (!dadosPedido.fornecedor || dadosPedido.fornecedor.trim() === '') {
-    errors.push('Fornecedor é obrigatório');
+  if (!dadosPedido.empresa) {
+    errors.push('ID da empresa é obrigatório');
   }
 
-  if (!dadosPedido.tipoEntrega || !['Normal', 'Urgente'].includes(dadosPedido.tipoEntrega)) {
-    errors.push('Tipo de entrega inválido (deve ser "Normal" ou "Urgente")');
+  if (!dadosPedido.estabelecimento) {
+    errors.push('ID do estabelecimento é obrigatório');
   }
 
-  if (!dadosPedido.metodoPagamento || !['Pix', 'Cartão de Crédito'].includes(dadosPedido.metodoPagamento)) {
-    errors.push('Método de pagamento inválido (deve ser "Pix" ou "Cartão de Crédito")');
-  }
-
-  // Validação de items
-  if (!dadosPedido.items || !Array.isArray(dadosPedido.items) || dadosPedido.items.length === 0) {
-    errors.push('O pedido deve conter pelo menos 1 item');
-  } else {
-    dadosPedido.items.forEach((item, index) => {
-      if (!item.produtoId) {
-        errors.push(`Item ${index + 1}: ID do produto é obrigatório`);
-      }
-      if (!item.nome || item.nome.trim() === '') {
-        errors.push(`Item ${index + 1}: Nome do produto é obrigatório`);
-      }
-      if (!item.quantidade || item.quantidade < 1) {
-        errors.push(`Item ${index + 1}: Quantidade deve ser maior que 0`);
-      }
-      if (!item.preco || item.preco <= 0) {
-        errors.push(`Item ${index + 1}: Preço deve ser maior que 0`);
-      }
-    });
-  }
-
-  // Validação de endereço
-  if (!dadosPedido.endereco) {
-    errors.push('Endereço de entrega é obrigatório');
-  } else {
-    const { cep, logradouro, numero, bairro, cidade, estado } = dadosPedido.endereco;
-
-    if (!cep || !/^\d{5}-?\d{3}$/.test(cep)) {
-      errors.push('CEP inválido (formato: #####-### ou ########)');
-    }
-    if (!logradouro || logradouro.trim() === '') {
-      errors.push('Logradouro é obrigatório');
-    }
-    if (!numero || numero.trim() === '') {
-      errors.push('Número do endereço é obrigatório');
-    }
-    if (!bairro || bairro.trim() === '') {
-      errors.push('Bairro é obrigatório');
-    }
-    if (!cidade || cidade.trim() === '') {
-      errors.push('Cidade é obrigatória');
-    }
-    if (!estado || estado.trim() === '' || estado.length !== 2) {
-      errors.push('Estado inválido (use sigla de 2 letras, ex: SP)');
-    }
-  }
-
-  // Validação de valores
+  // Validação de valores (valorFrete é opcional, pode ser 0)
   if (typeof dadosPedido.valorFrete !== 'number' || dadosPedido.valorFrete < 0) {
     errors.push('Valor do frete inválido');
-  }
-
-  if (typeof dadosPedido.valorProdutos !== 'number' || dadosPedido.valorProdutos <= 0) {
-    errors.push('Valor dos produtos inválido');
-  }
-
-  if (typeof dadosPedido.totalPago !== 'number' || dadosPedido.totalPago <= 0) {
-    errors.push('Valor total inválido');
-  }
-
-  // Validação de cálculo
-  const totalCalculado = dadosPedido.valorProdutos + dadosPedido.valorFrete;
-  if (Math.abs(totalCalculado - dadosPedido.totalPago) > 0.01) { // Tolerância para arredondamento
-    errors.push(`Total pago não corresponde à soma (Produtos: ${dadosPedido.valorProdutos} + Frete: ${dadosPedido.valorFrete} ≠ Total: ${dadosPedido.totalPago})`);
   }
 
   return {
