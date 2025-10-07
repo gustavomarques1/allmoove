@@ -13,28 +13,28 @@ export const usePedidos = () => {
     pedidosEmAndamento: 0
   });
 
+  const carregarPedidos = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const data = await getPedidosDaAssistencia();
+      setPedidos(data);
+
+      // Calcula os indicadores baseado nos pedidos
+      calcularIndicadores(data);
+
+    } catch (err) {
+      console.error('Erro ao carregar pedidos:', err);
+      setError(err.message || 'Erro ao carregar pedidos');
+      // Se houver erro, mantém os indicadores zerados
+      setPedidos([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const carregarPedidos = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const data = await getPedidosDaAssistencia();
-        setPedidos(data);
-
-        // Calcula os indicadores baseado nos pedidos
-        calcularIndicadores(data);
-
-      } catch (err) {
-        console.error('Erro ao carregar pedidos:', err);
-        setError(err.message || 'Erro ao carregar pedidos');
-        // Se houver erro, mantém os indicadores zerados
-        setPedidos([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     carregarPedidos();
   }, []);
 
@@ -79,6 +79,7 @@ export const usePedidos = () => {
     pedidos,
     isLoading,
     error,
-    indicadores
+    indicadores,
+    recarregar: carregarPedidos
   };
 };

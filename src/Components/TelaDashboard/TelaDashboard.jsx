@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./TelaDashboard.module.css";
-import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp } from "lucide-react";
+import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, RefreshCw } from "lucide-react";
 import { Link } from "react-router-dom";
 
 // Importe o hook personalizado
@@ -9,7 +9,7 @@ import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
 
 function TelaDashboard() {
   // Usa o hook para buscar pedidos e indicadores
-  const { pedidos, isLoading, error, indicadores } = usePedidos();
+  const { pedidos, isLoading, error, indicadores, recarregar } = usePedidos();
 
   // Estado para controlar expansão da lista de pedidos
   const [showAllOrders, setShowAllOrders] = useState(false);
@@ -32,6 +32,15 @@ function TelaDashboard() {
           <h2 className={styles["dashboard-subtitle"]}>Assistência Técnica</h2>
           
           <div className={styles["header-actions-group"]}>
+            <button
+              onClick={recarregar}
+              disabled={isLoading}
+              className={styles["refresh-button-header"]}
+              title="Atualizar pedidos"
+            >
+              <RefreshCw size={16} className={isLoading ? styles["spinning"] : ""} />
+              Atualizar
+            </button>
             <Link to="/assistencia/loja" className={styles["new-request-link-header"]}>
               <button className={styles["new-request-button-header"]}>
                 Buscar Produtos
