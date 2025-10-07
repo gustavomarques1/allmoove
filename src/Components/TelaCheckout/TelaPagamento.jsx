@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './TelaPagamento.module.css';
-import { ArrowLeft, MapPin, X } from 'lucide-react';
+import { ArrowLeft, MapPin, X, Loader } from 'lucide-react';
 
 // Importando os componentes filhos
 import ResumoPedido from './ResumoPedidoPagamento/ResumoPedido';
 import MetodosPagamento from './MetodosPagamento/MetodosPagamento';
+import Stepper from '../Shared/Stepper/Stepper';
+import Toast from '../Shared/Toast/Toast';
 
 // Importando service de pedidos
 import { createPedido, validarDadosPedido } from '../../api/pedidosServices';
@@ -20,7 +22,10 @@ function TelaPagamento() {
   const [criandoPedido, setCriandoPedido] = useState(false);
   const [erro, setErro] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingCep, setIsLoadingCep] = useState(false);
+  const [cepError, setCepError] = useState('');
+  const [cepSuccess, setCepSuccess] = useState(false);
+  const [toast, setToast] = useState(null);
   const [enderecoForm, setEnderecoForm] = useState({
     cep: '',
     logradouro: '',
@@ -30,6 +35,14 @@ function TelaPagamento() {
     cidade: '',
     estado: ''
   });
+
+  // Steps do checkout
+  const checkoutSteps = [
+    { label: 'Carrinho' },
+    { label: 'Entrega' },
+    { label: 'Pagamento' },
+    { label: 'Confirmação' }
+  ];
 
   // Carrega endereço do localStorage
   useEffect(() => {
@@ -44,6 +57,9 @@ function TelaPagamento() {
   const valorProdutos = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const valorFrete = opcaoSelecionada?.preco || 0;
   const valorTotal = valorProdutos + valorFrete;
+
+  // Verifica se pode confirmar pagamento
+  const podeConfirmar = validarEndereco() && cartItems.length > 0 && !criandoPedido;
 
   /**
    * Valida se o endereço está completo
@@ -94,14 +110,21 @@ function TelaPagamento() {
 
     handleEnderecoChange('cep', cepFormatado);
 
+    // Limpa mensagens anteriores
+    setCepError('');
+    setCepSuccess(false);
+
     // Busca automática quando CEP completo
     if (cepLimpo.length === 8) {
-      setIsLoading(true);
+      setIsLoadingCep(true);
       try {
         const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
         const data = await response.json();
 
-        if (!data.erro) {
+        if (data.erro) {
+          setCepError('CEP não encontrado. Verifique e tente novamente.');
+          setCepSuccess(false);
+        } else {
           setEnderecoForm(prev => ({
             ...prev,
             logradouro: data.logradouro || prev.logradouro,
@@ -109,11 +132,15 @@ function TelaPagamento() {
             cidade: data.localidade || prev.cidade,
             estado: data.uf || prev.estado
           }));
+          setCepSuccess(true);
+          setCepError('');
         }
       } catch (error) {
         console.error('Erro ao buscar CEP:', error);
+        setCepError('Erro ao buscar CEP. Tente novamente.');
+        setCepSuccess(false);
       } finally {
-        setIsLoading(false);
+        setIsLoadingCep(false);
       }
     }
   };
@@ -138,6 +165,12 @@ function TelaPagamento() {
     // Fecha modal
     setIsModalOpen(false);
     setErro('');
+
+    // Mostra toast de sucesso
+    setToast({
+      message: 'Endereço salvo com sucesso!',
+      type: 'success'
+    });
 
     console.log('Endereço salvo:', enderecoForm);
   };
@@ -217,6 +250,18 @@ function TelaPagamento() {
         <h2>Pagamento</h2>
       </header>
 
+      {/* Stepper de Progresso */}
+      <Stepper steps={checkoutSteps} currentStep={3} />
+
+      {/* Toast de Notificação */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+
       <main className={styles.mainContent}>
         {/* Card de Endereço */}
         <div className={styles.enderecoCard}>
@@ -294,14 +339,24 @@ function TelaPagamento() {
               <div className={styles.formGrid}>
                 <div className={styles.formGroup}>
                   <label>CEP *</label>
-                  <input
-                    type="text"
-                    value={enderecoForm.cep}
-                    onChange={handleCepChange}
-                    placeholder="00000-000"
-                    maxLength={9}
-                    required
-                  />
+                  <div className={styles.inputWithFeedback}>
+                    <input
+                      type="text"
+                      value={enderecoForm.cep}
+                      onChange={handleCepChange}
+                      placeholder="00000-000"
+                      maxLength={9}
+                      required
+                      className={cepSuccess ? styles.inputSuccess : cepError ? styles.inputError : ''}
+                    />
+                    {isLoadingCep && (
+                      <div className={styles.inputIcon}>
+                        <Loader size={16} className={styles.spinner} />
+                      </div>
+                    )}
+                  </div>
+                  {cepError && <span className={styles.errorMessage}>{cepError}</span>}
+                  {cepSuccess && <span className={styles.successMessage}>✓ CEP válido</span>}
                 </div>
 
                 <div className={`${styles.formGroup} ${styles.fullWidth}`}>
@@ -408,9 +463,9 @@ function TelaPagamento() {
                 <button
                   type="submit"
                   className={styles.saveButton}
-                  disabled={isLoading}
+                  disabled={isLoadingCep}
                 >
-                  {isLoading ? 'Buscando...' : 'Salvar Endereço'}
+                  {isLoadingCep ? 'Buscando...' : 'Salvar Endereço'}
                 </button>
               </div>
             </form>
@@ -429,7 +484,13 @@ function TelaPagamento() {
         <button
           className={`${styles.actionButton} ${styles.primary}`}
           onClick={handleConfirmPayment}
-          disabled={criandoPedido}
+          disabled={!podeConfirmar}
+          title={
+            !podeConfirmar ? (
+              !validarEndereco() ? 'Preencha o endereço de entrega' :
+              cartItems.length === 0 ? 'Adicione itens ao carrinho' : ''
+            ) : ''
+          }
         >
           {criandoPedido ? 'Processando...' : 'Confirmar Pagamento'}
         </button>
