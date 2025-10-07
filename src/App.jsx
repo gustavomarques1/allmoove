@@ -10,6 +10,7 @@ import TelaPagamento from "./Components/TelaCheckout/TelaPagamento";
 // 1. Importe o componente da nova tela de Confirmação
 // (Ajuste o caminho se você salvou o arquivo em outro lugar)
 import TelaConfirmacao from "./Components/TelaPagamentoConfirmado/TelaConfirmacao";
+import TestePedido from "./Components/TestePedido/TestePedido";
 
 function App() {
   return (
@@ -43,6 +44,9 @@ function App() {
         />
 
         <Route path="/distribuidor/dashboard" element={<DistribuidorDashboard/>} />
+
+        {/* Rota de teste para debug de pedidos */}
+        <Route path="/teste-pedido" element={<TestePedido />} />
       </Routes>
     </Router>
   );
