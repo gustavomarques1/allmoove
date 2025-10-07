@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchPedidosDaAssistencia } from '../api/assistencia/pedidosServices';
+import { getPedidosDaAssistencia } from '../api/pedidosServices';
 
 export const usePedidos = () => {
   const [pedidos, setPedidos] = useState([]);
@@ -19,7 +19,7 @@ export const usePedidos = () => {
         setIsLoading(true);
         setError(null);
 
-        const data = await fetchPedidosDaAssistencia();
+        const data = await getPedidosDaAssistencia();
         setPedidos(data);
 
         // Calcula os indicadores baseado nos pedidos
