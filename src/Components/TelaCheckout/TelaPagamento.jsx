@@ -207,92 +207,100 @@ function TelaPagamento() {
       console.log('💳 Método de pagamento:', metodoPagamento);
       console.log('🚚 Opção selecionada:', opcaoSelecionada);
 
-      // Determina fornecedor baseado nos itens do carrinho
-      // (assumindo que todos os itens são do mesmo fornecedor por enquanto)
-      const fornecedor = cartItems[0]?.fornecedor || cartItems[0]?.FORNECEDOR || 'TechParts SP';
+      // Agrupa itens por fornecedor
+      const itensPorFornecedor = cartItems.reduce((grupos, item) => {
+        const fornecedor = item.fornecedor || item.FORNECEDOR || 'TechParts SP';
+        if (!grupos[fornecedor]) {
+          grupos[fornecedor] = [];
+        }
+        grupos[fornecedor].push(item);
+        return grupos;
+      }, {});
+
+      console.log('📦 Itens agrupados por fornecedor:', itensPorFornecedor);
 
       // Determina tipo de entrega baseado na opção selecionada
       const tipoEntrega = opcaoSelecionada?.tipo === 'urgente' ? 'Urgente' : 'Normal';
 
-      // Monta dados completos do pedido conforme especificação da API
-      const dadosPedido = {
-        idPessoa: parseInt(idPessoa),
-        fornecedor: fornecedor,
-        tipoEntrega: tipoEntrega,
-        metodoPagamento: metodoPagamento, // "Pix" ou "Cartão de Crédito"
-        items: cartItems,
-        endereco: endereco,
-        valorFrete: valorFrete,
-        valorProdutos: valorProdutos,
-        totalPago: valorTotal
-      };
+      // Cria um pedido para cada fornecedor
+      const pedidosCriados = [];
 
-      console.log('📤 Enviando pedido completo para API:', dadosPedido);
-      console.log('📤 JSON stringified:', JSON.stringify(dadosPedido, null, 2));
+      for (const [fornecedor, items] of Object.entries(itensPorFornecedor)) {
+        console.log(`\n📤 Criando pedido para fornecedor: ${fornecedor}`);
+        console.log(`📋 ${items.length} itens deste fornecedor`);
 
-      // Valida dados antes de enviar
-      const validacao = validarDadosPedido(dadosPedido);
-      if (!validacao.valid) {
-        console.error('❌ Erros de validação:', validacao.errors);
-        throw new Error(`Dados inválidos: ${validacao.errors.join(', ')}`);
-      }
+        // Calcula valores apenas dos itens deste fornecedor
+        const valorProdutosFornecedor = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        const valorFreteFornecedor = valorFrete / Object.keys(itensPorFornecedor).length; // Divide frete entre fornecedores
+        const totalPagoFornecedor = valorProdutosFornecedor + valorFreteFornecedor;
 
-      // Chama API para criar pedido
-      const pedidoCriado = await createPedido(dadosPedido);
-
-      console.log('✅ Pedido criado com sucesso:', pedidoCriado);
-      console.log('✅ Resposta da API (JSON):', JSON.stringify(pedidoCriado, null, 2));
-
-      // WORKAROUND: Backend atual não processa todos os dados
-      // Mesclamos resposta da API com dados que enviamos
-      const pedidoCompleto = {
-        // Dados da API (id, dataHoraCriacaoRegistro, etc.)
-        ...pedidoCriado,
-
-        // Dados enviados que o backend não processou/retornou
-        fornecedor: fornecedor,
-        tipoEntrega: tipoEntrega,
-        metodoPagamento: metodoPagamento,
-        items: cartItems, // Backend não retornou items
-        endereco: endereco, // Backend não salvou endereço
-        valorFrete: valorFrete,
-        valorProdutos: valorProdutos,
-        totalPago: valorTotal,
-
-        // Gera código de entrega se backend não retornou
-        codigoEntrega: pedidoCriado.codigoEntrega || `M${Math.floor(1000 + Math.random() * 9000)}X${Math.floor(Math.random() * 10)}`,
-
-        // Status padrão se backend não retornou
-        status: pedidoCriado.situacao || 'Aguardando Aceite',
-
-        // Prazo estimado baseado no tipo de entrega
-        prazoEstimado: tipoEntrega === 'Urgente' ? '24-48 horas' : '3-5 dias úteis',
-
-        // Data do pedido
-        dataPedido: pedidoCriado.dataHoraCriacaoRegistro || new Date().toISOString()
-      };
-
-      console.log('✅ Pedido completo (API + dados enviados):', pedidoCompleto);
-
-      // WORKAROUND: Salva dados do pedido no localStorage (já que backend não salva)
-      // Isso permite que Dashboard mostre informações completas
-      try {
-        localStorage.setItem(`pedido_${pedidoCriado.id}`, JSON.stringify({
+        // Monta dados completos do pedido conforme especificação da API
+        const dadosPedido = {
+          idPessoa: parseInt(idPessoa),
           fornecedor: fornecedor,
           tipoEntrega: tipoEntrega,
           metodoPagamento: metodoPagamento,
-          codigoEntrega: pedidoCompleto.codigoEntrega,
-          totalPago: valorTotal
-        }));
-        console.log('💾 Dados do pedido salvos no cache local');
-      } catch (e) {
-        console.warn('⚠️ Não foi possível salvar cache do pedido:', e);
+          items: items,
+          endereco: endereco,
+          valorFrete: valorFreteFornecedor,
+          valorProdutos: valorProdutosFornecedor,
+          totalPago: totalPagoFornecedor
+        };
+
+        console.log('📤 Enviando pedido para API:', dadosPedido);
+
+        // Valida dados antes de enviar
+        const validacao = validarDadosPedido(dadosPedido);
+        if (!validacao.valid) {
+          console.error('❌ Erros de validação:', validacao.errors);
+          throw new Error(`Dados inválidos para fornecedor ${fornecedor}: ${validacao.errors.join(', ')}`);
+        }
+
+        // Chama API para criar pedido
+        const pedidoCriado = await createPedido(dadosPedido);
+        console.log(`✅ Pedido #${pedidoCriado.id} criado para ${fornecedor}`);
+
+        // WORKAROUND: Backend atual não processa todos os dados
+        const pedidoCompleto = {
+          ...pedidoCriado,
+          fornecedor: fornecedor,
+          tipoEntrega: tipoEntrega,
+          metodoPagamento: metodoPagamento,
+          items: items,
+          endereco: endereco,
+          valorFrete: valorFreteFornecedor,
+          valorProdutos: valorProdutosFornecedor,
+          totalPago: totalPagoFornecedor,
+          codigoEntrega: pedidoCriado.codigoEntrega || `M${Math.floor(1000 + Math.random() * 9000)}X${Math.floor(Math.random() * 10)}`,
+          status: pedidoCriado.situacao || 'Aguardando Aceite',
+          prazoEstimado: tipoEntrega === 'Urgente' ? '24-48 horas' : '3-5 dias úteis',
+          dataPedido: pedidoCriado.dataHoraCriacaoRegistro || new Date().toISOString()
+        };
+
+        // Salva no cache local
+        try {
+          localStorage.setItem(`pedido_${pedidoCriado.id}`, JSON.stringify({
+            fornecedor: fornecedor,
+            tipoEntrega: tipoEntrega,
+            metodoPagamento: metodoPagamento,
+            codigoEntrega: pedidoCompleto.codigoEntrega,
+            totalPago: totalPagoFornecedor
+          }));
+          console.log(`💾 Cache salvo para pedido #${pedidoCriado.id}`);
+        } catch (e) {
+          console.warn('⚠️ Não foi possível salvar cache:', e);
+        }
+
+        pedidosCriados.push(pedidoCompleto);
       }
 
-      // Navega para tela de confirmação passando dados completos
+      console.log(`\n✅ Total de ${pedidosCriados.length} pedido(s) criado(s)!`);
+
+      // Navega para tela de confirmação passando todos os pedidos
       navigate('/assistencia/payment-success', {
         state: {
-          pedidoConfirmado: pedidoCompleto
+          pedidoConfirmado: pedidosCriados.length === 1 ? pedidosCriados[0] : pedidosCriados[0], // Por enquanto mostra apenas o primeiro
+          todosPedidos: pedidosCriados // Passa todos para referência futura
         }
       });
 
