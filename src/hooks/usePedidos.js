@@ -19,10 +19,24 @@ export const usePedidos = () => {
       setError(null);
 
       const data = await getPedidosDaAssistencia();
-      setPedidos(data);
+
+      // Normaliza dados do backend (mapeia campos diferentes)
+      const pedidosNormalizados = data.map(pedido => ({
+        ...pedido,
+        // Compatibilidade de campos
+        status: pedido.status || pedido.situacao || pedido.SITUACAO || 'Aguardando Aceite',
+        fornecedor: pedido.fornecedor || pedido.FORNECEDOR || 'N/A',
+        codigoEntrega: pedido.codigoEntrega || pedido.codigo_entrega || pedido.CODIGO_ENTREGA || 'N/A',
+        tipoEntrega: pedido.tipoEntrega || pedido.tipo_entrega || pedido.TIPO_ENTREGA || 'Normal',
+        totalPago: pedido.totalPago || pedido.total_pago || pedido.TOTAL_PAGO || pedido.valorFrete || 0,
+        dataPedido: pedido.dataPedido || pedido.dataHoraCriacaoRegistro || pedido.DATA_HORA_CRICAO_REGISTRO
+      }));
+
+      console.log('📦 Pedidos normalizados:', pedidosNormalizados);
+      setPedidos(pedidosNormalizados);
 
       // Calcula os indicadores baseado nos pedidos
-      calcularIndicadores(data);
+      calcularIndicadores(pedidosNormalizados);
 
     } catch (err) {
       console.error('Erro ao carregar pedidos:', err);
