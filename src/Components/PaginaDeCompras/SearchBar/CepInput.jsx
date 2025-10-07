@@ -72,6 +72,9 @@ function CepInput() {
         // Salva no localStorage
         localStorage.setItem('endereco', JSON.stringify(novoEndereco));
 
+        // Dispara evento customizado para atualizar outros componentes
+        window.dispatchEvent(new Event('enderecoUpdated'));
+
         setIsModalOpen(false);
         setCep('');
         setIsLoading(false);
@@ -101,6 +104,9 @@ function CepInput() {
     // Salva endereço completo no localStorage
     localStorage.setItem('endereco', JSON.stringify(endereco));
     setSavedCep(endereco.cep);
+
+    // Dispara evento customizado para atualizar outros componentes
+    window.dispatchEvent(new Event('enderecoUpdated'));
 
     console.log('Endereço completo salvo:', endereco);
 

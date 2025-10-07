@@ -6,6 +6,7 @@ import { ArrowLeft, MapPin } from 'lucide-react';
 // Importando os componentes filhos
 import ResumoPedido from './ResumoPedidoPagamento/ResumoPedido';
 import MetodosPagamento from './MetodosPagamento/MetodosPagamento';
+import CepInput from '../PaginaDeCompras/SearchBar/CepInput';
 
 // Importando service de pedidos
 import { createPedido, validarDadosPedido } from '../../api/pedidosServices';
@@ -19,14 +20,37 @@ function TelaPagamento() {
   const [metodoPagamento, setMetodoPagamento] = useState('Pix');
   const [criandoPedido, setCriandoPedido] = useState(false);
   const [erro, setErro] = useState('');
+  const [modalKey, setModalKey] = useState(0); // Para forçar re-render do CepInput
 
   // Carrega endereço do localStorage
   useEffect(() => {
-    const enderecoSalvo = localStorage.getItem('endereco');
-    if (enderecoSalvo) {
-      setEndereco(JSON.parse(enderecoSalvo));
-    }
-  }, []);
+    const carregarEndereco = () => {
+      const enderecoSalvo = localStorage.getItem('endereco');
+      if (enderecoSalvo) {
+        setEndereco(JSON.parse(enderecoSalvo));
+      }
+    };
+
+    carregarEndereco();
+
+    // Escuta mudanças no localStorage (quando modal salva)
+    const handleStorageChange = () => {
+      carregarEndereco();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Também escuta um evento customizado para mudanças na mesma aba
+    const handleEnderecoUpdate = () => {
+      carregarEndereco();
+    };
+    window.addEventListener('enderecoUpdated', handleEnderecoUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('enderecoUpdated', handleEnderecoUpdate);
+    };
+  }, [modalKey]);
 
   const { cartItems = [], opcaoSelecionada = null } = location.state || {};
 
@@ -41,13 +65,6 @@ function TelaPagamento() {
     if (!endereco) return false;
     const camposObrigatorios = ['cep', 'logradouro', 'numero', 'bairro', 'cidade', 'estado'];
     return camposObrigatorios.every(campo => endereco[campo] && endereco[campo].trim() !== '');
-  };
-
-  /**
-   * Navega para tela de produtos para cadastrar endereço
-   */
-  const handleAdicionarEndereco = () => {
-    navigate('/assistencia/loja');
   };
 
   /**
@@ -143,23 +160,16 @@ function TelaPagamento() {
                 {endereco.bairro} - {endereco.cidade}/{endereco.estado}
               </p>
               <p className={styles.enderecoCep}>CEP: {endereco.cep}</p>
-              <button
-                className={styles.editarEnderecoButton}
-                onClick={handleAdicionarEndereco}
-              >
-                Alterar endereço
-              </button>
+              <div className={styles.editarEnderecoContainer}>
+                <CepInput key={modalKey} onEnderecoChange={() => setModalKey(prev => prev + 1)} />
+              </div>
             </div>
           ) : (
             <div className={styles.semEndereco}>
               <p>Nenhum endereço cadastrado</p>
-              <button
-                className={styles.adicionarEnderecoButton}
-                onClick={handleAdicionarEndereco}
-              >
-                <MapPin size={16} />
-                Cadastrar Endereço
-              </button>
+              <div className={styles.cepInputWrapper}>
+                <CepInput key={modalKey} onEnderecoChange={() => setModalKey(prev => prev + 1)} />
+              </div>
             </div>
           )}
         </div>
