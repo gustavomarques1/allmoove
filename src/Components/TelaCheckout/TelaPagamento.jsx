@@ -274,6 +274,21 @@ function TelaPagamento() {
 
       console.log('✅ Pedido completo (API + dados enviados):', pedidoCompleto);
 
+      // WORKAROUND: Salva dados do pedido no localStorage (já que backend não salva)
+      // Isso permite que Dashboard mostre informações completas
+      try {
+        localStorage.setItem(`pedido_${pedidoCriado.id}`, JSON.stringify({
+          fornecedor: fornecedor,
+          tipoEntrega: tipoEntrega,
+          metodoPagamento: metodoPagamento,
+          codigoEntrega: pedidoCompleto.codigoEntrega,
+          totalPago: valorTotal
+        }));
+        console.log('💾 Dados do pedido salvos no cache local');
+      } catch (e) {
+        console.warn('⚠️ Não foi possível salvar cache do pedido:', e);
+      }
+
       // Navega para tela de confirmação passando dados completos
       navigate('/assistencia/payment-success', {
         state: {

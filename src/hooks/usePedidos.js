@@ -21,16 +21,23 @@ export const usePedidos = () => {
       const data = await getPedidosDaAssistencia();
 
       // Normaliza dados do backend (mapeia campos diferentes)
-      const pedidosNormalizados = data.map(pedido => ({
-        ...pedido,
-        // Compatibilidade de campos
-        status: pedido.status || pedido.situacao || pedido.SITUACAO || 'Aguardando Aceite',
-        fornecedor: pedido.fornecedor || pedido.FORNECEDOR || 'N/A',
-        codigoEntrega: pedido.codigoEntrega || pedido.codigo_entrega || pedido.CODIGO_ENTREGA || 'N/A',
-        tipoEntrega: pedido.tipoEntrega || pedido.tipo_entrega || pedido.TIPO_ENTREGA || 'Normal',
-        totalPago: pedido.totalPago || pedido.total_pago || pedido.TOTAL_PAGO || pedido.valorFrete || 0,
-        dataPedido: pedido.dataPedido || pedido.dataHoraCriacaoRegistro || pedido.DATA_HORA_CRICAO_REGISTRO
-      }));
+      const pedidosNormalizados = data.map(pedido => {
+        // Tenta buscar dados complementares do cache local (workaround enquanto backend não salva)
+        const pedidoCache = localStorage.getItem(`pedido_${pedido.id}`);
+        const dadosCache = pedidoCache ? JSON.parse(pedidoCache) : {};
+
+        return {
+          ...pedido,
+          // Compatibilidade de campos
+          status: pedido.status || pedido.situacao || pedido.SITUACAO || 'Aguardando Aceite',
+          fornecedor: pedido.fornecedor || pedido.FORNECEDOR || dadosCache.fornecedor || 'N/A',
+          codigoEntrega: pedido.codigoEntrega || pedido.codigo_entrega || pedido.CODIGO_ENTREGA || dadosCache.codigoEntrega || `M${pedido.id}X${Math.floor(Math.random() * 10)}`,
+          tipoEntrega: pedido.tipoEntrega || pedido.tipo_entrega || pedido.TIPO_ENTREGA || dadosCache.tipoEntrega || 'Normal',
+          totalPago: pedido.totalPago || pedido.total_pago || pedido.TOTAL_PAGO || pedido.valorFrete || dadosCache.totalPago || 0,
+          dataPedido: pedido.dataPedido || pedido.dataHoraCriacaoRegistro || pedido.DATA_HORA_CRICAO_REGISTRO,
+          metodoPagamento: pedido.metodoPagamento || pedido.formaPagamento || dadosCache.metodoPagamento || 'N/A'
+        };
+      });
 
       console.log('📦 Pedidos normalizados:', pedidosNormalizados);
       setPedidos(pedidosNormalizados);
