@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./TelaDashboard.module.css";
 import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -9,10 +9,28 @@ import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
 
 function TelaDashboard() {
   // Usa o hook para buscar pedidos e indicadores
-  const { pedidos, isLoading, error, indicadores } = usePedidos();
+  const { pedidos, isLoading, error, indicadores, recarregar } = usePedidos();
 
   // Estado para controlar expansão da lista de pedidos
   const [showAllOrders, setShowAllOrders] = useState(false);
+
+  // Recarrega pedidos quando a página ganha foco (usuário volta de outra aba/página)
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log('🔄 Dashboard ganhou foco - recarregando pedidos...');
+      recarregar();
+    };
+
+    // Adiciona listener para quando a janela ganha foco
+    window.addEventListener('focus', handleFocus);
+
+    // Também recarrega quando o componente é montado
+    console.log('✅ Dashboard montado - carregando pedidos...');
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [recarregar]);
 
   // Limita para 2 pedidos inicialmente
   const displayedOrders = showAllOrders ? pedidos : pedidos.slice(0, 2);
