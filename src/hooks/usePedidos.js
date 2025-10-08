@@ -40,6 +40,10 @@ export const usePedidos = () => {
       });
 
       console.log('📦 Pedidos normalizados:', pedidosNormalizados);
+
+      // DEBUG: Mostrar status de cada pedido
+      console.log('🔍 Status dos pedidos:', pedidosNormalizados.map(p => ({ id: p.id, status: p.status })));
+
       setPedidos(pedidosNormalizados);
 
       // Calcula os indicadores baseado nos pedidos
@@ -71,23 +75,30 @@ export const usePedidos = () => {
 
     const total = listaPedidos.length;
 
-    // Ajuste os status conforme retornados pela sua API
-    // Exemplos: "Entregue", "Concluído", "Finalizado", etc.
-    const encerrados = listaPedidos.filter(
-      p => p.status === 'Entregue' ||
-           p.status === 'Concluído' ||
-           p.status === 'Finalizado' ||
-           p.status === 'Entregue ao Cliente'
+    // Status finalizados (pedidos que chegaram ao fim do ciclo)
+    const statusEncerrados = [
+      'Entregue',
+      'Concluído',
+      'Finalizado',
+      'Entregue ao Cliente',
+      'Cancelado',
+      'Recusado'
+    ];
+
+    const encerrados = listaPedidos.filter(p =>
+      statusEncerrados.includes(p.status)
     ).length;
 
-    // Exemplos: "Aceito", "Em Trânsito", "Em Separação", "Aguardando Retirada", etc.
-    const emAndamento = listaPedidos.filter(
-      p => p.status === 'Aceito' ||
-           p.status === 'Em Trânsito' ||
-           p.status === 'Em Separação' ||
-           p.status === 'Aguardando Retirada' ||
-           p.status === 'Em Processamento'
-    ).length;
+    // Pedidos em andamento = tudo que NÃO está encerrado
+    // Isso inclui: ATIVO, Aguardando Aceite, Aceito, Em Trânsito, Em Separação, etc.
+    const emAndamento = total - encerrados;
+
+    console.log('📊 Indicadores calculados:', {
+      total,
+      encerrados,
+      emAndamento,
+      statusPedidos: listaPedidos.map(p => p.status)
+    });
 
     setIndicadores({
       totalPedidos: total,
