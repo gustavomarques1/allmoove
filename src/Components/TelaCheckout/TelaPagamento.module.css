@@ -568,3 +568,150 @@
   gap: 4px;
   margin-top: 4px;
 }
+
+/* Histórico de Endereços */
+.enderecosLista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.enderecoItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.enderecoItem:hover {
+  border-color: #ff6400;
+  box-shadow: 0 2px 8px rgba(255, 100, 0, 0.1);
+}
+
+.enderecoItemAtivo {
+  border-color: #ff6400;
+  background-color: #fff7ed;
+}
+
+.enderecoItemInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.checkIcon {
+  color: #ff6400;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.enderecoItemDetalhes {
+  flex: 1;
+}
+
+.enderecoItemNome {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 6px 0;
+}
+
+.enderecoItemEndereco {
+  font-size: 13px;
+  color: #374151;
+  margin: 0 0 4px 0;
+}
+
+.enderecoItemCidade {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.enderecoItemAcoes {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btnEditar,
+.btnExcluir {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  background-color: transparent;
+}
+
+.btnEditar {
+  color: #3b82f6;
+}
+
+.btnEditar:hover {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.btnExcluir {
+  color: #ef4444;
+}
+
+.btnExcluir:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.btnAdicionarNovo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  background-color: #f3f4f6;
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.btnAdicionarNovo:hover {
+  background-color: #e5e7eb;
+  border-color: #ff6400;
+  color: #ff6400;
+}
+
+/* Botão Voltar no formulário */
+.formActions .backButton {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.formActions .backButton:hover {
+  background-color: #e5e7eb;
+  color: #374151;
+}

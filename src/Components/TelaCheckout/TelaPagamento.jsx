@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './TelaPagamento.module.css';
-import { ArrowLeft, MapPin, X, Loader } from 'lucide-react';
+import { ArrowLeft, MapPin, X, Loader, Edit2, Trash2, Plus, Check } from 'lucide-react';
 
 // Importando os componentes filhos
 import ResumoPedido from './ResumoPedidoPagamento/ResumoPedido';
@@ -18,6 +18,9 @@ function TelaPagamento() {
 
   // Estados
   const [endereco, setEndereco] = useState(null);
+  const [enderecosHistorico, setEnderecosHistorico] = useState([]);
+  const [enderecoSelecionadoId, setEnderecoSelecionadoId] = useState(null);
+  const [modoEdicao, setModoEdicao] = useState(false); // true = adicionar/editar, false = selecionar do histórico
   const [metodoPagamento, setMetodoPagamento] = useState('Pix');
   const [criandoPedido, setCriandoPedido] = useState(false);
   const [erro, setErro] = useState('');
@@ -44,11 +47,35 @@ function TelaPagamento() {
     { label: 'Confirmação' }
   ];
 
-  // Carrega endereço do localStorage
+  // Carrega histórico de endereços do localStorage
   useEffect(() => {
-    const enderecoSalvo = localStorage.getItem('endereco');
-    if (enderecoSalvo) {
-      setEndereco(JSON.parse(enderecoSalvo));
+    // Carrega histórico de endereços
+    const historico = localStorage.getItem('enderecosHistorico');
+    if (historico) {
+      const enderecosArray = JSON.parse(historico);
+      setEnderecosHistorico(enderecosArray);
+
+      // Define o último endereço como ativo (mais recente)
+      if (enderecosArray.length > 0) {
+        const enderecoAtivo = enderecosArray[enderecosArray.length - 1];
+        setEndereco(enderecoAtivo);
+        setEnderecoSelecionadoId(enderecoAtivo.id);
+      }
+    } else {
+      // MIGRAÇÃO: Se existir endereço antigo no formato legado, migra para novo formato
+      const enderecoLegado = localStorage.getItem('endereco');
+      if (enderecoLegado) {
+        const enderecoObj = JSON.parse(enderecoLegado);
+        const novoEndereco = { ...enderecoObj, id: Date.now(), nome: 'Endereço Principal' };
+        const novoHistorico = [novoEndereco];
+
+        localStorage.setItem('enderecosHistorico', JSON.stringify(novoHistorico));
+        localStorage.removeItem('endereco'); // Remove formato legado
+
+        setEnderecosHistorico(novoHistorico);
+        setEndereco(novoEndereco);
+        setEnderecoSelecionadoId(novoEndereco.id);
+      }
     }
   }, []);
 
@@ -74,11 +101,89 @@ function TelaPagamento() {
    * Abre modal de endereço
    */
   const handleAbrirModal = () => {
+    // Se já tem endereços, mostra a lista para seleção
+    if (enderecosHistorico.length > 0) {
+      setModoEdicao(false);
+    } else {
+      // Se não tem endereços, vai direto para o formulário
+      setModoEdicao(true);
+    }
+
     // Preenche formulário com endereço atual se existir
     if (endereco) {
       setEnderecoForm(endereco);
     }
     setIsModalOpen(true);
+  };
+
+  /**
+   * Alterna para modo de adição de novo endereço
+   */
+  const handleAdicionarNovoEndereco = () => {
+    setEnderecoForm({
+      cep: '',
+      logradouro: '',
+      numero: '',
+      complemento: '',
+      bairro: '',
+      cidade: '',
+      estado: ''
+    });
+    setModoEdicao(true);
+  };
+
+  /**
+   * Seleciona um endereço do histórico
+   */
+  const handleSelecionarEndereco = (enderecoId) => {
+    const enderecoSelecionado = enderecosHistorico.find(e => e.id === enderecoId);
+    if (enderecoSelecionado) {
+      setEndereco(enderecoSelecionado);
+      setEnderecoSelecionadoId(enderecoId);
+      setIsModalOpen(false);
+
+      setToast({
+        message: 'Endereço selecionado com sucesso!',
+        type: 'success'
+      });
+    }
+  };
+
+  /**
+   * Edita um endereço do histórico
+   */
+  const handleEditarEndereco = (enderecoId) => {
+    const enderecoParaEditar = enderecosHistorico.find(e => e.id === enderecoId);
+    if (enderecoParaEditar) {
+      setEnderecoForm(enderecoParaEditar);
+      setModoEdicao(true);
+    }
+  };
+
+  /**
+   * Exclui um endereço do histórico
+   */
+  const handleExcluirEndereco = (enderecoId) => {
+    const novosEnderecos = enderecosHistorico.filter(e => e.id !== enderecoId);
+    setEnderecosHistorico(novosEnderecos);
+    localStorage.setItem('enderecosHistorico', JSON.stringify(novosEnderecos));
+
+    // Se excluiu o endereço ativo, seleciona o último disponível
+    if (enderecoSelecionadoId === enderecoId) {
+      if (novosEnderecos.length > 0) {
+        const novoAtivo = novosEnderecos[novosEnderecos.length - 1];
+        setEndereco(novoAtivo);
+        setEnderecoSelecionadoId(novoAtivo.id);
+      } else {
+        setEndereco(null);
+        setEnderecoSelecionadoId(null);
+      }
+    }
+
+    setToast({
+      message: 'Endereço excluído com sucesso!',
+      type: 'success'
+    });
   };
 
   /**
@@ -158,21 +263,46 @@ function TelaPagamento() {
       return;
     }
 
-    // Salva no localStorage
-    localStorage.setItem('endereco', JSON.stringify(enderecoForm));
-    setEndereco(enderecoForm);
+    let novosEnderecos;
+    let enderecoSalvo;
 
-    // Fecha modal
+    // Verifica se está editando um endereço existente
+    if (enderecoForm.id) {
+      // Atualiza endereço existente
+      novosEnderecos = enderecosHistorico.map(e =>
+        e.id === enderecoForm.id ? enderecoForm : e
+      );
+      enderecoSalvo = enderecoForm;
+    } else {
+      // Cria novo endereço com ID único
+      enderecoSalvo = {
+        ...enderecoForm,
+        id: Date.now(),
+        nome: `Endereço ${enderecosHistorico.length + 1}`
+      };
+      novosEnderecos = [...enderecosHistorico, enderecoSalvo];
+    }
+
+    // Salva no localStorage
+    setEnderecosHistorico(novosEnderecos);
+    localStorage.setItem('enderecosHistorico', JSON.stringify(novosEnderecos));
+
+    // Define como endereço ativo
+    setEndereco(enderecoSalvo);
+    setEnderecoSelecionadoId(enderecoSalvo.id);
+
+    // Fecha modal e volta para modo seleção
     setIsModalOpen(false);
+    setModoEdicao(false);
     setErro('');
 
     // Mostra toast de sucesso
     setToast({
-      message: 'Endereço salvo com sucesso!',
+      message: enderecoForm.id ? 'Endereço atualizado com sucesso!' : 'Endereço adicionado com sucesso!',
       type: 'success'
     });
 
-    console.log('Endereço salvo:', enderecoForm);
+    console.log('Endereço salvo:', enderecoSalvo);
   };
 
   /**
@@ -410,11 +540,72 @@ function TelaPagamento() {
             <div className={styles.modalHeader}>
               <h3>Endereço de Entrega</h3>
               <p className={styles.modalSubtitle}>
-                Preencha o endereço completo para entrega do pedido.
+                {modoEdicao
+                  ? 'Preencha o endereço completo para entrega do pedido.'
+                  : 'Selecione um endereço salvo ou adicione um novo.'}
               </p>
             </div>
 
-            <form onSubmit={handleSalvarEndereco} className={styles.enderecoForm}>
+            {/* Lista de Endereços Salvos */}
+            {!modoEdicao && (
+              <div className={styles.enderecosLista}>
+                {enderecosHistorico.map((end) => (
+                  <div
+                    key={end.id}
+                    className={`${styles.enderecoItem} ${
+                      enderecoSelecionadoId === end.id ? styles.enderecoItemAtivo : ''
+                    }`}
+                  >
+                    <div className={styles.enderecoItemInfo} onClick={() => handleSelecionarEndereco(end.id)}>
+                      {enderecoSelecionadoId === end.id && (
+                        <Check size={20} className={styles.checkIcon} />
+                      )}
+                      <div className={styles.enderecoItemDetalhes}>
+                        <p className={styles.enderecoItemNome}>{end.nome || 'Endereço'}</p>
+                        <p className={styles.enderecoItemEndereco}>
+                          {end.logradouro}, {end.numero}
+                          {end.complemento && ` - ${end.complemento}`}
+                        </p>
+                        <p className={styles.enderecoItemCidade}>
+                          {end.bairro} - {end.cidade}/{end.estado} - CEP: {end.cep}
+                        </p>
+                      </div>
+                    </div>
+                    <div className={styles.enderecoItemAcoes}>
+                      <button
+                        type="button"
+                        onClick={() => handleEditarEndereco(end.id)}
+                        className={styles.btnEditar}
+                        title="Editar endereço"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleExcluirEndereco(end.id)}
+                        className={styles.btnExcluir}
+                        title="Excluir endereço"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                <button
+                  type="button"
+                  onClick={handleAdicionarNovoEndereco}
+                  className={styles.btnAdicionarNovo}
+                >
+                  <Plus size={18} />
+                  Adicionar Novo Endereço
+                </button>
+              </div>
+            )}
+
+            {/* Formulário de Endereço */}
+            {modoEdicao && (
+              <form onSubmit={handleSalvarEndereco} className={styles.enderecoForm}>
               <div className={styles.formGrid}>
                 <div className={styles.formGroup}>
                   <label>CEP *</label>
@@ -531,23 +722,33 @@ function TelaPagamento() {
                 </div>
               </div>
 
-              <div className={styles.formActions}>
-                <button
-                  type="button"
-                  className={styles.cancelButton}
-                  onClick={handleFecharModal}
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className={styles.saveButton}
-                  disabled={isLoadingCep}
-                >
-                  {isLoadingCep ? 'Buscando...' : 'Salvar Endereço'}
-                </button>
-              </div>
-            </form>
+                <div className={styles.formActions}>
+                  {enderecosHistorico.length > 0 && (
+                    <button
+                      type="button"
+                      className={styles.backButton}
+                      onClick={() => setModoEdicao(false)}
+                    >
+                      Voltar
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={handleFecharModal}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    className={styles.saveButton}
+                    disabled={isLoadingCep}
+                  >
+                    {isLoadingCep ? 'Buscando...' : 'Salvar Endereço'}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}
