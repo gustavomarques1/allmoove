@@ -1,32 +1,86 @@
+/* ========================================
+   SearchBar Component - AllMoove
+   ======================================== */
+
 .search-bar {
   display: flex;
-  background-color: white;
+  background-color: var(--color-white);
   width: 100%;
   max-width: 500px;
   justify-content: space-between;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-  gap: 13px;
-  padding-right: 13px;
+  box-shadow: var(--shadow-sm);
+  gap: var(--spacing-3);
+  padding-right: var(--spacing-3);
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  transition: all var(--transition-fast);
+}
+
+/* Focus no container quando input está focado */
+.search-bar:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 .search__input {
-  padding: 13px;
+  padding: var(--spacing-3);
   flex-grow: 1;
   border: none;
   outline: none;
-  font-size: 0.8rem;
-  font-weight: 500px;
-  border-right: 1px solid #ddd;
-  background-color: white;
-  color: #333;
+  font-family: var(--font-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  background-color: transparent;
+  color: var(--color-text-primary);
+}
+
+.search__input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* Remove o outline do focus-visible global apenas para este input */
+.search__input:focus-visible {
+  outline: none;
 }
 
 .search__button {
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: var(--text-base);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--spacing-2);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.search__button:hover {
+  color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.search__button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .search-bar {
+    max-width: 100%;
+  }
+
+  .search__input {
+    font-size: var(--text-xs);
+    padding: var(--spacing-2);
+  }
+}
+
+@media (max-width: 480px) {
+  .search__input {
+    font-size: var(--text-xs);
+  }
 }

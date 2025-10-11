@@ -1,0 +1,194 @@
+/* ========================================
+   Button Component - AllMoove Design System
+   ======================================== */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+
+  font-family: var(--font-primary);
+  font-weight: var(--font-semibold);
+  text-align: center;
+  white-space: nowrap;
+
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+
+  transition: all var(--transition-fast);
+
+  /* Remove aparência padrão do botão */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+/* ==================
+   Variants
+   ================== */
+
+/* Primary */
+.button--primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.button--primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.button--primary:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Secondary */
+.button--secondary {
+  background-color: var(--color-gray-100);
+  color: var(--color-text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background-color: var(--color-gray-200);
+  box-shadow: var(--shadow-md);
+}
+
+.button--secondary:focus-visible {
+  outline: 2px solid var(--color-gray-400);
+  outline-offset: 2px;
+}
+
+/* Outline */
+.button--outline {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.button--outline:hover:not(:disabled) {
+  background-color: var(--color-primary-light);
+}
+
+.button--outline:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Ghost */
+.button--ghost {
+  background-color: transparent;
+  color: var(--color-text-primary);
+}
+
+.button--ghost:hover:not(:disabled) {
+  background-color: var(--color-gray-100);
+}
+
+.button--ghost:focus-visible {
+  outline: 2px solid var(--color-gray-400);
+  outline-offset: 2px;
+}
+
+/* Danger */
+.button--danger {
+  background-color: var(--color-error);
+  color: var(--color-text-inverse);
+  box-shadow: var(--shadow-sm);
+}
+
+.button--danger:hover:not(:disabled) {
+  background-color: var(--color-error-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.button--danger:focus-visible {
+  outline: 2px solid var(--color-error);
+  outline-offset: 2px;
+}
+
+/* ==================
+   Sizes
+   ================== */
+
+.button--sm {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--text-sm);
+  min-height: 32px;
+}
+
+.button--md {
+  padding: var(--spacing-3) var(--spacing-4);
+  font-size: var(--text-base);
+  min-height: 40px;
+}
+
+.button--lg {
+  padding: var(--spacing-4) var(--spacing-6);
+  font-size: var(--text-lg);
+  min-height: 48px;
+}
+
+/* ==================
+   Modifiers
+   ================== */
+
+.button--fullWidth {
+  width: 100%;
+}
+
+.button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.button--loading {
+  position: relative;
+  cursor: wait;
+}
+
+/* ==================
+   Internal Elements
+   ================== */
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ==================
+   Responsividade
+   ================== */
+
+@media (max-width: 768px) {
+  .button--lg {
+    padding: var(--spacing-3) var(--spacing-5);
+    font-size: var(--text-base);
+    min-height: 44px;
+  }
+
+  .button--md {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--text-sm);
+    min-height: 38px;
+  }
+}

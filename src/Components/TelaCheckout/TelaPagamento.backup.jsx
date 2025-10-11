@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { flushSync } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './TelaPagamento.module.css';
 import { ArrowLeft, MapPin, X, Loader, Edit2, Trash2, Plus, Check } from 'lucide-react';
@@ -31,7 +30,6 @@ function TelaPagamento() {
   const [cepSuccess, setCepSuccess] = useState(false);
   const [toast, setToast] = useState(null);
   const [enderecoForm, setEnderecoForm] = useState({
-    descricao: '',
     cep: '',
     logradouro: '',
     numero: '',
@@ -68,11 +66,7 @@ function TelaPagamento() {
       const enderecoLegado = localStorage.getItem('endereco');
       if (enderecoLegado) {
         const enderecoObj = JSON.parse(enderecoLegado);
-        const novoEndereco = {
-          ...enderecoObj,
-          id: Date.now(),
-          nome: `${enderecoObj.cidade}/${enderecoObj.estado} - ${enderecoObj.logradouro}`
-        };
+        const novoEndereco = { ...enderecoObj, id: Date.now(), nome: 'Endereço Principal' };
         const novoHistorico = [novoEndereco];
 
         localStorage.setItem('enderecosHistorico', JSON.stringify(novoHistorico));
@@ -127,7 +121,6 @@ function TelaPagamento() {
    */
   const handleAdicionarNovoEndereco = () => {
     setEnderecoForm({
-      descricao: '',
       cep: '',
       logradouro: '',
       numero: '',
@@ -145,13 +138,8 @@ function TelaPagamento() {
   const handleSelecionarEndereco = (enderecoId) => {
     const enderecoSelecionado = enderecosHistorico.find(e => e.id === enderecoId);
     if (enderecoSelecionado) {
-      // Força atualização síncrona do estado
-      flushSync(() => {
-        setEndereco(enderecoSelecionado);
-        setEnderecoSelecionadoId(enderecoId);
-      });
-
-      // Fecha o modal
+      setEndereco(enderecoSelecionado);
+      setEnderecoSelecionadoId(enderecoId);
       setIsModalOpen(false);
 
       setToast({
@@ -280,43 +268,33 @@ function TelaPagamento() {
 
     // Verifica se está editando um endereço existente
     if (enderecoForm.id) {
-      // Atualiza endereço existente e recalcula o nome
-      enderecoSalvo = {
-        ...enderecoForm,
-        nome: enderecoForm.descricao
-          ? `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.descricao}`
-          : `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.logradouro}`
-      };
+      // Atualiza endereço existente
       novosEnderecos = enderecosHistorico.map(e =>
-        e.id === enderecoForm.id ? enderecoSalvo : e
+        e.id === enderecoForm.id ? enderecoForm : e
       );
+      enderecoSalvo = enderecoForm;
     } else {
       // Cria novo endereço com ID único
       enderecoSalvo = {
         ...enderecoForm,
         id: Date.now(),
-        nome: enderecoForm.descricao
-          ? `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.descricao}`
-          : `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.logradouro}`
+        nome: `Endereço ${enderecosHistorico.length + 1}`
       };
       novosEnderecos = [...enderecosHistorico, enderecoSalvo];
     }
 
-    // Salva no localStorage primeiro
+    // Salva no localStorage
+    setEnderecosHistorico(novosEnderecos);
     localStorage.setItem('enderecosHistorico', JSON.stringify(novosEnderecos));
 
-    // Força atualização síncrona dos estados
-    flushSync(() => {
-      setEnderecosHistorico(novosEnderecos);
-      setEndereco(enderecoSalvo);
-      setEnderecoSelecionadoId(enderecoSalvo.id);
-    });
+    // Define como endereço ativo
+    setEndereco(enderecoSalvo);
+    setEnderecoSelecionadoId(enderecoSalvo.id);
 
-    setErro('');
-
-    // Fecha modal
+    // Fecha modal e volta para modo seleção
     setIsModalOpen(false);
     setModoEdicao(false);
+    setErro('');
 
     // Mostra toast de sucesso
     setToast({
@@ -629,17 +607,6 @@ function TelaPagamento() {
             {modoEdicao && (
               <form onSubmit={handleSalvarEndereco} className={styles.enderecoForm}>
               <div className={styles.formGrid}>
-                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                  <label>Descrição (opcional)</label>
-                  <input
-                    type="text"
-                    value={enderecoForm.descricao}
-                    onChange={(e) => handleEnderecoChange('descricao', e.target.value)}
-                    placeholder="Ex: Minha casa, Trabalho, Casa dos pais..."
-                    maxLength={50}
-                  />
-                </div>
-
                 <div className={styles.formGroup}>
                   <label>CEP *</label>
                   <div className={styles.inputWithFeedback}>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// 1. Importa os estilos do seu módulo
 import styles from "./Inicial.module.css";
 import { Package, AlertCircle } from "lucide-react";
 import ModalRecuperarSenha from "../ModalSenha/ModalRecuperarSenha";
 import ModalContato from "./ModalContato";
+import Button from "../Shared/Button/Button";
 import api from "../../api/api";
 
 function Inicial() {
@@ -128,18 +128,16 @@ function Inicial() {
             </div>
           )}
 
-          <button 
-            type="submit" 
-            className={styles.inicial_button}
-            disabled={isLoading}
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={isLoading}
+            leftIcon={!isLoading && <Package size={18} />}
           >
-            {isLoading ? ('Entrando...') : (
-              <>
-                <Package className={styles.icon_button} />
-                Entrar no Sistema
-              </>
-            )}
-          </button>
+            {isLoading ? 'Entrando...' : 'Entrar no Sistema'}
+          </Button>
           
           <div className={styles.inicial_contato}>
             Problemas para acessar? 

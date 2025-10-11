@@ -1,42 +1,68 @@
-/* Header.css (Completo e Corrigido) */
+/* ========================================
+   Header Component - PaginaLoja
+   ======================================== */
 
 .header {
-  background-color: #ff6400; /* A cor laranja de fundo */
+  background-color: var(--color-primary);
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1;
-  padding: 15px 20px; /* Espaçamento vertical e nas laterais para telas pequenas */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  z-index: var(--z-fixed);
+  padding: var(--spacing-4) var(--spacing-5);
+  box-shadow: var(--shadow-md);
 }
 
-/* Este é o container que alinha o conteúdo */
 .header .container {
   display: flex;
-  justify-content: space-between; /* Empurra a busca para a esquerda e o carrinho para a direita */
+  justify-content: space-between;
   align-items: center;
-  
-  /* A MÁGICA DO ALINHAMENTO:
-     Mesma largura máxima e centralização da sua grade de produtos. */
+  gap: var(--spacing-4);
+
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Adicione essas regras ao seu Header.css existente */
-
 .search-section {
   display: flex;
   align-items: center;
-  gap: 42px;
+  gap: var(--spacing-6);
   flex: 1;
 }
 
-/* Responsivo para mobile */
+/* ==================
+   Responsividade Mobile
+   ================== */
+
 @media (max-width: 768px) {
+  .header {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  .header .container {
+    flex-wrap: wrap;
+    gap: var(--spacing-3);
+  }
+
   .search-section {
     flex-direction: column;
-    gap: 8px;
+    gap: var(--spacing-2);
     width: 100%;
+    order: 2;
+  }
+
+  /* CartButton fica no topo direito no mobile */
+  .header .container > :last-child {
+    order: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+
+  .search-section {
+    gap: var(--spacing-2);
   }
 }

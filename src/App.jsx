@@ -6,44 +6,82 @@ import PaginaLoja from "./Components/PaginaDeCompras/PaginaLoja";
 import DistribuidorDashboard from "./Components/TelaDistribuidor/TelaDistribuidorDashboard/DistribuidorDashboard";
 import TelaEntrega from "./Components/TelaEntrega/TelaEntrega";
 import TelaPagamento from "./Components/TelaCheckout/TelaPagamento";
-
-// 1. Importe o componente da nova tela de Confirmação
-// (Ajuste o caminho se você salvou o arquivo em outro lugar)
 import TelaConfirmacao from "./Components/TelaPagamentoConfirmado/TelaConfirmacao";
 import TestePedido from "./Components/TestePedido/TestePedido";
+import Layout from "./Components/Shared/Layout/Layout";
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Rota de Login (sem Navbar) */}
         <Route path="/" element={<Inicial />} />
-        <Route path="/entregador" element={<TelaEntregador />} />
-        <Route path="/assistencia/dashboard" element={<TelaDashboard />} />
-        
-        
 
-        <Route 
-          path="/assistencia/loja" 
-          element={<PaginaLoja />} 
+        {/* Rotas Assistência Técnica (com Navbar) */}
+        <Route
+          path="/assistencia/dashboard"
+          element={
+            <Layout userType="assistencia">
+              <TelaDashboard />
+            </Layout>
+          }
         />
 
-        <Route 
+        <Route
+          path="/assistencia/loja"
+          element={
+            <Layout userType="assistencia">
+              <PaginaLoja />
+            </Layout>
+          }
+        />
+
+        <Route
           path="/assistencia/delivery-options"
-          element={<TelaEntrega />}
+          element={
+            <Layout userType="assistencia">
+              <TelaEntrega />
+            </Layout>
+          }
         />
 
         <Route
           path="/assistencia/pagamento"
-          element={<TelaPagamento />}
+          element={
+            <Layout userType="assistencia">
+              <TelaPagamento />
+            </Layout>
+          }
         />
 
-        {/* 2. Rota para a tela de Pagamento Confirmado adicionada aqui */}
-        <Route 
+        <Route
           path="/assistencia/payment-success"
-          element={<TelaConfirmacao />}
+          element={
+            <Layout userType="assistencia">
+              <TelaConfirmacao />
+            </Layout>
+          }
         />
 
-        <Route path="/distribuidor/dashboard" element={<DistribuidorDashboard/>} />
+        {/* Rotas Distribuidor (com Navbar) */}
+        <Route
+          path="/distribuidor/dashboard"
+          element={
+            <Layout userType="distribuidor">
+              <DistribuidorDashboard />
+            </Layout>
+          }
+        />
+
+        {/* Rotas Entregador (com Navbar) */}
+        <Route
+          path="/entregador"
+          element={
+            <Layout userType="entregador">
+              <TelaEntregador />
+            </Layout>
+          }
+        />
 
         {/* Rota de teste para debug de pedidos */}
         <Route path="/teste-pedido" element={<TestePedido />} />

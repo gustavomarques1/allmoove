@@ -1,6 +1,5 @@
 // CEPInput.jsx - Sistema integrado de múltiplos endereços
 import React, { useState, useEffect } from 'react';
-import { flushSync } from 'react-dom';
 import { MapPin, X, Loader, Edit2, Trash2, Plus, Check } from 'lucide-react';
 import styles from './CepInput.module.css';
 import Toast from '../../Shared/Toast/Toast';
@@ -16,7 +15,6 @@ function CepInput() {
   const [cepSuccess, setCepSuccess] = useState(false);
   const [toast, setToast] = useState(null);
   const [enderecoForm, setEnderecoForm] = useState({
-    descricao: '',
     cep: '',
     logradouro: '',
     numero: '',
@@ -44,11 +42,7 @@ function CepInput() {
       const enderecoLegado = localStorage.getItem('endereco');
       if (enderecoLegado) {
         const enderecoObj = JSON.parse(enderecoLegado);
-        const novoEndereco = {
-          ...enderecoObj,
-          id: Date.now(),
-          nome: `${enderecoObj.cidade}/${enderecoObj.estado} - ${enderecoObj.logradouro}`
-        };
+        const novoEndereco = { ...enderecoObj, id: Date.now(), nome: 'Endereço Principal' };
         const novoHistorico = [novoEndereco];
 
         localStorage.setItem('enderecosHistorico', JSON.stringify(novoHistorico));
@@ -101,7 +95,6 @@ function CepInput() {
     setIsModalOpen(false);
     setModoEdicao(false);
     setEnderecoForm({
-      descricao: '',
       cep: '',
       logradouro: '',
       numero: '',
@@ -116,7 +109,6 @@ function CepInput() {
 
   const handleAdicionarNovoEndereco = () => {
     setEnderecoForm({
-      descricao: '',
       cep: '',
       logradouro: '',
       numero: '',
@@ -133,13 +125,8 @@ function CepInput() {
   const handleSelecionarEndereco = (enderecoId) => {
     const enderecoSelecionado = enderecosHistorico.find(e => e.id === enderecoId);
     if (enderecoSelecionado) {
-      // Força atualização síncrona do estado
-      flushSync(() => {
-        setEndereco(enderecoSelecionado);
-        setEnderecoSelecionadoId(enderecoId);
-      });
-
-      // Fecha o modal
+      setEndereco(enderecoSelecionado);
+      setEnderecoSelecionadoId(enderecoId);
       setIsModalOpen(false);
 
       // Dispara evento para sincronizar com checkout
@@ -257,39 +244,30 @@ function CepInput() {
 
     // Verifica se está editando um endereço existente
     if (enderecoForm.id) {
-      // Atualiza endereço existente e recalcula o nome
-      enderecoSalvo = {
-        ...enderecoForm,
-        nome: enderecoForm.descricao
-          ? `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.descricao}`
-          : `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.logradouro}`
-      };
+      // Atualiza endereço existente
       novosEnderecos = enderecosHistorico.map(e =>
-        e.id === enderecoForm.id ? enderecoSalvo : e
+        e.id === enderecoForm.id ? enderecoForm : e
       );
+      enderecoSalvo = enderecoForm;
     } else {
       // Cria novo endereço com ID único
       enderecoSalvo = {
         ...enderecoForm,
         id: Date.now(),
-        nome: enderecoForm.descricao
-          ? `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.descricao}`
-          : `${enderecoForm.cidade}/${enderecoForm.estado} - ${enderecoForm.logradouro}`
+        nome: `${enderecoForm.cidade} - ${enderecoForm.bairro}`
       };
       novosEnderecos = [...enderecosHistorico, enderecoSalvo];
     }
 
-    // Salva no localStorage primeiro
+    // Salva no localStorage
+    setEnderecosHistorico(novosEnderecos);
     localStorage.setItem('enderecosHistorico', JSON.stringify(novosEnderecos));
 
-    // Força atualização síncrona dos estados
-    flushSync(() => {
-      setEnderecosHistorico(novosEnderecos);
-      setEndereco(enderecoSalvo);
-      setEnderecoSelecionadoId(enderecoSalvo.id);
-    });
+    // Define como endereço ativo
+    setEndereco(enderecoSalvo);
+    setEnderecoSelecionadoId(enderecoSalvo.id);
 
-    // Fecha modal
+    // Fecha modal e volta para modo seleção
     setIsModalOpen(false);
     setModoEdicao(false);
 
@@ -352,7 +330,7 @@ function CepInput() {
           <span className={styles.cepInputLabel}>Enviar para</span>
           <span className={styles.cepInputValue}>
             {endereco
-              ? endereco.nome || `${endereco.cidade}/${endereco.estado} - ${formatCep(endereco.cep)}`
+              ? `${endereco.cidade}/${endereco.estado} - ${formatCep(endereco.cep)}`
               : 'Informe seu CEP'}
           </span>
         </div>
@@ -435,17 +413,6 @@ function CepInput() {
             {modoEdicao && (
               <form onSubmit={handleSalvarEndereco} className={styles.fullAddressForm}>
                 <div className={styles.formGrid}>
-                  <div className={`${styles.formGroup} ${styles.fullWidth}`}>
-                    <label>Descrição (opcional)</label>
-                    <input
-                      type="text"
-                      value={enderecoForm.descricao}
-                      onChange={(e) => handleEnderecoChange('descricao', e.target.value)}
-                      placeholder="Ex: Minha casa, Trabalho, Casa dos pais..."
-                      maxLength={50}
-                    />
-                  </div>
-
                   <div className={styles.formGroup}>
                     <label>CEP *</label>
                     <div className={styles.inputWithFeedback}>

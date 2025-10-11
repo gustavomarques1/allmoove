@@ -1,0 +1,308 @@
+/* ========================================
+   Navbar Component - AllMoove Design System
+   ======================================== */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-sticky);
+
+  background-color: var(--color-white);
+  border-bottom: 1px solid var(--color-gray-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-6);
+
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-4) var(--spacing-6);
+}
+
+/* ==================
+   Logo
+   ================== */
+
+.logo {
+  cursor: pointer;
+  transition: transform var(--transition-fast);
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logoText {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-primary);
+  letter-spacing: -0.5px;
+}
+
+/* ==================
+   Navigation Links
+   ================== */
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex: 1;
+  justify-content: center;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding: var(--spacing-2) var(--spacing-4);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+
+  font-family: var(--font-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.navLink:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-text-primary);
+}
+
+.navLinkActive {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: var(--font-semibold);
+}
+
+/* ==================
+   User Menu
+   ================== */
+
+.userMenu {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-50);
+}
+
+.userIcon {
+  color: var(--color-text-secondary);
+}
+
+.userName {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+}
+
+.logoutButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding: var(--spacing-2) var(--spacing-3);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+
+  font-family: var(--font-primary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.logoutButton:hover {
+  background-color: var(--color-error-light);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+/* ==================
+   Mobile Menu Toggle
+   ================== */
+
+.menuToggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--spacing-2);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.menuToggle:hover {
+  background-color: var(--color-gray-100);
+}
+
+/* ==================
+   Mobile Menu
+   ================== */
+
+.mobileMenu {
+  display: none;
+  flex-direction: column;
+  gap: var(--spacing-2);
+
+  padding: var(--spacing-4);
+  border-top: 1px solid var(--color-gray-200);
+  background-color: var(--color-white);
+
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobileUserInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+
+  padding: var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-50);
+
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+}
+
+.mobileNavLink {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+
+  padding: var(--spacing-3) var(--spacing-4);
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: transparent;
+
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--color-text-primary);
+  text-align: left;
+
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobileNavLink:hover {
+  background-color: var(--color-gray-100);
+}
+
+.mobileNavLinkActive {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: var(--font-semibold);
+}
+
+.mobileLogoutButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+
+  padding: var(--spacing-3) var(--spacing-4);
+  margin-top: var(--spacing-4);
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  background-color: transparent;
+
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  color: var(--color-error);
+
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mobileLogoutButton:hover {
+  background-color: var(--color-error-light);
+}
+
+/* ==================
+   Responsividade
+   ================== */
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-3) var(--spacing-4);
+  }
+
+  /* Esconde elementos desktop */
+  .navLinks,
+  .userMenu {
+    display: none;
+  }
+
+  /* Mostra menu toggle */
+  .menuToggle {
+    display: flex;
+  }
+
+  /* Mostra menu mobile quando aberto */
+  .mobileMenu {
+    display: flex;
+  }
+
+  .logoText {
+    font-size: var(--text-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+
+  .logoText {
+    font-size: var(--text-base);
+  }
+
+  .logoutText {
+    display: none;
+  }
+}

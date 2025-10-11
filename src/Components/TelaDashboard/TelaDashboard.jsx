@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from "react";
 import styles from "./TelaDashboard.module.css";
-import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp } from "lucide-react";
-import { Link } from "react-router-dom";
-
-// Importe o hook personalizado
+import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, ShoppingBag, Plus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import { usePedidos } from "../../hooks/usePedidos";
 import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
+import Button from "../Shared/Button/Button";
 
 function TelaDashboard() {
-  // Usa o hook para buscar pedidos e indicadores
+  const navigate = useNavigate();
   const { pedidos, isLoading, error, indicadores, recarregar } = usePedidos();
-
-  // Estado para controlar expansão da lista de pedidos
   const [showAllOrders, setShowAllOrders] = useState(false);
 
   // Recarrega pedidos quando a página ganha foco (usuário volta de outra aba/página)
@@ -49,11 +46,14 @@ function TelaDashboard() {
         <div className={styles["dashboard-subtitle-and-button"]}>
           <h2 className={styles["dashboard-subtitle"]}>Assistência Técnica</h2>
 
-          <Link to="/assistencia/loja" className={styles["new-request-link-header"]}>
-            <button className={styles["new-request-button-header"]}>
-              Buscar Produtos
-            </button>
-          </Link>
+          <Button
+            variant="primary"
+            size="md"
+            leftIcon={<ShoppingBag size={18} />}
+            onClick={() => navigate('/assistencia/loja')}
+          >
+            Buscar Produtos
+          </Button>
         </div>
 
         <p className={styles["dashboard-description"]}>
@@ -139,11 +139,14 @@ function TelaDashboard() {
               <p>Nenhum pedido de peça encontrado</p>
             </div>
             <div className={styles["button-orders"]}>
-              <Link to="/assistencia/loja">
-                <button className={styles["new-request-button-down"]}>
-                  + Fazer Primeiro Pedido
-                </button>
-              </Link>
+              <Button
+                variant="primary"
+                size="lg"
+                leftIcon={<Plus size={18} />}
+                onClick={() => navigate('/assistencia/loja')}
+              >
+                Fazer Primeiro Pedido
+              </Button>
             </div>
           </>
         ) : (
@@ -180,31 +183,29 @@ function TelaDashboard() {
             {/* Botão para expandir/colapsar pedidos se houver mais de 2 */}
             {pedidos.length > 2 && (
               <div className={styles["expand-orders-container"]}>
-                <button
+                <Button
+                  variant="ghost"
+                  size="md"
                   onClick={() => setShowAllOrders(!showAllOrders)}
-                  className={styles["expand-orders-button"]}
+                  leftIcon={showAllOrders ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 >
-                  {showAllOrders ? (
-                    <>
-                      <ChevronUp size={18} />
-                      <span>Mostrar menos pedidos</span>
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown size={18} />
-                      <span>Ver todos os pedidos ({pedidos.length})</span>
-                    </>
-                  )}
-                </button>
+                  {showAllOrders
+                    ? 'Mostrar menos pedidos'
+                    : `Ver todos os pedidos (${pedidos.length})`
+                  }
+                </Button>
               </div>
             )}
 
             <div className={styles["button-orders"]}>
-              <Link to="/assistencia/loja">
-                <button className={styles["new-request-button-down"]}>
-                  + Fazer Novo Pedido
-                </button>
-              </Link>
+              <Button
+                variant="primary"
+                size="lg"
+                leftIcon={<Plus size={18} />}
+                onClick={() => navigate('/assistencia/loja')}
+              >
+                Fazer Novo Pedido
+              </Button>
             </div>
           </>
         )}
