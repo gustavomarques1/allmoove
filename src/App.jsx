@@ -9,9 +9,9 @@ import TelaPagamento from "./Components/TelaCheckout/TelaPagamento";
 import TelaConfirmacao from "./Components/TelaPagamentoConfirmado/TelaConfirmacao";
 import TestePedido from "./Components/TestePedido/TestePedido";
 import Layout from "./Components/Shared/Layout/Layout";
-import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
-import NaoAutorizado from "./Components/NaoAutorizado/NaoAutorizado";
-import { ROLES } from "./hooks/useAuth";
+// import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
+// import NaoAutorizado from "./Components/NaoAutorizado/NaoAutorizado";
+// import { ROLES } from "./hooks/useAuth";
 
 function App() {
   return (
@@ -20,86 +20,69 @@ function App() {
         {/* Rota de Login (sem Navbar, pública) */}
         <Route path="/" element={<Inicial />} />
 
-        {/* Página de Não Autorizado */}
-        <Route path="/nao-autorizado" element={<NaoAutorizado />} />
-
-        {/* ===== ROTAS ASSISTÊNCIA TÉCNICA (com Navbar e proteção) ===== */}
+        {/* ===== ROTAS ASSISTÊNCIA TÉCNICA (com Navbar, SEM proteção) ===== */}
         <Route
           path="/assistencia/dashboard"
           element={
-            <ProtectedRoute allowedRoles={[ROLES.ASSISTENCIA_TECNICA]}>
-              <Layout userType="assistencia">
-                <TelaDashboard />
-              </Layout>
-            </ProtectedRoute>
+            <Layout userType="assistencia">
+              <TelaDashboard />
+            </Layout>
           }
         />
 
         <Route
           path="/assistencia/loja"
           element={
-            <ProtectedRoute allowedRoles={[ROLES.ASSISTENCIA_TECNICA]}>
-              <Layout userType="assistencia">
-                <PaginaLoja />
-              </Layout>
-            </ProtectedRoute>
+            <Layout userType="assistencia">
+              <PaginaLoja />
+            </Layout>
           }
         />
 
         <Route
           path="/assistencia/delivery-options"
           element={
-            <ProtectedRoute allowedRoles={[ROLES.ASSISTENCIA_TECNICA]}>
-              <Layout userType="assistencia">
-                <TelaEntrega />
-              </Layout>
-            </ProtectedRoute>
+            <Layout userType="assistencia">
+              <TelaEntrega />
+            </Layout>
           }
         />
 
         <Route
           path="/assistencia/pagamento"
           element={
-            <ProtectedRoute allowedRoles={[ROLES.ASSISTENCIA_TECNICA]}>
-              <Layout userType="assistencia">
-                <TelaPagamento />
-              </Layout>
-            </ProtectedRoute>
+            <Layout userType="assistencia">
+              <TelaPagamento />
+            </Layout>
           }
         />
 
         <Route
           path="/assistencia/payment-success"
           element={
-            <ProtectedRoute allowedRoles={[ROLES.ASSISTENCIA_TECNICA]}>
-              <Layout userType="assistencia">
-                <TelaConfirmacao />
-              </Layout>
-            </ProtectedRoute>
+            <Layout userType="assistencia">
+              <TelaConfirmacao />
+            </Layout>
           }
         />
 
-        {/* ===== ROTAS DISTRIBUIDOR (com Navbar e proteção) ===== */}
+        {/* ===== ROTAS DISTRIBUIDOR (com Navbar, SEM proteção) ===== */}
         <Route
           path="/distribuidor/dashboard"
           element={
-            <ProtectedRoute allowedRoles={[ROLES.DISTRIBUIDOR]}>
-              <Layout userType="distribuidor">
-                <DistribuidorDashboard />
-              </Layout>
-            </ProtectedRoute>
+            <Layout userType="distribuidor">
+              <DistribuidorDashboard />
+            </Layout>
           }
         />
 
-        {/* ===== ROTAS ENTREGADOR (com Navbar e proteção) ===== */}
+        {/* ===== ROTAS ENTREGADOR (com Navbar, SEM proteção) ===== */}
         <Route
           path="/entregador/dashboard"
           element={
-            <ProtectedRoute allowedRoles={[ROLES.ENTREGADOR]}>
-              <Layout userType="entregador">
-                <TelaEntregador />
-              </Layout>
-            </ProtectedRoute>
+            <Layout userType="entregador">
+              <TelaEntregador />
+            </Layout>
           }
         />
 

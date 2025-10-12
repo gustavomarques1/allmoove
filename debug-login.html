@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Login AllMoove</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .section h2 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            display: none;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #9ae6b4;
+            display: block;
+        }
+
+        .result.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #fc8181;
+            display: block;
+        }
+
+        .result.info {
+            background: #bee3f8;
+            color: #2c5282;
+            border: 2px solid #90cdf4;
+            display: block;
+        }
+
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .icon {
+            font-size: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #edf2f7;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .badge-error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .badge-warning {
+            background: #fef5e7;
+            color: #7d6608;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Debug - Sistema de Login</h1>
+        <p class="subtitle">Ferramenta de diagnóstico para identificar problemas de papel/role</p>
+
+        <!-- Seção 1: Testar Login -->
+        <div class="section">
+            <h2><span class="icon">🔐</span> 1. Testar Login</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" value="distribuidor@teste.com">
+            </div>
+            <div class="form-group">
+                <label>Senha</label>
+                <input type="password" id="password" value="Senha@12345">
+            </div>
+            <button onclick="testarLogin()">Testar Login Completo</button>
+            <div class="result" id="resultLogin"></div>
+        </div>
+
+        <!-- Seção 2: Buscar Pessoas -->
+        <div class="section">
+            <h2><span class="icon">👥</span> 2. Buscar Pessoas no Banco</h2>
+            <p style="color: #718096; font-size: 13px; margin-bottom: 12px;">
+                Primeiro faça login acima para obter o token
+            </p>
+            <button onclick="buscarPessoas()" id="btnPessoas" disabled>Buscar Todas as Pessoas</button>
+            <div class="result" id="resultPessoas"></div>
+        </div>
+
+        <!-- Seção 3: Buscar Pessoa Específica -->
+        <div class="section">
+            <h2><span class="icon">🔎</span> 3. Buscar Pessoa Específica</h2>
+            <div class="form-group">
+                <label>Email da Pessoa</label>
+                <input type="text" id="emailBusca" value="distribuidor@teste.com">
+            </div>
+            <button onclick="buscarPessoaEspecifica()" id="btnPessoaEspecifica" disabled>Buscar Pessoa</button>
+            <div class="result" id="resultPessoaEspecifica"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://localhost:44370';
+        let token = null;
+
+        async function testarLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const result = document.getElementById('resultLogin');
+
+            result.className = 'result info';
+            result.innerHTML = '🔄 Testando login...\n\n';
+
+            try {
+                // Passo 1: Fazer login
+                result.innerHTML += '➡️ Passo 1: Autenticando...\n';
+                const loginResponse = await fetch(`${API_URL}/api/account/LoginUser`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!loginResponse.ok) {
+                    throw new Error(`Login falhou: ${loginResponse.status} ${loginResponse.statusText}`);
+                }
+
+                const loginData = await loginResponse.json();
+                token = loginData.token;
+
+                result.innerHTML += `✅ Login bem-sucedido!\n`;
+                result.innerHTML += `   Token: ${token.substring(0, 30)}...\n`;
+                result.innerHTML += `   Expira em: ${loginData.expiration}\n\n`;
+
+                // Passo 2: Buscar dados da pessoa
+                result.innerHTML += '➡️ Passo 2: Buscando dados da pessoa...\n';
+                const pessoasResponse = await fetch(`${API_URL}/api/pessoas`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!pessoasResponse.ok) {
+                    throw new Error(`Erro ao buscar pessoas: ${pessoasResponse.status}`);
+                }
+
+                const pessoas = await pessoasResponse.json();
+                result.innerHTML += `✅ Retornadas ${pessoas.length} pessoas do banco\n\n`;
+
+                // Passo 3: Procurar pessoa específica
+                result.innerHTML += '➡️ Passo 3: Procurando pessoa com email: ' + email + '\n';
+
+                const pessoa = pessoas.find(
+                    p => p.login === email || p.cpfCnpj === email.replace(/[^0-9]/g, '')
+                );
+
+                if (pessoa) {
+                    result.className = 'result success';
+                    result.innerHTML += '\n✅ PESSOA ENCONTRADA!\n\n';
+                    result.innerHTML += `📋 Dados:\n`;
+                    result.innerHTML += `   ID: ${pessoa.id}\n`;
+                    result.innerHTML += `   Nome: ${pessoa.nome}\n`;
+                    result.innerHTML += `   Login/Email: ${pessoa.login}\n`;
+                    result.innerHTML += `   CPF/CNPJ: ${pessoa.cpfCnpj}\n`;
+                    result.innerHTML += `   ⭐ TIPO/PAPEL: <span class="highlight">${pessoa.tipo || 'NÃO DEFINIDO'}</span>\n`;
+                    result.innerHTML += `   Situação: ${pessoa.situacao}\n\n`;
+
+                    if (!pessoa.tipo) {
+                        result.innerHTML += '⚠️ PROBLEMA IDENTIFICADO:\n';
+                        result.innerHTML += '   O campo "tipo" está VAZIO ou NULL!\n';
+                        result.innerHTML += '   Isso faz o sistema usar o fallback: ASSISTENCIA_TECNICA\n\n';
+                        result.innerHTML += '🔧 SOLUÇÃO:\n';
+                        result.innerHTML += '   Atualize a pessoa no Swagger (PUT /api/pessoas/{id})\n';
+                        result.innerHTML += '   Adicione o campo: "tipo": "DISTRIBUIDOR"\n';
+                    } else if (pessoa.tipo !== 'DISTRIBUIDOR') {
+                        result.innerHTML += '⚠️ PROBLEMA IDENTIFICADO:\n';
+                        result.innerHTML += `   O tipo está definido como: "${pessoa.tipo}"\n`;
+                        result.innerHTML += '   Mas você esperava: "DISTRIBUIDOR"\n\n';
+                        result.innerHTML += '🔧 SOLUÇÃO:\n';
+                        result.innerHTML += '   Atualize a pessoa no Swagger (PUT /api/pessoas/{id})\n';
+                        result.innerHTML += '   Altere o campo: "tipo": "DISTRIBUIDOR"\n';
+                    } else {
+                        result.innerHTML += '✅ Tipo correto: DISTRIBUIDOR\n';
+                        result.innerHTML += '✅ O sistema DEVERIA redirecionar para /distribuidor/dashboard\n\n';
+                        result.innerHTML += '💡 Se ainda assim foi para /assistencia/dashboard:\n';
+                        result.innerHTML += '   1. Limpe o localStorage do navegador\n';
+                        result.innerHTML += '   2. Faça logout e login novamente\n';
+                    }
+                } else {
+                    result.className = 'result error';
+                    result.innerHTML += '\n❌ PESSOA NÃO ENCONTRADA!\n\n';
+                    result.innerHTML += '🔍 Procurei por:\n';
+                    result.innerHTML += `   - login = "${email}"\n`;
+                    result.innerHTML += `   - cpfCnpj = "${email.replace(/[^0-9]/g, '')}"\n\n`;
+                    result.innerHTML += '⚠️ PROBLEMA IDENTIFICADO:\n';
+                    result.innerHTML += '   A pessoa não existe na tabela PESSOA!\n';
+                    result.innerHTML += '   O sistema usará dados MOCK (fallback)\n\n';
+                    result.innerHTML += '🔧 SOLUÇÃO:\n';
+                    result.innerHTML += '   Crie a pessoa no Swagger (POST /api/pessoas)\n';
+                    result.innerHTML += '   Com o campo: "tipo": "DISTRIBUIDOR"\n';
+                }
+
+                // Habilitar outros botões
+                document.getElementById('btnPessoas').disabled = false;
+                document.getElementById('btnPessoaEspecifica').disabled = false;
+
+            } catch (error) {
+                result.className = 'result error';
+                result.innerHTML += `\n❌ ERRO: ${error.message}\n\n`;
+                result.innerHTML += 'Certifique-se de que:\n';
+                result.innerHTML += '1. O backend está rodando\n';
+                result.innerHTML += '2. Você aceitou o certificado SSL (acesse https://localhost:44370/swagger primeiro)\n';
+                result.innerHTML += '3. O email e senha estão corretos\n';
+            }
+        }
+
+        async function buscarPessoas() {
+            if (!token) {
+                alert('Faça login primeiro!');
+                return;
+            }
+
+            const result = document.getElementById('resultPessoas');
+            result.className = 'result info';
+            result.innerHTML = '🔄 Buscando pessoas...\n\n';
+
+            try {
+                const response = await fetch(`${API_URL}/api/pessoas`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}`);
+                }
+
+                const pessoas = response.json();
+
+                result.className = 'result success';
+                result.innerHTML = `✅ Total de pessoas: ${pessoas.length}\n\n`;
+
+                if (pessoas.length === 0) {
+                    result.innerHTML += '⚠️ Nenhuma pessoa cadastrada!\n';
+                } else {
+                    result.innerHTML += '<table>';
+                    result.innerHTML += '<tr><th>ID</th><th>Nome</th><th>Login/Email</th><th>Tipo</th><th>Situação</th></tr>';
+
+                    pessoas.forEach(p => {
+                        let tipoBadge = '';
+                        if (!p.tipo) {
+                            tipoBadge = '<span class="badge badge-error">SEM TIPO</span>';
+                        } else if (p.tipo === 'DISTRIBUIDOR') {
+                            tipoBadge = '<span class="badge badge-success">DISTRIBUIDOR</span>';
+                        } else if (p.tipo === 'ASSISTENCIA_TECNICA') {
+                            tipoBadge = '<span class="badge badge-success">ASSISTENCIA</span>';
+                        } else if (p.tipo === 'ENTREGADOR') {
+                            tipoBadge = '<span class="badge badge-success">ENTREGADOR</span>';
+                        } else {
+                            tipoBadge = `<span class="badge badge-warning">${p.tipo}</span>`;
+                        }
+
+                        result.innerHTML += `<tr>
+                            <td>${p.id}</td>
+                            <td>${p.nome || '-'}</td>
+                            <td>${p.login || '-'}</td>
+                            <td>${tipoBadge}</td>
+                            <td>${p.situacao || '-'}</td>
+                        </tr>`;
+                    });
+
+                    result.innerHTML += '</table>';
+                }
+
+            } catch (error) {
+                result.className = 'result error';
+                result.innerHTML = `❌ Erro: ${error.message}`;
+            }
+        }
+
+        async function buscarPessoaEspecifica() {
+            if (!token) {
+                alert('Faça login primeiro!');
+                return;
+            }
+
+            const emailBusca = document.getElementById('emailBusca').value;
+            const result = document.getElementById('resultPessoaEspecifica');
+            result.className = 'result info';
+            result.innerHTML = `🔄 Buscando pessoa com email: ${emailBusca}...\n\n`;
+
+            try {
+                const response = await fetch(`${API_URL}/api/pessoas`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}`);
+                }
+
+                const pessoas = await response.json();
+                const pessoa = pessoas.find(p => p.login === emailBusca);
+
+                if (pessoa) {
+                    result.className = 'result success';
+                    result.innerHTML = '✅ Pessoa encontrada!\n\n';
+                    result.innerHTML += JSON.stringify(pessoa, null, 2);
+                } else {
+                    result.className = 'result error';
+                    result.innerHTML = `❌ Nenhuma pessoa encontrada com email: ${emailBusca}\n\n`;
+                    result.innerHTML += 'Pessoas disponíveis:\n';
+                    pessoas.forEach(p => {
+                        result.innerHTML += `- ${p.login || p.nome || 'Sem nome'}\n`;
+                    });
+                }
+
+            } catch (error) {
+                result.className = 'result error';
+                result.innerHTML = `❌ Erro: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
