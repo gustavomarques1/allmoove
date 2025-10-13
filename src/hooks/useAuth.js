@@ -99,6 +99,14 @@ export const useAuth = () => {
           // Pessoa encontrada - armazenar dados
           const role = pessoa.tipo || 'ASSISTENCIA_TECNICA'; // Default para assistência
 
+          console.log('👤 Pessoa encontrada na API:', {
+            id: pessoa.id,
+            nome: pessoa.nome,
+            login: pessoa.login,
+            tipo: pessoa.tipo,
+            roleAtribuido: role
+          });
+
           localStorage.setItem('idPessoa', pessoa.id.toString());
           localStorage.setItem('userRole', role);
           localStorage.setItem('userName', pessoa.nome || email);
@@ -109,10 +117,13 @@ export const useAuth = () => {
           setUserEmail(email);
           setIsAuthenticated(true);
 
+          console.log('✅ Login concluído com sucesso! Role:', role);
           return { success: true, role };
         } else {
           // Pessoa não encontrada - usar mock para desenvolvimento
-          console.warn('Pessoa não encontrada na API. Usando dados mock.');
+          console.warn('⚠️ Pessoa não encontrada na API. Usando dados mock.');
+          console.log('📧 Email procurado:', email);
+          console.log('📋 Total de pessoas encontradas:', pessoas.length);
 
           const mockId = 1;
           const mockRole = 'ASSISTENCIA_TECNICA';
@@ -209,10 +220,13 @@ export const useAuth = () => {
 
   /**
    * Retorna o dashboard apropriado baseado no papel
+   * @param {string} role - Papel opcional (usa userRole do estado se não fornecido)
    * @returns {string} - Rota do dashboard
    */
-  const getDashboardRoute = () => {
-    switch (userRole) {
+  const getDashboardRoute = (role = null) => {
+    const effectiveRole = role || userRole;
+
+    switch (effectiveRole) {
       case 'ASSISTENCIA_TECNICA':
         return '/assistencia/dashboard';
       case 'DISTRIBUIDOR':

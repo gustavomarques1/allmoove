@@ -29,7 +29,9 @@ function Inicial() {
       console.log('✅ Login bem-sucedido! Papel do usuário:', result.role);
 
       // Redireciona para o dashboard apropriado baseado no papel
-      const dashboardRoute = getDashboardRoute();
+      // IMPORTANTE: Usa result.role diretamente para evitar race condition
+      const dashboardRoute = getDashboardRoute(result.role);
+      console.log('🔀 Redirecionando para:', dashboardRoute);
       navigate(dashboardRoute);
     } else {
       // Exibe mensagem de erro

@@ -2,10 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import styles from './BuscaSegmentada.module.css';
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { getProdutosPorCategoria, getProdutosPorCategoriaEFornecedor, getFornecedores } from '../../../api/produtosServices';
+import {
+  getProdutos,
+  getFornecedores,
+  getSegmentos,
+  getDistribuidoresPorSegmento,
+  getUltimosPedidos,
+  getDistribuidoresFavoritos
+} from '../../../api/produtosServices';
+import { useAuth } from '../../../hooks/useAuth';
 
-// Categorias disponíveis (incluindo as do products.json + exemplos)
-const segmentos = [
+// Categorias fallback (caso a API não esteja disponível)
+const segmentosFallback = [
   { id: 'celulares', nome: 'Celulares' },
   { id: 'auto', nome: 'Auto' },
   { id: 'telas', nome: 'Telas' },
@@ -43,89 +51,191 @@ const mockPedidos = [
 ];
 
 function BuscaSegmentada() {
-  const [selectedSegmento, setSelectedSegmento] = useState('celulares');
+  const [segmentos, setSegmentos] = useState(segmentosFallback);
+  const [selectedSegmento, setSelectedSegmento] = useState('');
   const [selectedDistribuidor, setSelectedDistribuidor] = useState('');
   const [searchDistribuidor, setSearchDistribuidor] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [ultimosPedidos, setUltimosPedidos] = useState([]);
+  const [distribuidoresFavoritos, setDistribuidoresFavoritos] = useState([]);
   const [distribuidoresDisponiveis, setDistribuidoresDisponiveis] = useState(distribuidores);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingPedidos, setIsLoadingPedidos] = useState(false);
+  const [isLoadingFavoritos, setIsLoadingFavoritos] = useState(false);
   const [useAPI, setUseAPI] = useState(false); // Flag para tentar usar API
 
   const carouselRef = useRef(null);
   const searchInputRef = useRef(null);
   const navigate = useNavigate();
 
-  // Carrega fornecedores da API (se disponível)
+  // Obter ID do usuário autenticado (assistência técnica)
+  const { userId } = useAuth();
+
+  // Carrega segmentos/categorias da API
   useEffect(() => {
-    const loadFornecedores = async () => {
+    const loadSegmentos = async () => {
       try {
-        const fornecedoresAPI = await getFornecedores();
-        if (fornecedoresAPI && fornecedoresAPI.length > 0) {
-          setDistribuidoresDisponiveis(
-            fornecedoresAPI.map(f => ({ id: f, nome: f }))
-          );
-          setUseAPI(true); // API disponível
+        const segmentosAPI = await getSegmentos();
+
+        if (segmentosAPI && segmentosAPI.length > 0) {
+          // Converte o formato da API para o formato esperado pelo componente
+          const segmentosFormatados = segmentosAPI.map(seg => ({
+            id: seg.id,
+            nome: seg.nome || seg.descricao || 'Sem nome'
+          }));
+
+          setSegmentos(segmentosFormatados);
+          // Define o primeiro segmento como selecionado
+          if (segmentosFormatados.length > 0) {
+            setSelectedSegmento(segmentosFormatados[0].id);
+          }
+          setUseAPI(true);
+          console.log('✅ Segmentos carregados da API:', segmentosFormatados.length);
         }
       } catch (error) {
-        console.log('API de fornecedores não disponível, usando dados estáticos', error);
+        console.log('⚠️ API de segmentos não disponível, usando categorias fallback', error);
+        setSegmentos(segmentosFallback);
+        setSelectedSegmento(segmentosFallback[0].id);
         setUseAPI(false);
       }
     };
 
-    loadFornecedores();
+    loadSegmentos();
   }, []);
 
-  // Filtra pedidos por categoria e distribuidor
+  // Carrega distribuidores por segmento da API
   useEffect(() => {
-    const loadPedidos = async () => {
-      setIsLoading(true);
+    // Só carrega se tiver segmento selecionado
+    if (!selectedSegmento) {
+      return;
+    }
 
+    const loadDistribuidores = async () => {
       try {
-        if (useAPI) {
-          // Tenta buscar da API
-          let produtos = [];
+        // Tenta usar a API específica de distribuidores por segmento
+        const distribuidoresAPI = await getDistribuidoresPorSegmento(selectedSegmento);
 
-          if (selectedDistribuidor) {
-            produtos = await getProdutosPorCategoriaEFornecedor(selectedSegmento, selectedDistribuidor);
-          } else {
-            produtos = await getProdutosPorCategoria(selectedSegmento);
-          }
+        if (distribuidoresAPI && distribuidoresAPI.length > 0) {
+          console.log('📦 Distribuidor da API (RAW):', distribuidoresAPI[0]);
 
-          // Converte produtos em formato de "últimos pedidos"
-          const pedidosFromAPI = produtos.slice(0, 5).map((produto, index) => ({
-            id: produto.id || index,
-            distribuidor: produto.fornecedor,
-            produto: produto.nome,
-            segmentoId: produto.categoria,
+          const distribuidoresFormatados = distribuidoresAPI.map(d => ({
+            id: d.idDistribuidor || d.id || d.idPessoa,
+            nome: d.nome || d.razaoSocial || d.nomeFantasia || 'Sem nome'
           }));
-
-          setUltimosPedidos(pedidosFromAPI);
+          setDistribuidoresDisponiveis(distribuidoresFormatados);
+          console.log(`✅ Distribuidores do segmento ${selectedSegmento}:`, distribuidoresAPI.length);
+          console.log('📋 Lista de distribuidores formatados:', distribuidoresFormatados);
         } else {
-          // Usa mock data
-          let pedidosFiltrados = mockPedidos.filter(p => p.segmentoId === selectedSegmento);
-
-          if (selectedDistribuidor) {
-            pedidosFiltrados = pedidosFiltrados.filter(p => p.distribuidor === selectedDistribuidor);
+          // Fallback: tenta API de fornecedores genérica
+          console.log('⚠️ Nenhum distribuidor encontrado no segmento, tentando API genérica');
+          const fornecedoresAPI = await getFornecedores();
+          if (fornecedoresAPI && fornecedoresAPI.length > 0) {
+            setDistribuidoresDisponiveis(
+              fornecedoresAPI.map(f => ({ id: f, nome: f }))
+            );
+            console.log('✅ Fornecedores carregados da API genérica:', fornecedoresAPI.length);
           }
-
-          setUltimosPedidos(pedidosFiltrados);
         }
       } catch (error) {
-        console.error('Erro ao carregar pedidos:', error);
-        // Fallback para mock em caso de erro
-        let pedidosFiltrados = mockPedidos.filter(p => p.segmentoId === selectedSegmento);
-        if (selectedDistribuidor) {
-          pedidosFiltrados = pedidosFiltrados.filter(p => p.distribuidor === selectedDistribuidor);
-        }
-        setUltimosPedidos(pedidosFiltrados);
-      } finally {
-        setIsLoading(false);
+        console.log('⚠️ Erro ao buscar distribuidores, usando dados estáticos', error);
+        // Mantém dados estáticos em caso de erro
       }
     };
 
-    loadPedidos();
-  }, [selectedSegmento, selectedDistribuidor, useAPI]);
+    loadDistribuidores();
+  }, [selectedSegmento]);
+
+  // Carrega últimos pedidos com produtos (FORNECEDOR - PRODUTO) filtrados por segmento
+  useEffect(() => {
+    if (!userId || !selectedSegmento) {
+      return;
+    }
+
+    const loadUltimosPedidos = async () => {
+      setIsLoadingPedidos(true);
+      console.log(`\n🔍 Buscando últimos pedidos do segmento ${selectedSegmento} para assistência ${userId}`);
+
+      try {
+        // API com filtro por segmento: /api/Pedidos/ultimos-produtos/{idAssistencia}/segmento/{idSegmento}
+        const response = await fetch(`https://localhost:44370/api/Pedidos/ultimos-produtos/${userId}/segmento/${selectedSegmento}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`API retornou status ${response.status}`);
+        }
+
+        const produtosAPI = await response.json();
+
+        if (produtosAPI && produtosAPI.length > 0) {
+          console.log(`✅ ${produtosAPI.length} produtos encontrados no segmento ${selectedSegmento}`);
+
+          // Transforma para formato de exibição
+          const produtosFormatados = produtosAPI.slice(0, 5).map(item => ({
+            id: item.idPedidoItem,
+            fornecedor: item.fornecedorProduto,
+            produto: '',
+            descricao: item.fornecedorProduto,
+            data: item.dataPedido,
+            quantidade: item.quantidade
+          }));
+
+          setUltimosPedidos(produtosFormatados);
+        } else {
+          console.log('⚠️ Nenhum produto encontrado neste segmento');
+          setUltimosPedidos([]);
+        }
+      } catch (error) {
+        console.error('❌ Erro ao carregar últimos pedidos:', error);
+        setUltimosPedidos([]);
+      } finally {
+        setIsLoadingPedidos(false);
+      }
+    };
+
+    loadUltimosPedidos();
+  }, [userId, selectedSegmento]);
+
+  // Carrega distribuidores favoritos por segmento
+  useEffect(() => {
+    if (!selectedSegmento || !userId) {
+      return;
+    }
+
+    const loadFavoritos = async () => {
+      setIsLoadingFavoritos(true);
+      console.log(`\n🔍 Buscando favoritos para segmento ${selectedSegmento} e assistência ${userId}`);
+
+      try {
+        const favoritosAPI = await getDistribuidoresFavoritos(selectedSegmento, userId);
+
+        if (favoritosAPI && favoritosAPI.length > 0) {
+          console.log(`✅ Distribuidores favoritos:`, favoritosAPI);
+
+          // Transforma para formato de exibição
+          const favoritosFormatados = favoritosAPI.slice(0, 5).map(dist => ({
+            id: dist.idDistribuidor,
+            nome: dist.nome,
+            cpfCnpj: dist.cpfCnpj,
+            idSegmento: dist.idSegmento
+          }));
+
+          setDistribuidoresFavoritos(favoritosFormatados);
+        } else {
+          console.log('⚠️ Nenhum distribuidor favorito neste segmento');
+          setDistribuidoresFavoritos([]);
+        }
+      } catch (error) {
+        console.error('❌ Erro ao carregar favoritos:', error);
+        setDistribuidoresFavoritos([]);
+      } finally {
+        setIsLoadingFavoritos(false);
+      }
+    };
+
+    loadFavoritos();
+  }, [selectedSegmento, userId]);
 
   const handleScroll = (scrollOffset) => {
     if (carouselRef.current) {
@@ -138,11 +248,12 @@ function BuscaSegmentada() {
     const params = new URLSearchParams();
 
     if (selectedSegmento) {
-      params.append('categoria', selectedSegmento);
+      params.append('idSegmento', selectedSegmento);
     }
 
     if (selectedDistribuidor) {
-      params.append('fornecedor', selectedDistribuidor);
+      // Passa o ID do distribuidor (não o nome)
+      params.append('idDistribuidor', selectedDistribuidor);
     }
 
     const queryString = params.toString();
@@ -150,6 +261,7 @@ function BuscaSegmentada() {
       url += `?${queryString}`;
     }
 
+    console.log('🔍 Navegando para loja com filtros:', url);
     navigate(url);
   };
 
@@ -161,6 +273,13 @@ function BuscaSegmentada() {
   const filteredDistribuidores = distribuidoresDisponiveis.filter(dist =>
     dist.nome.toLowerCase().includes(searchDistribuidor.toLowerCase())
   );
+
+  // Debug temporário
+  if (searchDistribuidor) {
+    console.log('🔍 Buscando:', searchDistribuidor);
+    console.log('📦 Distribuidores disponíveis:', distribuidoresDisponiveis);
+    console.log('✅ Filtrados:', filteredDistribuidores);
+  }
 
   // Seleciona fornecedor do dropdown
   const handleSelectDistribuidor = (distribuidor) => {
@@ -212,31 +331,66 @@ function BuscaSegmentada() {
         </button>
       </div>
 
-      {/* Seção de Interação */}
+      {/* Seção de Interação - DUAS COLUNAS */}
       <div className={styles.interacaoContainer}>
-        <div className={styles.pedidosContainer}>
-          <h3 className={styles.colunaTitulo}>
-            {useAPI ? 'Últimos Pedidos' : 'Últimos Pedidos'}
-          </h3>
-          <div className={styles.listaWrapper}>
-            {isLoading ? (
-              <p className={styles.listaVazia}>Carregando...</p>
-            ) : ultimosPedidos.length > 0 ? (
-              <ul className={styles.listaPedidos}>
-                {ultimosPedidos.map((pedido) => (
-                  <li key={pedido.id}>
-                    <span>{pedido.distribuidor}</span>
-                    <span>{pedido.produto}</span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className={styles.listaVazia}>Nenhum produto encontrado para esta seleção.</p>
-            )}
+        {/* COLUNA ESQUERDA: Últimos Pedidos + Favoritos (empilhados) */}
+        <div className={styles.colunaEsquerda}>
+          {/* Últimos Pedidos */}
+          <div className={styles.pedidosContainer}>
+            <h3 className={styles.colunaTitulo}>
+              Últimos Pedidos
+            </h3>
+            <div className={styles.listaWrapper}>
+              {isLoadingPedidos ? (
+                <p className={styles.listaVazia}>Carregando...</p>
+              ) : ultimosPedidos.length > 0 ? (
+                <ul className={styles.listaPedidos}>
+                  {ultimosPedidos.map((item) => (
+                    <li key={item.id}>
+                      {/* Exibe "FORNECEDOR - PRODUTO" em uma única linha */}
+                      <span>{item.fornecedor}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className={styles.listaVazia}>
+                  {userId
+                    ? 'Você ainda não fez nenhum pedido.'
+                    : 'Faça login para ver seus pedidos.'}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {/* Distribuidores Favoritos */}
+          <div className={styles.pedidosContainer}>
+            <h3 className={styles.colunaTitulo}>
+              Favoritos do Segmento
+            </h3>
+            <div className={styles.listaWrapper}>
+              {isLoadingFavoritos ? (
+                <p className={styles.listaVazia}>Carregando...</p>
+              ) : distribuidoresFavoritos.length > 0 ? (
+                <ul className={styles.listaPedidos}>
+                  {distribuidoresFavoritos.map((dist) => (
+                    <li key={dist.id}>
+                      <span>{dist.nome}</span>
+                      <span>{dist.cpfCnpj}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className={styles.listaVazia}>
+                  {userId
+                    ? 'Nenhum favorito neste segmento ainda.'
+                    : 'Faça login para ver favoritos.'}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Coluna da direita - Seleção de Distribuidor e Ações */}
+        {/* COLUNA DIREITA - Seleção de Distribuidor e Ações */}
         <div className={styles.distribuidorContainer}>
           {/* Busca de Distribuidor com Autocomplete */}
           <div className={styles.distribuidorSelector} ref={searchInputRef}>

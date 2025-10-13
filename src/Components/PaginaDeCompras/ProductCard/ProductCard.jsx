@@ -8,15 +8,21 @@ import AppContext from '../../../context/AppContext';
 import formatCurrency from '../../../utils/formatCurrency';
 
 function ProductCard({ data }) {
-  const { nome, imagem, price } = data;
+  const { nome, imagem, precoVenda, price } = data;
   const { handleAddItem } = useContext(AppContext);
+
+  // Usa precoVenda da API ou price do fallback JSON
+  const preco = precoVenda || price || 0;
+
+  // Imagem: usa imagem da API ou placeholder
+  const imagemUrl = imagem || 'https://via.placeholder.com/200x200?text=Sem+Imagem';
 
   return (
     <section className="product-card">
-      <img src={imagem} alt="product" className="card__image" />
+      <img src={imagemUrl} alt="product" className="card__image" />
 
       <div className="card__infos">
-        <h2 className="card__price">{formatCurrency(price, 'BRL')}</h2>
+        <h2 className="card__price">{formatCurrency(preco, 'BRL')}</h2>
         <h2 className="card__title">{nome}</h2>
       </div>
 
@@ -40,5 +46,6 @@ ProductCard.propTypes = {
     nome: propTypes.string,
     imagem: propTypes.string,
     price: propTypes.number,
+    precoVenda: propTypes.number,
   }).isRequired,
 };

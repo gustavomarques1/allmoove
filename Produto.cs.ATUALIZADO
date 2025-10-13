@@ -1,0 +1,98 @@
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AlunosApi.Models
+{
+    [Table("PRODUTO")]
+    public class Produto
+    {
+        [Key]
+        [Column("ID")]
+        public long Id { get; set; }
+
+        [Column("EMPRESA")]
+        public int? Empresa { get; set; }
+
+        [Column("ESTABELECIMENTO")]
+        public int? Estabelecimento { get; set; }
+
+        [Column("CODIGO")]
+        [MaxLength(50)]
+        public string? Codigo { get; set; }
+
+        [Column("DATA_HORA_CRICAO_REGISTRO")]
+        public DateTime? DataHoraCriacaoRegistro { get; set; }
+
+        [Column("DATA_HORA_ALTERACAO_REGISTRO")]
+        public DateTime? DataHoraAlteracaoRegistro { get; set; }
+
+        [Column("USUARIO_CRIACAO")]
+        [MaxLength(50)]
+        public string? UsuarioCriacao { get; set; }
+
+        [Column("USUARIO_ALTERACAO")]
+        [MaxLength(50)]
+        public string? UsuarioAlteracao { get; set; }
+
+        [Column("SITUACAO_REGISTRO")]
+        [MaxLength(50)]
+        public string? SituacaoRegistro { get; set; }
+
+        [Column("ID_DISTRIBUIDOR")]
+        public long? IdDistribuidor { get; set; }
+
+        [Column("ID_SEGMENTO")]
+        public int? IdSegmento { get; set; }
+
+        [Column("ID_MARCA")]
+        public int? IdMarca { get; set; }
+
+        [Column("ID_MODELO")]
+        public int? IdModelo { get; set; }
+
+        [Column("ID_GRUPO")]
+        public int? IdGrupo { get; set; }
+
+        [Column("ID_TAG")]
+        public int? IdTag { get; set; }
+
+        [Column("NOME")]
+        [MaxLength(100)]
+        public string? Nome { get; set; }
+
+        [Column("DESCRICAO")]
+        [MaxLength(1000)]
+        public string? Descricao { get; set; }
+
+        [Column("SKU")]
+        [MaxLength(50)]
+        public string? Sku { get; set; }
+
+        [Column("EAN")]
+        [MaxLength(50)]
+        public string? Ean { get; set; }
+
+        [Column("POSICAO")]
+        [MaxLength(50)]
+        public string? Posicao { get; set; }
+
+        [Column("SITUACAO")]
+        [MaxLength(50)]
+        public string? Situacao { get; set; }
+
+        [Column("PRECO_CUSTO", TypeName = "numeric(18,2)")]
+        public decimal? PrecoCusto { get; set; }
+
+        [Column("PRECO_VENDA", TypeName = "numeric(18,2)")]
+        public decimal? PrecoVenda { get; set; }
+
+        [Column("QUANTIDADE", TypeName = "numeric(18,2)")]
+        public decimal? Quantidade { get; set; }
+
+        // ✨ NOVO CAMPO ADICIONADO
+        [Column("IMAGEM")]
+        [MaxLength(255)]
+        public string? Imagem { get; set; }
+    }
+}

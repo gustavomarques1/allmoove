@@ -1,42 +1,39 @@
-import { getProdutos, getProdutosPorCategoria } from './produtosServices';
+import { buscarProdutosParaCarrinho, getProdutos, getProdutosPorCategoria } from './produtosServices';
 
 /**
  * Busca produtos da API com fallback para JSON estático
- * @param {string} query - Termo de busca (categoria ou nome)
- * @returns {Promise<Array>} Lista de produtos
+ *
+ * NOVO: Agora usa /api/ProdutoEscolhaCarrinho que retorna produtos com:
+ * - Informações completas (marca, modelo, segmento, tag, grupo)
+ * - Nome do distribuidor
+ * - Busca inteligente em múltiplos campos
+ *
+ * @param {string} query - Termo de busca (categoria, nome, SKU, marca, modelo, etc.)
+ * @returns {Promise<Array>} Lista de produtos com informações completas
  */
 async function fetchProducts(query = '') {
   try {
     console.log('🔍 Buscando produtos...', query ? `Filtro: ${query}` : 'Todos');
 
-    // Se não houver query, retorna todos os produtos
-    if (!query) {
-      const produtos = await getProdutos();
-      console.log('✅ Produtos carregados da API:', produtos.length);
+    // Temporariamente usando endpoint antigo até backend implementar o novo
+    const produtos = query
+      ? await getProdutosPorCategoria(query)
+      : await getProdutos();
+
+    if (produtos && produtos.length > 0) {
+      console.log('✅ Produtos carregados com sucesso:', produtos.length);
       return produtos;
     }
 
-    // Primeiro tenta buscar por categoria exata
-    try {
-      const produtosPorCategoria = await getProdutosPorCategoria(query.toLowerCase());
-      if (produtosPorCategoria && produtosPorCategoria.length > 0) {
-        console.log(`✅ ${produtosPorCategoria.length} produtos encontrados na categoria "${query}"`);
-        return produtosPorCategoria;
-      }
-    } catch (error) {
-      console.log('⚠️ Categoria não encontrada na API, buscando por nome...', +error);
+    // Se não encontrar produtos e houver query, tenta buscar sem filtro
+    if (query && (!produtos || produtos.length === 0)) {
+      console.log('⚠️ Nenhum produto encontrado com filtro. Buscando todos...');
+      const todosProdutos = await buscarProdutosParaCarrinho('');
+      return todosProdutos;
     }
 
-    // Se não encontrar por categoria, busca todos e filtra por nome
-    const todosProdutos = await getProdutos();
-    const produtosFiltrados = todosProdutos.filter(
-      (item) =>
-        item.nome.toLowerCase().includes(query.toLowerCase()) ||
-        item.categoria.toLowerCase().includes(query.toLowerCase())
-    );
-
-    console.log(`✅ ${produtosFiltrados.length} produtos encontrados com filtro "${query}"`);
-    return produtosFiltrados;
+    console.log('✅ Busca concluída:', produtos?.length || 0, 'produtos');
+    return produtos || [];
 
   } catch (error) {
     console.error('❌ Erro ao carregar produtos da API:', error);

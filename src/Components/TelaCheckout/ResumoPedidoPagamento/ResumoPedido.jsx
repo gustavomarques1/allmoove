@@ -12,13 +12,17 @@ function ResumoPedido({ cartItems, valorFrete = 0 }) {
       acc[fornecedor] = { itens: [], subtotal: 0 };
     }
     acc[fornecedor].itens.push(item);
-    acc[fornecedor].subtotal += item.price * item.quantity;
+    const preco = item.precoVenda || item.price || 0;
+    acc[fornecedor].subtotal += preco * item.quantity;
     return acc;
   }, {});
 
   // 2. CÁLCULO DO TOTAL GERAL
   const numeroDeFornecedores = Object.keys(itensAgrupados).length;
-  const valorTotalProdutos = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const valorTotalProdutos = cartItems.reduce((acc, item) => {
+    const preco = item.precoVenda || item.price || 0;
+    return acc + (preco * item.quantity);
+  }, 0);
   const valorTotalFrete = valorFrete * numeroDeFornecedores;
   const valorTotalGeral = valorTotalProdutos + valorTotalFrete;
 
@@ -42,12 +46,15 @@ function ResumoPedido({ cartItems, valorFrete = 0 }) {
 
             <div className={styles.itemsList}>
               <div className={styles.itemsDetail}>
-                {itensAgrupados[fornecedor].itens.map(item => (
-                  <div key={item.id} className={styles.itemRow}>
-                    <span>{item.nome} ({item.quantity}x)</span>
-                    <span>{(item.price * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                  </div>
-                ))}
+                {itensAgrupados[fornecedor].itens.map(item => {
+                  const preco = item.precoVenda || item.price || 0;
+                  return (
+                    <div key={item.id} className={styles.itemRow}>
+                      <span>{item.nome} ({item.quantity}x)</span>
+                      <span>{(preco * item.quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             

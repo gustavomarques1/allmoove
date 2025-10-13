@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Últimos Pedidos</title>
+</head>
+<body>
+    <h1>Teste API - Últimos Pedidos</h1>
+
+    <div>
+        <h2>1. Distribuidor/ultimospedidos (Atual)</h2>
+        <button onclick="testarUltimosPedidosDistribuidor()">Testar</button>
+        <pre id="result1"></pre>
+    </div>
+
+    <div>
+        <h2>2. Pedidos/assistencia (Alternativa)</h2>
+        <button onclick="testarPedidosAssistencia()">Testar</button>
+        <pre id="result2"></pre>
+    </div>
+
+    <script>
+        const API_BASE = 'https://localhost:44370';
+        const ID_ASSISTENCIA = 1; // Substitua pelo ID correto
+
+        async function testarUltimosPedidosDistribuidor() {
+            const result = document.getElementById('result1');
+            result.textContent = 'Carregando...';
+
+            try {
+                const response = await fetch(`${API_BASE}/api/Distribuidor/ultimospedidos/${ID_ASSISTENCIA}`);
+                const data = await response.json();
+
+                result.textContent = JSON.stringify(data, null, 2);
+                console.log('✅ Distribuidor/ultimospedidos:', data);
+            } catch (error) {
+                result.textContent = `❌ Erro: ${error.message}`;
+                console.error('Erro:', error);
+            }
+        }
+
+        async function testarPedidosAssistencia() {
+            const result = document.getElementById('result2');
+            result.textContent = 'Carregando...';
+
+            try {
+                // Tenta pegar token do localStorage (se estiver logado)
+                const token = localStorage.getItem('token');
+
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch(`${API_BASE}/api/Pedidos/assistencia/${ID_ASSISTENCIA}`, {
+                    headers
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+
+                result.textContent = JSON.stringify(data, null, 2);
+                console.log('✅ Pedidos/assistencia:', data);
+            } catch (error) {
+                result.textContent = `❌ Erro: ${error.message}`;
+                console.error('Erro:', error);
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        div {
+            margin: 20px 0;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 400px;
+        }
+    </style>
+</body>
+</html>

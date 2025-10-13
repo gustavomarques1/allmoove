@@ -12,23 +12,24 @@ import api from './api';
  */
 
 /**
- * Busca todos os pedidos de um distribuidor/fornecedor específico
- * @param {string} fornecedor - Nome do fornecedor (se não fornecido, busca do localStorage)
- * @returns {Promise<Array>} Lista de pedidos destinados a este fornecedor
+ * Busca todos os pedidos de um distribuidor específico
+ * @param {number|string} idDistribuidor - ID do distribuidor (se não fornecido, busca do localStorage)
+ * @returns {Promise<Array>} Lista de pedidos destinados a este distribuidor
  * @throws {Error} Se o usuário não estiver autenticado ou houver erro na requisição
  */
-export const getPedidosDoDistribuidor = async (fornecedor = null) => {
+export const getPedidosDoDistribuidor = async (idDistribuidor = null) => {
   try {
     const token = localStorage.getItem('token');
-    const fornecedorNome = fornecedor || localStorage.getItem('fornecedor');
+    const id = idDistribuidor || localStorage.getItem('idPessoa');
 
-    if (!token || !fornecedorNome) {
-      throw new Error('Usuário não autenticado ou fornecedor não identificado.');
+    if (!token || !id) {
+      console.warn('⚠️ Token ou ID não encontrado. Token:', !!token, 'ID:', id);
+      throw new Error('Usuário não autenticado ou distribuidor não identificado.');
     }
 
-    console.log('📡 Buscando pedidos do distribuidor:', fornecedorNome);
+    console.log('📡 Buscando pedidos do distribuidor ID:', id);
 
-    const response = await api.get(`/api/Pedidos/distribuidor/${encodeURIComponent(fornecedorNome)}`, {
+    const response = await api.get(`/api/Pedidos/distribuidor/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -42,6 +43,12 @@ export const getPedidosDoDistribuidor = async (fornecedor = null) => {
     if (error.response) {
       console.error('Status:', error.response.status);
       console.error('Dados:', error.response.data);
+
+      // Se o endpoint não existir, retornar array vazio (desenvolvimento)
+      if (error.response.status === 404) {
+        console.warn('⚠️ Endpoint não implementado no backend. Retornando array vazio.');
+        return [];
+      }
     }
 
     throw error;
@@ -120,7 +127,7 @@ export const createPedido = async (dadosPedido) => {
         produtoId: item.id || item.produtoId,
         nome: item.nome || item.name,
         quantidade: item.quantidade || item.quantity,
-        preco: item.preco || item.price
+        preco: item.precoVenda || item.preco || item.price
       })),
       endereco: {
         cep: dadosPedido.endereco.cep,
@@ -345,7 +352,8 @@ export const validarDadosPedido = (dadosPedido) => {
       if (!item.quantidade && !item.quantity) {
         errors.push(`Item ${index + 1}: Quantidade é obrigatória`);
       }
-      if ((!item.preco && !item.price) || (item.preco || item.price) <= 0) {
+      const preco = item.precoVenda || item.preco || item.price;
+      if (!preco || preco <= 0) {
         errors.push(`Item ${index + 1}: Preço deve ser maior que zero`);
       }
     });

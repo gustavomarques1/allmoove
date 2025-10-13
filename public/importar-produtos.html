@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importar Produtos - AllMoove</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            background: #f8f9ff;
+        }
+
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #764ba2;
+            background: #e8ebff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .config-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .config-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .log {
+            background: #1e1e1e;
+            color: #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .log.show {
+            display: block;
+        }
+
+        .log-line {
+            margin-bottom: 5px;
+        }
+
+        .log-success {
+            color: #4caf50;
+        }
+
+        .log-error {
+            color: #f44336;
+        }
+
+        .log-warning {
+            color: #ff9800;
+        }
+
+        .log-info {
+            color: #2196f3;
+        }
+
+        .preview {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .preview.show {
+            display: block;
+        }
+
+        .preview h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .preview-table th,
+        .preview-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .preview-table th {
+            background: #667eea;
+            color: white;
+        }
+
+        .progress {
+            background: #e0e0e0;
+            border-radius: 8px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress.show {
+            display: block;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Importar Produtos para AllMoove</h1>
+        <p class="subtitle">Faça upload do arquivo Excel com os produtos para popular o banco de dados</p>
+
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📤</div>
+            <h3>Clique ou arraste o arquivo Excel aqui</h3>
+            <p style="color: #999; margin-top: 10px;">Formatos aceitos: .xlsx, .xls</p>
+            <input type="file" id="fileInput" accept=".xlsx,.xls" />
+        </div>
+
+        <div class="config-section">
+            <h3>⚙️ Configurações de Importação</h3>
+
+            <div class="form-group">
+                <label for="apiUrl">URL da API:</label>
+                <input type="text" id="apiUrl" value="https://localhost:44370" />
+            </div>
+
+            <div class="form-group">
+                <label for="idDistribuidor">ID do Distribuidor (padrão):</label>
+                <input type="number" id="idDistribuidor" value="11" />
+            </div>
+
+            <div class="form-group">
+                <label for="idSegmento">ID do Segmento (padrão):</label>
+                <input type="number" id="idSegmento" value="1" />
+            </div>
+
+            <div class="form-group">
+                <label for="situacao">Situação dos produtos:</label>
+                <select id="situacao">
+                    <option value="ATIVO">ATIVO</option>
+                    <option value="INATIVO">INATIVO</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="useAuth" checked />
+                    Usar autenticação (Bearer token do localStorage)
+                </label>
+            </div>
+        </div>
+
+        <button class="btn" id="importBtn" disabled>
+            Importar Produtos
+        </button>
+
+        <div class="progress" id="progress">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+
+        <div class="preview" id="preview">
+            <h3>📋 Preview (primeiros 5 produtos)</h3>
+            <div id="previewContent"></div>
+        </div>
+
+        <div class="log" id="log"></div>
+    </div>
+
+    <script>
+        let excelData = [];
+
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const importBtn = document.getElementById('importBtn');
+        const log = document.getElementById('log');
+        const preview = document.getElementById('preview');
+        const previewContent = document.getElementById('previewContent');
+        const progress = document.getElementById('progress');
+        const progressBar = document.getElementById('progressBar');
+
+        // Upload area events
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            addLog(`📂 Lendo arquivo: ${file.name}`, 'info');
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                    addLog(`✅ Arquivo lido com sucesso! ${jsonData.length} linhas encontradas`, 'success');
+                    excelData = jsonData;
+
+                    showPreview(jsonData);
+                    importBtn.disabled = false;
+                } catch (error) {
+                    addLog(`❌ Erro ao ler arquivo: ${error.message}`, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showPreview(data) {
+            const previewData = data.slice(0, 5);
+
+            let html = '<table class="preview-table"><thead><tr>';
+            const keys = Object.keys(previewData[0] || {});
+            keys.forEach(key => {
+                html += `<th>${key}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            previewData.forEach(row => {
+                html += '<tr>';
+                keys.forEach(key => {
+                    html += `<td>${row[key] || ''}</td>`;
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody></table>';
+            previewContent.innerHTML = html;
+            preview.classList.add('show');
+        }
+
+        function addLog(message, type = 'info') {
+            const logLine = document.createElement('div');
+            logLine.className = `log-line log-${type}`;
+            logLine.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(logLine);
+            log.classList.add('show');
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function updateProgress(current, total) {
+            const percent = Math.round((current / total) * 100);
+            progressBar.style.width = `${percent}%`;
+            progressBar.textContent = `${percent}%`;
+            progress.classList.add('show');
+        }
+
+        importBtn.addEventListener('click', async () => {
+            if (excelData.length === 0) {
+                addLog('❌ Nenhum dado para importar', 'error');
+                return;
+            }
+
+            importBtn.disabled = true;
+            log.innerHTML = '';
+            addLog('🚀 Iniciando importação...', 'info');
+
+            const apiUrl = document.getElementById('apiUrl').value;
+            const idDistribuidor = parseInt(document.getElementById('idDistribuidor').value);
+            const idSegmento = parseInt(document.getElementById('idSegmento').value);
+            const situacao = document.getElementById('situacao').value;
+            const useAuth = document.getElementById('useAuth').checked;
+
+            let headers = {
+                'Content-Type': 'application/json'
+            };
+
+            if (useAuth) {
+                const token = localStorage.getItem('token');
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                    addLog('🔐 Token de autenticação encontrado', 'info');
+                } else {
+                    addLog('⚠️ Token não encontrado no localStorage', 'warning');
+                }
+            }
+
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (let i = 0; i < excelData.length; i++) {
+                const row = excelData[i];
+
+                // Mapear dados do Excel para o formato da API
+                // Ajuste os nomes das colunas de acordo com seu Excel
+                const produto = {
+                    nome: row.nome || row.Nome || row.NOME || '',
+                    descricao: row.descricao || row.Descricao || row.DESCRICAO || '',
+                    sku: row.sku || row.SKU || row.codigo || row.Codigo || '',
+                    ean: row.ean || row.EAN || row.codigoBarras || '',
+                    precoCusto: parseFloat(row.precoCusto || row.PrecoCusto || row.preco_custo || 0),
+                    precoVenda: parseFloat(row.precoVenda || row.PrecoVenda || row.preco_venda || row.preco || row.Preco || 0),
+                    quantidade: parseInt(row.quantidade || row.Quantidade || row.estoque || row.Estoque || 0),
+                    idDistribuidor: parseInt(row.idDistribuidor || row.distribuidor || idDistribuidor),
+                    idSegmento: parseInt(row.idSegmento || row.segmento || idSegmento),
+                    idMarca: parseInt(row.idMarca || row.marca || 1),
+                    idModelo: parseInt(row.idModelo || row.modelo || 1),
+                    idGrupo: parseInt(row.idGrupo || row.grupo || 1),
+                    idTag: parseInt(row.idTag || row.tag || 1),
+                    situacao: situacao,
+                    codigo: row.codigo || row.Codigo || row.sku || `PROD${i + 1}`,
+                    posicao: row.posicao || row.Posicao || ''
+                };
+
+                try {
+                    const response = await fetch(`${apiUrl}/api/Produtos`, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(produto)
+                    });
+
+                    if (response.ok) {
+                        successCount++;
+                        addLog(`✅ [${i + 1}/${excelData.length}] Produto "${produto.nome}" importado com sucesso`, 'success');
+                    } else {
+                        errorCount++;
+                        const errorText = await response.text();
+                        addLog(`❌ [${i + 1}/${excelData.length}] Erro ao importar "${produto.nome}": ${response.status} - ${errorText}`, 'error');
+                    }
+                } catch (error) {
+                    errorCount++;
+                    addLog(`❌ [${i + 1}/${excelData.length}] Erro de conexão ao importar "${produto.nome}": ${error.message}`, 'error');
+                }
+
+                updateProgress(i + 1, excelData.length);
+
+                // Delay para não sobrecarregar a API
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            addLog(`\n🏁 Importação concluída!`, 'info');
+            addLog(`✅ Sucesso: ${successCount} produtos`, 'success');
+            if (errorCount > 0) {
+                addLog(`❌ Erros: ${errorCount} produtos`, 'error');
+            }
+
+            importBtn.disabled = false;
+        });
+
+        // Verificar se há token no localStorage ao carregar
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                addLog('✅ Token de autenticação detectado no localStorage', 'success');
+            } else {
+                addLog('⚠️ Nenhum token encontrado. Faça login primeiro ou desmarque "Usar autenticação"', 'warning');
+            }
+        });
+    </script>
+</body>
+</html>

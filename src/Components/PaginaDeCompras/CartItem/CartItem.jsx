@@ -12,7 +12,10 @@ function CartItem({ data }) {
   const { handleAddItem, handleDecreaseItem, handleRemoveItem } = useContext(AppContext);
   
   // 3. Pegando a descrição e a quantidade dos dados
-  const { id, nome, imagem, descricao, price, quantity } = data;
+  const { id, nome, imagem, descricao, price, precoVenda, quantity } = data;
+
+  // Usa precoVenda da API ou price do fallback
+  const preco = precoVenda || price || 0;
 
   return (
     <section className="cart-item">
@@ -47,8 +50,8 @@ function CartItem({ data }) {
           </div>
           
           <div className="price-details">
-            <span className="item-price-each">{formatCurrency(price, 'BRL')} each</span>
-            <span className="item-price-total">{formatCurrency(price * quantity, 'BRL')}</span>
+            <span className="item-price-each">{formatCurrency(preco, 'BRL')} each</span>
+            <span className="item-price-total">{formatCurrency(preco * quantity, 'BRL')}</span>
           </div>
         </div>
       </div>
@@ -74,6 +77,7 @@ CartItem.propTypes = {
     imagem: propTypes.string,
     descricao: propTypes.string,
     price: propTypes.number,
+    precoVenda: propTypes.number,
     quantity: propTypes.number,
   }).isRequired,
 };

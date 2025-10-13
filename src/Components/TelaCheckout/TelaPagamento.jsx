@@ -87,7 +87,10 @@ function TelaPagamento() {
 
   const { cartItems = [], opcaoSelecionada = null } = location.state || {};
 
-  const valorProdutos = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const valorProdutos = cartItems.reduce((acc, item) => {
+    const preco = item.precoVenda || item.price || 0;
+    return acc + (preco * item.quantity);
+  }, 0);
   const valorFrete = opcaoSelecionada?.preco || 0;
   const valorTotal = valorProdutos + valorFrete;
 
@@ -382,7 +385,10 @@ function TelaPagamento() {
         console.log(`📋 ${items.length} itens deste fornecedor`);
 
         // Calcula valores apenas dos itens deste fornecedor
-        const valorProdutosFornecedor = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        const valorProdutosFornecedor = items.reduce((acc, item) => {
+          const preco = item.precoVenda || item.price || 0;
+          return acc + (preco * item.quantity);
+        }, 0);
         const valorFreteFornecedor = valorFrete / Object.keys(itensPorFornecedor).length; // Divide frete entre fornecedores
         const totalPagoFornecedor = valorProdutosFornecedor + valorFreteFornecedor;
 

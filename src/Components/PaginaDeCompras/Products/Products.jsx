@@ -17,31 +17,38 @@ function Products() {
       setLoading(true);
       setNotification('');
 
-      const categoriaQuery = searchParams.get('categoria');
-      const fornecedorQuery = searchParams.get('fornecedor');
-      const termoDeBusca = categoriaQuery || '';
+      const idSegmentoQuery = searchParams.get('idSegmento');
+      const idDistribuidorQuery = searchParams.get('idDistribuidor');
 
-      // 1. Busca produtos pela categoria
-      let fetchedProducts = await fetchProducts(termoDeBusca);
+      // 1. Busca TODOS os produtos
+      let fetchedProducts = await fetchProducts('');
 
-      // 2. Filtra por fornecedor se especificado
-      if (fornecedorQuery && fetchedProducts.length > 0) {
+      // 2. Filtra por idSegmento se especificado
+      if (idSegmentoQuery) {
+        const idSegmento = parseInt(idSegmentoQuery);
         fetchedProducts = fetchedProducts.filter(
-          product => product.fornecedor === fornecedorQuery
+          product => product.idSegmento === idSegmento
         );
 
-        // Se após filtrar por fornecedor não houver produtos
-        if (fetchedProducts.length === 0) {
-          setNotification(
-            `Nenhum produto encontrado para a categoria "${categoriaQuery || 'todas'}" do fornecedor "${fornecedorQuery}".`
-          );
-        }
+        console.log(`📊 Filtrado por idSegmento ${idSegmento}:`, fetchedProducts.length, 'produtos');
       }
 
-      // 3. Fallback se categoria não retornar nada
-      if ((!fetchedProducts || fetchedProducts.length === 0) && termoDeBusca !== '' && !fornecedorQuery) {
-        setNotification(`Nenhum produto encontrado para "${termoDeBusca}". Exibindo todos os produtos.`);
-        fetchedProducts = await fetchProducts('');
+      // 3. Filtra por idDistribuidor se especificado
+      if (idDistribuidorQuery && fetchedProducts.length > 0) {
+        const idDistribuidor = parseInt(idDistribuidorQuery);
+        console.log(`🔍 Filtrando por idDistribuidor: ${idDistribuidor}`);
+
+        const produtosAntes = fetchedProducts.length;
+        fetchedProducts = fetchedProducts.filter(
+          product => product.idDistribuidor === idDistribuidor
+        );
+
+        console.log(`📊 Produtos antes: ${produtosAntes}, depois: ${fetchedProducts.length}`);
+      }
+
+      // 4. Notificação se não encontrar produtos
+      if (fetchedProducts.length === 0 && idSegmentoQuery) {
+        setNotification(`Nenhum produto encontrado para o segmento selecionado.`);
       }
 
       setProducts(fetchedProducts || []);

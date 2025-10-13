@@ -12,7 +12,10 @@ function Cart() {
   const navigate = useNavigate(); // Hook para navegação
 
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+  const totalPrice = cartItems.reduce((acc, item) => {
+    const preco = item.precoVenda || item.price || 0;
+    return acc + (preco * item.quantity);
+  }, 0);
 
   // Função para navegar para a próxima tela, passando os dados
   const handleContinue = () => {

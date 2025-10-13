@@ -10,10 +10,23 @@ import api from './api';
  */
 export const getProdutos = async () => {
   try {
-    const response = await api.get('/api/Produtos');
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    console.log('🔍 getProdutos: Buscando produtos...');
+    console.log('🔐 Token disponível:', token ? 'SIM' : 'NÃO');
+
+    const response = await api.get('/api/Produtos', { headers });
+
+    console.log('✅ getProdutos: Resposta recebida');
+    console.log('📦 Total de produtos:', response.data?.length || 0);
+    console.log('📋 Produtos:', response.data);
+
     return response.data;
   } catch (error) {
-    console.error('Erro ao buscar produtos:', error);
+    console.error('❌ getProdutos: Erro ao buscar produtos:', error);
+    console.error('❌ Status:', error.response?.status);
+    console.error('❌ Mensagem:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -89,6 +102,240 @@ export const getFornecedores = async () => {
     return response.data;
   } catch (error) {
     console.error('Erro ao buscar fornecedores:', error);
+    throw error;
+  }
+};
+
+/**
+ * Busca produtos para carrinho com busca inteligente
+ *
+ * Este endpoint é mais completo que /api/Produtos pois retorna:
+ * - Informações de grupo, tag, segmento, marca, modelo
+ * - Nome do distribuidor
+ * - Busca em múltiplos campos (nome, SKU, EAN, descrição, etc.)
+ *
+ * @param {string} campoConsulta - Texto de busca (nome, SKU, marca, modelo, etc.)
+ * @returns {Promise<Array>} Lista de produtos com informações completas
+ */
+export const buscarProdutosParaCarrinho = async (campoConsulta = '') => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/ProdutoEscolhaCarrinho', {
+      params: { campoConsulta },
+      headers
+    });
+
+    console.log(`✅ Produtos encontrados (busca: "${campoConsulta}"):`, response.data.length);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar produtos para carrinho:', error);
+
+    // Se der erro 404 ou 401, usa fallback
+    if (error.response?.status === 404 || error.response?.status === 401) {
+      console.warn('⚠️ Endpoint /api/ProdutoEscolhaCarrinho não encontrado ou requer auth. Usando fallback.');
+      // Fallback para o endpoint antigo
+      return getProdutos();
+    }
+
+    throw error;
+  }
+};
+
+/**
+ * Busca todos os segmentos/categorias de produtos
+ * @returns {Promise<Array>} Lista de segmentos com id e nome
+ */
+export const getSegmentos = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/ProdutoSegmentos', { headers });
+    console.log('✅ Segmentos carregados da API:', response.data.length);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar segmentos:', error);
+    throw error;
+  }
+};
+
+/**
+ * Busca todos os grupos de produtos
+ * @returns {Promise<Array>} Lista de grupos
+ */
+export const getGrupos = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/ProdutoGrupos', { headers });
+    return response.data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar grupos:', error);
+    throw error;
+  }
+};
+
+/**
+ * Busca todas as marcas de produtos
+ * @returns {Promise<Array>} Lista de marcas
+ */
+export const getMarcas = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/ProdutoMarcas', { headers });
+    return response.data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar marcas:', error);
+    throw error;
+  }
+};
+
+/**
+ * Busca todos os modelos de produtos
+ * @returns {Promise<Array>} Lista de modelos
+ */
+export const getModelos = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/ProdutoModelos', { headers });
+    return response.data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar modelos:', error);
+    throw error;
+  }
+};
+
+/**
+ * Busca todas as tags de produtos
+ * @returns {Promise<Array>} Lista de tags
+ */
+export const getTags = async () => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/ProdutoTags', { headers });
+    return response.data;
+  } catch (error) {
+    console.error('❌ Erro ao buscar tags:', error);
+    throw error;
+  }
+};
+
+/**
+ * Busca produtos por grupo
+ * @param {number} idGrupo - ID do grupo
+ * @returns {Promise<Array>} Lista de produtos filtrados
+ */
+export const getProdutosPorGrupo = async (idGrupo) => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/Produtos', { headers });
+
+    // Filtrar no cliente por idGrupo
+    const produtosFiltrados = response.data.filter(p => p.idGrupo === idGrupo);
+
+    console.log(`✅ Produtos do grupo ${idGrupo}:`, produtosFiltrados.length);
+    return produtosFiltrados;
+  } catch (error) {
+    console.error(`❌ Erro ao buscar produtos do grupo ${idGrupo}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Busca produtos por grupo E fornecedor
+ * @param {number} idGrupo - ID do grupo
+ * @param {string} fornecedor - Nome do fornecedor
+ * @returns {Promise<Array>} Lista de produtos filtrados
+ */
+export const getProdutosPorGrupoEFornecedor = async (idGrupo, fornecedor) => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get('/api/Produtos', { headers });
+
+    // Filtrar no cliente por idGrupo e fornecedor
+    const produtosFiltrados = response.data.filter(p =>
+      p.idGrupo === idGrupo &&
+      (p.fornecedor === fornecedor || p.distribuidor === fornecedor)
+    );
+
+    console.log(`✅ Produtos do grupo ${idGrupo} e fornecedor ${fornecedor}:`, produtosFiltrados.length);
+    return produtosFiltrados;
+  } catch (error) {
+    console.error(`❌ Erro ao buscar produtos do grupo ${idGrupo} e fornecedor ${fornecedor}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Busca distribuidores por segmento
+ * @param {number} idSegmento - ID do segmento
+ * @returns {Promise<Array>} Lista de distribuidores
+ */
+export const getDistribuidoresPorSegmento = async (idSegmento) => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get(`/api/Distribuidor/consulta?idSegmento=${idSegmento}`, { headers });
+
+    console.log(`✅ Distribuidores do segmento ${idSegmento}:`, response.data.length);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Erro ao buscar distribuidores do segmento ${idSegmento}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Busca últimos pedidos de uma assistência
+ * @param {number} idAssistencia - ID da assistência técnica
+ * @returns {Promise<Array>} Lista dos últimos pedidos
+ */
+export const getUltimosPedidos = async (idAssistencia) => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get(`/api/Distribuidor/ultimospedidos/${idAssistencia}`, { headers });
+
+    console.log(`✅ Últimos pedidos da assistência ${idAssistencia}:`, response.data.length);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Erro ao buscar últimos pedidos:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Busca distribuidores favoritos por segmento e assistência
+ * @param {number} idSegmento - ID do segmento
+ * @param {number} idAssistencia - ID da assistência técnica
+ * @returns {Promise<Array>} Lista de distribuidores favoritos
+ */
+export const getDistribuidoresFavoritos = async (idSegmento, idAssistencia) => {
+  try {
+    const token = localStorage.getItem('token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await api.get(`/api/Distribuidor/favoritos/${idSegmento}/${idAssistencia}`, { headers });
+
+    console.log(`✅ Distribuidores favoritos (segmento ${idSegmento}, assistência ${idAssistencia}):`, response.data.length);
+    return response.data;
+  } catch (error) {
+    console.error(`❌ Erro ao buscar distribuidores favoritos:`, error);
     throw error;
   }
 };
