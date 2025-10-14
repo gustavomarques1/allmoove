@@ -31,14 +31,21 @@
   --leading-relaxed: 1.75;
 
   /* ==================
-     Colors
+     Colors - AllMoove Official Palette
      ================== */
 
   /* Brand Colors */
-  --color-primary: #ff6400;
-  --color-primary-hover: #ea580c;
-  --color-primary-light: #fff7ed;
-  --color-primary-dark: #c2410c;
+  --color-primary: #FF3600;           /* AllMoove signature red-orange */
+  --color-primary-hover: #E63000;     /* Darker on hover */
+  --color-primary-light: #FF5722;     /* Lighter variant */
+  --color-primary-dark: #CC2B00;      /* Darkest variant */
+
+  --color-secondary: #18304C;         /* Deep navy blue */
+  --color-secondary-hover: #0F1F35;   /* Darker on hover */
+  --color-secondary-light: #2A4A6F;   /* Lighter variant */
+  --color-secondary-dark: #0A1526;    /* Darkest variant */
+
+  --color-background: #F0F4EE;        /* Off-white/cream background */
 
   /* Neutral Colors */
   --color-white: #ffffff;
@@ -72,7 +79,7 @@
   --color-info-dark: #2563eb;
 
   /* Text Colors */
-  --color-text-primary: #1f2937;
+  --color-text-primary: #18304C;      /* Navy blue - same as secondary */
   --color-text-secondary: #6b7280;
   --color-text-tertiary: #9ca3af;
   --color-text-inverse: #ffffff;
@@ -157,7 +164,7 @@ body {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: var(--color-text-primary);
-  background-color: var(--color-white);
+  background-color: var(--color-background);  /* Changed to cream/off-white */
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
