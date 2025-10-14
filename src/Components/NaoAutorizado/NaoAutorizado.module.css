@@ -3,7 +3,7 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-dark) 100%);
   padding: 20px;
 }
 
@@ -56,7 +56,7 @@
 }
 
 .role strong {
-  color: #667eea;
+  color: var(--color-primary);
   font-weight: 600;
 }
 
@@ -79,23 +79,24 @@
 }
 
 .primaryButton {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-primary);
   color: white;
 }
 
 .primaryButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  background: var(--color-primary-hover);
+  box-shadow: var(--shadow-xl);
 }
 
 .secondaryButton {
   background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: var(--color-secondary);
+  border: 2px solid var(--color-secondary);
 }
 
 .secondaryButton:hover {
-  background: #f7fafc;
+  background: var(--color-background);
   transform: translateY(-2px);
 }
 

@@ -41,10 +41,10 @@
 }
 
 .stepCircle.active {
-  background-color: #ff6400;
+  background-color: var(--color-primary);
   color: white;
-  border: 2px solid #ff6400;
-  box-shadow: 0 0 0 4px rgba(255, 100, 0, 0.1);
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(255, 54, 0, 0.15);
 }
 
 .stepCircle.future {
@@ -70,7 +70,7 @@
 }
 
 .labelActive {
-  color: #1f2937;
+  color: var(--color-secondary);
 }
 
 .labelInactive {

@@ -10,8 +10,8 @@
   z-index: var(--z-sticky);
 
   background-color: var(--color-white);
-  border-bottom: 1px solid var(--color-gray-200);
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--color-secondary);
+  box-shadow: var(--shadow-md);
 }
 
 .container {
@@ -77,12 +77,12 @@
 }
 
 .navLink:hover {
-  background-color: var(--color-gray-100);
-  color: var(--color-text-primary);
+  background-color: var(--color-background);
+  color: var(--color-secondary);
 }
 
 .navLinkActive {
-  background-color: var(--color-primary-light);
+  background-color: rgba(255, 54, 0, 0.1);
   color: var(--color-primary);
   font-weight: var(--font-semibold);
 }
@@ -104,7 +104,7 @@
 
   padding: var(--spacing-2) var(--spacing-3);
   border-radius: var(--radius-md);
-  background-color: var(--color-gray-50);
+  background-color: var(--color-background);
 }
 
 .userIcon {
@@ -201,7 +201,7 @@
   padding: var(--spacing-3);
   margin-bottom: var(--spacing-2);
   border-radius: var(--radius-md);
-  background-color: var(--color-gray-50);
+  background-color: var(--color-background);
 
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
@@ -230,11 +230,11 @@
 }
 
 .mobileNavLink:hover {
-  background-color: var(--color-gray-100);
+  background-color: var(--color-background);
 }
 
 .mobileNavLinkActive {
-  background-color: var(--color-primary-light);
+  background-color: rgba(255, 54, 0, 0.1);
   color: var(--color-primary);
   font-weight: var(--font-semibold);
 }

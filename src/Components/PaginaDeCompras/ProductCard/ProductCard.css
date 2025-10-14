@@ -3,23 +3,23 @@
 .product-card {
   width: 100%;
   max-width: 300px;
-  background-color: white;
+  background-color: var(--color-white);
   display: flex;
-  flex-direction: column; /* Organiza os itens (imagem, infos) em uma coluna vertical */
+  flex-direction: column;
   cursor: pointer;
   margin: 0 auto;
-  position: relative; /* Essencial para posicionar o botão de carrinho dentro dele */
-  
-  /* MELHORIA: Adiciona bordas e sombra para um visual mais limpo */
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden; /* Garante que a imagem não "vaze" das bordas arredondadas */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: box-shadow 0.3s ease;
+  position: relative;
+
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
 }
 
 .product-card:hover {
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
 }
 
 /* CORREÇÃO PRINCIPAL PARA A IMAGEM: 
@@ -84,5 +84,5 @@
 }
 
 .icone_cor {
-  color:#ff6400
+  color: var(--color-primary);
 }

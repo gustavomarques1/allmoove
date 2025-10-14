@@ -15,10 +15,10 @@
 
 /* O conteúdo do modal (o card branco) */
 .modal-content {
-  background-color: white;
+  background-color: var(--color-white);
   padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
   width: 90%;
   max-width: 450px;
   position: relative;
@@ -47,7 +47,7 @@
 }
 
 .modal-close-button:hover {
-  color: #333;
+  color: var(--color-secondary);
 }
 
 .modal-header {
@@ -59,8 +59,8 @@
 
 .modal-header h2 {
   margin: 0;
-  font-size: 18px; 
-  color: #333;
+  font-size: 18px;
+  color: var(--color-secondary);
 }
 
 .modal-header-icon {
@@ -83,23 +83,23 @@
 .modal-form input {
   width: 100%;
   padding: 0.8rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
   font-size: 1rem;
-  box-sizing: border-box; 
-  background-color: white; 
-  color: #7C899D; 
+  box-sizing: border-box;
+  background-color: var(--color-white);
+  color: var(--color-secondary);
 }
 
 .modal-form input::placeholder {
-    color: #7C899D;
+    color: var(--color-text-secondary);
     opacity: 1;
 }
 
 .modal-form input:focus {
   outline: none;
-  border-color: #377CF2;
-  box-shadow: 0 0 0 2px rgba(55, 124, 242, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(255, 54, 0, 0.15);
 }
 
 /* --- ÁREA DOS BOTÕES CORRIGIDA --- */
@@ -143,14 +143,14 @@
 
 /* Estilo ATIVO (quando tem texto no input) */
 .modal-send-button {
-  background-color: #3C83F6; /* Cor azul ativa */
-  color: #ffffff; /* Cor do texto branca */
+  background-color: var(--color-primary);
+  color: var(--color-white);
   font-weight: bold;
 }
 
 /* Efeito hover para o botão ATIVO */
 .modal-send-button:not(.disabled):hover {
-  background-color: #2563eb; /* Um tom de azul um pouco mais escuro */
+  background-color: var(--color-primary-hover);
 }
 
 /* Estilo DESABILITADO (quando o input está vazio) */

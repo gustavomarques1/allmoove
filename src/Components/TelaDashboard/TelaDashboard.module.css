@@ -21,7 +21,7 @@
 }
 
 .dashboard-icon {
-  background-color: #ff6400;
+  background-color: var(--color-primary);
   color: white;
   padding: 10px;
   border-radius: 50%;
@@ -32,7 +32,7 @@
 
 .dashboard_title {
   font-size: 20px;
-  color: #333;
+  color: var(--color-secondary);
   font-weight: 600;
   margin: 0;
 }
@@ -48,7 +48,7 @@
 .dashboard-subtitle {
   font-size: 24px;
   font-weight: 700;
-  color: #333;
+  color: var(--color-secondary);
   margin: 0;
 }
 
@@ -65,14 +65,14 @@
 }
 
 .refresh-button-header {
-  background-color: #6b7280;
+  background-color: var(--color-secondary);
   color: white;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 16px 20px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   font-size: 14px;
   white-space: nowrap;
   display: flex;
@@ -81,7 +81,7 @@
 }
 
 .refresh-button-header:hover:not(:disabled) {
-  background-color: #4b5563;
+  background-color: var(--color-secondary-hover);
 }
 
 .refresh-button-header:disabled {
@@ -105,13 +105,13 @@
 }
 
 .category-icon {
-  color: #ff6400;
+  color: var(--color-primary);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all var(--transition-fast);
 }
 
 .category-icon:hover {
-  color: #da5802;
+  color: var(--color-primary-hover);
   transform: scale(1.1);
 }
 
@@ -120,20 +120,21 @@
 }
 
 .new-request-button-header {
-  background-color: #ff6400;
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 16px 24px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all var(--transition-fast);
   font-size: 14px;
   white-space: nowrap;
 }
 
 .new-request-button-header:hover {
-  background-color: #da5802;
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
 }
 
 /* CORREÇÃO APLICADA AQUI */
@@ -158,11 +159,11 @@
 }
 
 .card {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
   padding: 20px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
 }
@@ -178,7 +179,7 @@
   font-size: 16px;
   font-weight: 600;
   margin: 0;
-  color: #111827;
+  color: var(--color-secondary);
 }
 
 .card-number {
@@ -186,7 +187,7 @@
   font-weight: 700;
   margin: 0;
   margin-bottom: 6px;
-  color: #111827;
+  color: var(--color-secondary);
 }
 
 .card-description {
@@ -196,27 +197,28 @@
 }
 
 .new-request-button-down {
-  background-color: #ff6400;
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 12px 24px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all var(--transition-fast);
 }
 
 .new-request-button-down:hover {
-  background-color: #da5802;
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
 }
 
 .orders-section {
   margin-top: 24px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
   padding: 16px 24px 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
 }
@@ -305,7 +307,7 @@
 .card-icon {
   width: 18px;
   height: 18px;
-  color: #ff6400;
+  color: var(--color-primary);
 }
 
 /* Loading e Error States */
@@ -322,7 +324,7 @@
 .spinner {
   width: 32px;
   height: 32px;
-  color: #ff6400;
+  color: var(--color-primary);
   animation: spin 1s linear infinite;
 }
 
@@ -350,18 +352,18 @@
 }
 
 .order-item {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  background: var(--color-background);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  transition: box-shadow 0.2s;
+  transition: box-shadow var(--transition-fast);
 }
 
 .order-item:hover {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-md);
 }
 
 .order-info {
@@ -380,7 +382,7 @@
   margin: 0;
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-secondary);
 }
 
 .order-date {
@@ -451,7 +453,7 @@
 .order-total {
   font-size: 16px;
   font-weight: 700;
-  color: #111827;
+  color: var(--color-secondary);
   margin: 0;
 }
 

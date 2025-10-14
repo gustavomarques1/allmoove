@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: #E8EEF7; /* Ou a cor desejada */
+  background-color: var(--color-background);
 }
 
 html, body, #root {

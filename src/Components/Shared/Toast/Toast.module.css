@@ -1,19 +1,19 @@
 /* Toast Container */
 .toast {
   position: fixed;
-  top: 24px;
-  right: 24px;
+  top: var(--spacing-6);
+  right: var(--spacing-6);
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  background: white;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-5);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  background: var(--color-white);
   border-left: 4px solid;
   min-width: 300px;
   max-width: 500px;
-  z-index: 9999;
+  z-index: var(--z-toast);
   animation: slideIn 0.3s ease-out;
 }
 
@@ -40,10 +40,10 @@
 .message {
   flex: 1;
   margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1f2937;
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-secondary);
+  line-height: var(--leading-normal);
 }
 
 /* Close Button */
@@ -62,8 +62,8 @@
 }
 
 .closeButton:hover {
-  color: #1f2937;
-  background-color: #f3f4f6;
+  color: var(--color-secondary);
+  background-color: var(--color-background);
 }
 
 /* Toast Types */

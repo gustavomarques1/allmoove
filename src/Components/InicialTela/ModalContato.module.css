@@ -15,10 +15,10 @@
 
 /* O card do modal em si */
 .modalContent {
-  background-color: white;
+  background-color: var(--color-white);
   padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
   width: 90%;
   max-width: 450px;
   animation: fadeIn 0.3s ease-out;
@@ -42,18 +42,18 @@
 .modalHeader h2 {
   margin: 0;
   font-size: 1.25rem;
-  color: #333;
+  color: var(--color-secondary);
 }
 
 .closeButton {
   background: none;
   border: none;
   cursor: pointer;
-  color: #888;
+  color: var(--color-text-secondary);
   padding: 4px;
 }
 .closeButton:hover {
-  color: #333;
+  color: var(--color-secondary);
 }
 
 /* Corpo do modal com as informações */
@@ -68,9 +68,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background-color: #f8f9fa;
+  background-color: var(--color-background);
   padding: 12px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 }
 
 .contactIcon {

@@ -4,16 +4,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f8f9fa;
+  background-color: var(--color-background);
   padding: 50px;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-primary);
 }
 
 /* Ícone principal da AllMoove no topo */
 .inicial_icon {
   width: 64px;
   height: 64px;
-  color: #f97316;
+  color: var(--color-primary);
   margin-bottom: 16px;
 }
 
@@ -21,7 +21,7 @@
 .inicial_title {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--color-secondary);
   margin: 0;
 }
 
@@ -35,10 +35,10 @@
 
 /* Card do formulário de login */
 .inicial_form {
-  background-color: white;
+  background-color: var(--color-white);
   padding: 32px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -50,7 +50,7 @@
   text-align: center;
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--color-secondary);
   margin: 0 0 8px 0;
 }
 
@@ -74,19 +74,19 @@
 .inicial_input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
   margin-bottom: 16px;
   font-size: 1rem;
   box-sizing: border-box;
-  background-color: #ffffff;
-  color: #1f2937;
+  background-color: var(--color-white);
+  color: var(--color-secondary);
 }
 
 .inicial_input:focus {
   outline: none;
-  border-color: #f97316;
-  box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(255, 54, 0, 0.15);
 }
 
 .inicial_input::placeholder {
@@ -116,19 +116,20 @@
   gap: 10px;
   width: 100%;
   padding: 14px;
-  background-color: #f97316;
+  background-color: var(--color-primary);
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all var(--transition-fast);
   margin-top: 8px;
 }
 
 .inicial_button:hover {
-  background-color: #ea580c;
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
 }
 
 /* Ícone dentro do botão */
@@ -147,7 +148,7 @@
 
 /* Estilo para o link que abre o modal de contato */
 .linkContato {
-  color: #f97316;
+  color: var(--color-primary);
   text-decoration: none;
   cursor: pointer;
   font-weight: 600;
@@ -163,10 +164,10 @@
 .inicial_input:-webkit-autofill:hover,
 .inicial_input:-webkit-autofill:focus,
 .inicial_input:-webkit-autofill:active {
-    -webkit-text-fill-color: #1f2937 !important;
+    -webkit-text-fill-color: var(--color-secondary) !important;
     background-image: none !important;
     background-color: transparent !important;
-    box-shadow: 0 0 0 1000px #fff7ed inset !important;
+    box-shadow: 0 0 0 1000px var(--color-white) inset !important;
     transition: background-color 5000s ease-in-out 0s;
 }
 

@@ -24,9 +24,9 @@
 }
 
 .distribuidor-logo-icon {
-  color: white; /* Cor azul para o ícone do logo */
+  color: white;
   padding: 6px;
-  background-color: #F97415;
+  background-color: var(--color-primary);
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -111,26 +111,26 @@
 
 /* Estilização específica para o botão de estoque */
 .distribuidor-stock-button {
-
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;  
-  background-color: #f97316; /* Laranja */
+  gap: 8px;
+  background-color: var(--color-primary);
   color: white;
   font-weight: 600;
   width: 100%;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 10px 15px;
   cursor: pointer;
-  transition: background 0.2s;
-  align-self: flex-start; /* Alinha o botão à esquerda */
-  margin-bottom: 8px; /* Espaço abaixo do botão */
+  transition: all var(--transition-fast);
+  align-self: flex-start;
+  margin-bottom: 8px;
 }
 
 .distribuidor-stock-button:hover {
-  background-color: #ea580c;
+  background-color: var(--color-primary-hover);
+  box-shadow: var(--shadow-md);
 }
 
 .distribuidor-stock-description {
@@ -211,7 +211,7 @@
 
 .distribuidor-fat-progress-fill-orange {
   height: 100%;
-  background-color: #f97316; /* Laranja */
+  background-color: var(--color-primary);
   border-radius: 4px;
 }
 
@@ -263,7 +263,7 @@
 
 .distribuidor-segment-progress-fill {
   height: 100%;
-  background-color: #f97316; /* Verde */
+  background-color: var(--color-primary);
   border-radius: 4px;
 }
 
