@@ -5,6 +5,7 @@ import { Package, AlertCircle } from "lucide-react";
 import ModalRecuperarSenha from "../ModalSenha/ModalRecuperarSenha";
 import ModalContato from "./ModalContato";
 import Button from "../Shared/Button/Button";
+import Logo from "../Shared/Logo/Logo";
 import { useAuth } from "../../hooks/useAuth";
 
 function Inicial() {
@@ -46,7 +47,7 @@ function Inicial() {
   return (
     <>
       <div className={styles.inicial_container}>
-        <Package className={styles.inicial_icon} />
+        <Logo size={40} className={styles.inicial_icon} />
         <h1 className={styles.inicial_title}>AllMoove - Delivery</h1>
         <p className={styles.inicial_description}>
           Sistema de Entregas - Portal do Entregador

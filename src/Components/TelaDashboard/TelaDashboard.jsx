@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { usePedidos } from "../../hooks/usePedidos";
 import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
 import Button from "../Shared/Button/Button";
+import Logo from "../Shared/Logo/Logo";
 
 function TelaDashboard() {
   const navigate = useNavigate();
@@ -37,10 +38,7 @@ function TelaDashboard() {
       {/* Cabeçalho */}
       <div className={styles["dashboard-header-section"]}>
         <div className={styles["dashboard-header"]}>
-          <div className={styles["dashboard-icon"]}>
-            <Package size={20} />
-          </div>
-          <h1 className={styles["dashboard_title"]}>AllMoove</h1>
+          <Logo size={20} />
         </div>
         
         <div className={styles["dashboard-subtitle-and-button"]}>

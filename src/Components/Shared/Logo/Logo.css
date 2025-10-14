@@ -1,0 +1,16 @@
+.allmoove-logo {
+  display: inline-block;
+  vertical-align: middle;
+  /* SVGs renderizam melhor com essas configurações */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Garantir suavização de bordas */
+  shape-rendering: geometricPrecision;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  /* Suavização adicional */
+  filter: contrast(1.02);
+}
