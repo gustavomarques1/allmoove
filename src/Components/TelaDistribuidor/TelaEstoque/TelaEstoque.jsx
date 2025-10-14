@@ -154,6 +154,7 @@ function TelaEstoque() {
 
       {/* Métricas Cards */}
       {!isLoading && !error && (
+        <>
         <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
           <div className={styles.metricHeader}>
@@ -349,6 +350,7 @@ function TelaEstoque() {
           )}
         </div>
       </div>
+      </>
       )}
     </div>
   );
