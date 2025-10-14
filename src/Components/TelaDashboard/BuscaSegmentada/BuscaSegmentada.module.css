@@ -79,11 +79,6 @@
   white-space: nowrap;
 }
 
-.segmentoBotao:hover {
-  background-color: var(--color-gray-50);
-  border-color: var(--color-gray-400);
-}
-
 /* Botão selecionado */
 .segmentoBotao.selecionado {
   background-color: var(--color-white);
