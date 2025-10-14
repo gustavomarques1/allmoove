@@ -12,12 +12,13 @@ import {
   CircleCheck,
   Info,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { usePedidosDistribuidor } from "../../../hooks/usePedidosDistribuidor";
 import { updateStatusPedido } from "../../../api/pedidosServices";
 import formatCurrency from "../../../utils/formatCurrency";
 
 function DistribuidorDashboard() {
+  const navigate = useNavigate();
   const { pedidos, isLoading, error, indicadores } = usePedidosDistribuidor();
   const [processandoPedido, setProcessandoPedido] = useState(null);
 
@@ -33,6 +34,10 @@ function DistribuidorDashboard() {
     } finally {
       setProcessandoPedido(null);
     }
+  };
+
+  const handleGerenciarEstoque = () => {
+    navigate('/distribuidor/estoque');
   };
   return (
     <div className={styles["distribuidor-page"]}>
@@ -113,7 +118,10 @@ function DistribuidorDashboard() {
               className={styles["distribuidor-top-card-icon"]}
             />
           </div>
-          <button className={styles["distribuidor-stock-button"]}>
+          <button
+            className={styles["distribuidor-stock-button"]}
+            onClick={handleGerenciarEstoque}
+          >
             <Package size={16} /> {/* O ícone Package é adicionado aqui */}
             Gerenciar
           </button>

@@ -48,7 +48,7 @@ function Inicial() {
     <>
       <div className={styles.inicial_container}>
         <Logo size={40} className={styles.inicial_icon} />
-        <h1 className={styles.inicial_title}>AllMoove - Delivery</h1>
+        <h1 className={styles.inicial_title}>Delivery</h1>
         <p className={styles.inicial_description}>
           Sistema de Entregas - Portal do Entregador
         </p>

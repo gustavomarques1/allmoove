@@ -4,6 +4,7 @@ import TelaEntregador from "./Components/TelaEntregador/TelaEntregador";
 import TelaDashboard from "./Components/TelaDashboard/TelaDashboard";
 import PaginaLoja from "./Components/PaginaDeCompras/PaginaLoja";
 import DistribuidorDashboard from "./Components/TelaDistribuidor/TelaDistribuidorDashboard/DistribuidorDashboard";
+import TelaEstoque from "./Components/TelaDistribuidor/TelaEstoque/TelaEstoque";
 import TelaEntrega from "./Components/TelaEntrega/TelaEntrega";
 import TelaPagamento from "./Components/TelaCheckout/TelaPagamento";
 import TelaConfirmacao from "./Components/TelaPagamentoConfirmado/TelaConfirmacao";
@@ -72,6 +73,15 @@ function App() {
           element={
             <Layout userType="distribuidor">
               <DistribuidorDashboard />
+            </Layout>
+          }
+        />
+
+        <Route
+          path="/distribuidor/estoque"
+          element={
+            <Layout userType="distribuidor">
+              <TelaEstoque />
             </Layout>
           }
         />
