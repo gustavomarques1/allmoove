@@ -326,7 +326,7 @@
 }
 
 .botaoAcao:hover {
-  background-color: var(--color-primary-light);
+  background-color: #f0f4ee;
   border-color: var(--color-primary-hover);
 }
 
