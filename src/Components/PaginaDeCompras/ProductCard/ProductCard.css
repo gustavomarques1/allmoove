@@ -19,7 +19,6 @@
 
 .product-card:hover {
   box-shadow: var(--shadow-lg);
-  border-color: var(--color-primary);
 }
 
 /* CORREÇÃO PRINCIPAL PARA A IMAGEM: 
@@ -83,6 +82,16 @@
   opacity: 1;
 }
 
+/* Hover no botão: fundo laranja e ícone branco */
+.button__add-cart:hover {
+  background-color: var(--color-primary);
+}
+
+.button__add-cart:hover .icone_cor {
+  color: var(--color-white);
+}
+
 .icone_cor {
   color: var(--color-primary);
+  transition: color var(--transition-fast);
 }
