@@ -3,71 +3,19 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Package, AlertTriangle, DollarSign, Plus, Edit2, Trash2, Search } from 'lucide-react';
 import Button from '../../Shared/Button/Button';
 import styles from './TelaEstoque.module.css';
-
-// Dados mockados dos itens do estoque
-const mockEstoque = [
-  {
-    id: 1,
-    nome: 'Placa Principal',
-    descricao: 'Placa principal para smartphone Samsung Galaxy A54',
-    marca: 'Samsung',
-    quantidade: 25,
-    valorUnitario: 89.90,
-    localFisico: 'A1-B2',
-    lote: 'LOT-001',
-    status: 'disponivel'
-  },
-  {
-    id: 2,
-    nome: 'Tela LCD',
-    descricao: 'Tela LCD original 6.4 polegadas',
-    marca: 'Samsung',
-    quantidade: 5,
-    valorUnitario: 120.50,
-    localFisico: 'B2-C1',
-    lote: 'LOT-002',
-    status: 'estoque-baixo'
-  },
-  {
-    id: 3,
-    nome: 'Bateria',
-    descricao: 'Bateria 3000mAh compatível',
-    marca: 'Universal',
-    quantidade: 0,
-    valorUnitario: 45.00,
-    localFisico: 'C1-D3',
-    lote: 'LOT-003',
-    status: 'sem-estoque'
-  },
-  {
-    id: 4,
-    nome: 'Conector USB-C',
-    descricao: 'Conector de carga USB-C universal',
-    marca: 'Universal',
-    quantidade: 50,
-    valorUnitario: 15.90,
-    localFisico: 'D1-E2',
-    lote: 'LOT-004',
-    status: 'disponivel'
-  },
-  {
-    id: 5,
-    nome: 'Alto-falante',
-    descricao: 'Alto-falante interno padrão',
-    marca: 'Samsung',
-    quantidade: 12,
-    valorUnitario: 25.50,
-    localFisico: 'E1-F1',
-    lote: 'LOT-005',
-    status: 'disponivel'
-  }
-];
+import { useEstoque } from '../../../hooks/useEstoque';
+import {
+  deleteProdutoEstoque,
+  updateProdutoEstoque,
+  createProdutoEstoque
+} from '../../../api/estoqueServices';
 
 function TelaEstoque() {
   const navigate = useNavigate();
-  const [estoque, setEstoque] = useState(mockEstoque);
+  const { estoque, isLoading, error, recarregar } = useEstoque();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
+  const [processando, setProcessando] = useState(false);
 
   // Calcula métricas
   const totalItens = estoque.reduce((acc, item) => acc + item.quantidade, 0);
@@ -96,18 +44,44 @@ function TelaEstoque() {
   };
 
   const handleCadastrar = () => {
-    console.log('Cadastrar novo produto');
-    // TODO: Implementar modal ou rota para cadastro
+    // TODO: Implementar modal de cadastro
+    alert('Funcionalidade de cadastro será implementada em breve.\n\nPor enquanto, você pode cadastrar produtos diretamente no backend.');
   };
 
   const handleEditar = (id) => {
-    console.log('Editar produto', id);
-    // TODO: Implementar edição
+    // TODO: Implementar modal de edição
+    const produto = estoque.find(item => item.id === id);
+    if (produto) {
+      alert(`Editar produto: ${produto.nome}\n\nModal de edição será implementado em breve.`);
+    }
   };
 
-  const handleExcluir = (id) => {
-    console.log('Excluir produto', id);
-    // TODO: Implementar exclusão
+  const handleExcluir = async (id) => {
+    const produto = estoque.find(item => item.id === id);
+    if (!produto) {
+      alert('Produto não encontrado.');
+      return;
+    }
+
+    const confirmacao = window.confirm(
+      `Tem certeza que deseja excluir o produto:\n\n${produto.nome}\n\nEsta ação não pode ser desfeita.`
+    );
+
+    if (!confirmacao) {
+      return;
+    }
+
+    try {
+      setProcessando(true);
+      await deleteProdutoEstoque(id);
+      alert('Produto excluído com sucesso!');
+      recarregar(); // Recarrega a lista
+    } catch (err) {
+      console.error('Erro ao excluir produto:', err);
+      alert('Erro ao excluir produto: ' + (err.message || 'Erro desconhecido'));
+    } finally {
+      setProcessando(false);
+    }
   };
 
   const limparFiltros = () => {
@@ -153,8 +127,34 @@ function TelaEstoque() {
         </div>
       </header>
 
+      {/* Loading State */}
+      {isLoading && (
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <Package size={48} style={{ color: '#ccc', marginBottom: '1rem' }} />
+          <p style={{ fontSize: '1.1rem', color: '#666' }}>Carregando estoque...</p>
+        </div>
+      )}
+
+      {/* Error State */}
+      {error && !isLoading && (
+        <div style={{ textAlign: 'center', padding: '3rem', color: '#e74c3c' }}>
+          <AlertTriangle size={48} style={{ marginBottom: '1rem' }} />
+          <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>❌ Erro ao carregar estoque</p>
+          <p style={{ fontSize: '0.9rem', color: '#666' }}>{error}</p>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={recarregar}
+            style={{ marginTop: '1rem' }}
+          >
+            Tentar Novamente
+          </Button>
+        </div>
+      )}
+
       {/* Métricas Cards */}
-      <div className={styles.metricsGrid}>
+      {!isLoading && !error && (
+        <div className={styles.metricsGrid}>
         <div className={styles.metricCard}>
           <div className={styles.metricHeader}>
             <span className={styles.metricLabel}>Total de Itens</span>
@@ -277,6 +277,7 @@ function TelaEstoque() {
                       className={styles.actionButton}
                       onClick={() => handleEditar(item.id)}
                       title="Editar"
+                      disabled={processando}
                     >
                       <Edit2 size={16} />
                       Editar
@@ -285,9 +286,10 @@ function TelaEstoque() {
                       className={`${styles.actionButton} ${styles.deleteButton}`}
                       onClick={() => handleExcluir(item.id)}
                       title="Excluir"
+                      disabled={processando}
                     >
                       <Trash2 size={16} />
-                      Excluir
+                      {processando ? 'Excluindo...' : 'Excluir'}
                     </button>
                   </div>
                 </div>
@@ -347,6 +349,7 @@ function TelaEstoque() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }
