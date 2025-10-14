@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { LogOut, Menu, X, Home, ShoppingBag, Package, Truck, User } from 'lucide-react';
 import PropTypes from 'prop-types';
 import styles from './Navbar.module.css';
+import Logo from '../Logo/Logo';
 
 /**
  * Navbar global persistente do AllMoove
@@ -61,7 +62,7 @@ function Navbar({ userType = 'assistencia' }) {
       <div className={styles.container}>
         {/* Logo */}
         <div className={styles.logo} onClick={() => navigate(navLinks[0]?.path)}>
-          <span className={styles.logoText}>AllMoove</span>
+          <Logo size={24} />
         </div>
 
         {/* Desktop Navigation */}

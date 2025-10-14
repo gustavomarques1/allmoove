@@ -38,7 +38,7 @@ function TelaDashboard() {
       {/* Cabeçalho */}
       <div className={styles["dashboard-header-section"]}>
         <div className={styles["dashboard-header"]}>
-          <Logo size={20} />
+          {/* <Logo size={20} /> */}
         </div>
         
         <div className={styles["dashboard-subtitle-and-button"]}>
