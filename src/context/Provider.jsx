@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import propTypes from 'prop-types';
 import AppContext from './AppContext';
+import Toast from '../Components/PaginaDeCompras/Toast/Toast';
 
 function Provider({ children }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartItems, setCartItems] = useState([]);
   const [isCartVisible, setIsCartVisible] = useState(false);
+  const [toast, setToast] = useState({ isVisible: false, message: '', type: 'success' });
 
   const handleAddItem = (product) => {
     setCartItems((prevCartItems) => {
@@ -20,6 +22,13 @@ function Provider({ children }) {
       } else {
         return [...prevCartItems, { ...product, quantity: 1 }];
       }
+    });
+
+    // Mostra toast de sucesso
+    setToast({
+      isVisible: true,
+      message: `${product.nome} adicionado ao carrinho!`,
+      type: 'success',
     });
   };
 
@@ -60,6 +69,12 @@ function Provider({ children }) {
   return (
     <AppContext.Provider value={value}>
       {children}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={() => setToast({ ...toast, isVisible: false })}
+      />
     </AppContext.Provider>
   );
 }
