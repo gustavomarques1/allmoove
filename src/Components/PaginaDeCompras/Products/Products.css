@@ -1,6 +1,17 @@
 /* Products.css - Grade de Produtos */
 
 /* ---------------------------------------------------- */
+/* --- WRAPPER DA PÁGINA DE PRODUTOS --- */
+/* ---------------------------------------------------- */
+
+.products-wrapper {
+  padding: 100px 20px 50px;
+  max-width: 1400px;
+  margin: 0 auto;
+  background-color: transparent;
+}
+
+/* ---------------------------------------------------- */
 /* --- ESTILO DA GRADE DE PRODUTOS --- */
 /* ---------------------------------------------------- */
 
@@ -8,15 +19,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 24px;
-  padding: 120px 20px 50px;
-  max-width: 1400px;
-  margin: 0 auto;
-  background-color: #ffffff;
 }
 
-.products.container {
-  padding: 120px 32px 50px;
-}
 
 /* ---------------------------------------------------- */
 /* --- MENSAGENS DE ESTADO --- */

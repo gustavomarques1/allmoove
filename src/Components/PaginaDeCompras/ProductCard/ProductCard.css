@@ -3,7 +3,7 @@
 .product-card {
   width: 100%;
   max-width: 300px;
-  background-color: #F0F4EE;
+  background-color: #ffffff;
   display: flex;
   flex-direction: column;
   cursor: pointer;
@@ -20,6 +20,20 @@
 .product-card:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
   transform: translateY(-2px);
+}
+
+/* Animação ao adicionar ao carrinho */
+.product-card--adding {
+  animation: pulse 0.4s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.98);
+  }
 }
 
 /* ========================================
@@ -55,6 +69,33 @@
   box-shadow: 0 2px 4px rgba(0, 166, 80, 0.2);
 }
 
+/* Badge de produto no carrinho */
+.card__in-cart-badge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, #ff6b00 0%, #ff8533 100%);
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  z-index: 2;
+  box-shadow: 0 2px 6px rgba(255, 107, 0, 0.4);
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 /* ========================================
    IMAGEM DO PRODUTO
    ======================================== */
@@ -65,7 +106,7 @@
   object-fit: contain;
   padding: 20px;
   box-sizing: border-box;
-  background-color: #F0F4EE;
+  background-color: #ffffff;
 }
 
 /* ========================================
@@ -74,6 +115,7 @@
 
 .card__infos {
   padding: 16px;
+  padding-bottom: 40px; /* Espaço extra para o badge "no carrinho" */
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
@@ -183,6 +225,31 @@
 .icone_cor {
   color: #ff6b00;
   transition: color 0.2s ease;
+}
+
+/* Estado de sucesso */
+.button__add-cart--success {
+  background-color: #16a34a !important;
+  animation: successPulse 0.4s ease;
+}
+
+.button__add-cart--success .icone_success {
+  color: #ffffff !important;
+}
+
+@keyframes successPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Botão desabilitado (enquanto adiciona) */
+.button__add-cart:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
 }
 
 /* ========================================
