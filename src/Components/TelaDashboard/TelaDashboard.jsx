@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./TelaDashboard.module.css";
-import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, ShoppingBag, Plus, Eye, Truck, X } from "lucide-react";
+import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, ShoppingBag, Plus, Truck, X } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { usePedidos } from "../../hooks/usePedidos";
 import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
@@ -289,22 +289,6 @@ function TelaDashboard() {
                       <p className={styles["order-total"]}>
                         R$ {pedido.totalPago ? pedido.totalPago.toFixed(2) : '0.00'}
                       </p>
-                    </div>
-                    <div className={styles["order-actions"]}>
-                      <button
-                        className={styles["action-btn"]}
-                        onClick={() => alert(`Ver detalhes do pedido #${pedido.id}`)}
-                        title="Ver Detalhes"
-                      >
-                        <Eye size={18} />
-                      </button>
-                      <button
-                        className={styles["action-btn"]}
-                        onClick={() => alert(`Rastrear pedido #${pedido.id}`)}
-                        title="Rastrear Pedido"
-                      >
-                        <Truck size={18} />
-                      </button>
                     </div>
                   </div>
                 );
