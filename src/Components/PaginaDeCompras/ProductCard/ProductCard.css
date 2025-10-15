@@ -1,97 +1,232 @@
-/* ProductCard.css */
+/* ProductCard.css - Inspirado no Mercado Livre */
 
 .product-card {
   width: 100%;
   max-width: 300px;
-  background-color: var(--color-white);
+  background-color: #F0F4EE;
   display: flex;
   flex-direction: column;
   cursor: pointer;
   margin: 0 auto;
   position: relative;
 
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: all var(--transition-base);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: visible; /* Permite badges saírem do card */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 .product-card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
-/* CORREÇÃO PRINCIPAL PARA A IMAGEM: 
-  Garante que a área da imagem sempre ocupe espaço, mesmo antes de carregar.
-  object-fit: cover faz com que a imagem preencha a área sem se distorcer.
-*/
+/* ========================================
+   BADGES (Desconto e Frete Grátis)
+   ======================================== */
+
+.card__discount-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, #00a650 0%, #00b96d 100%);
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 166, 80, 0.3);
+}
+
+.card__free-shipping {
+  position: absolute;
+  top: 48px;
+  left: 12px;
+  background-color: #00a650;
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 4px rgba(0, 166, 80, 0.2);
+}
+
+/* ========================================
+   IMAGEM DO PRODUTO
+   ======================================== */
+
 .card__image {
   width: 100%;
-  height: 250px; /* Defina uma altura fixa para todas as imagens */
-  object-fit: cover;
+  height: 250px;
+  object-fit: contain;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #F0F4EE;
 }
+
+/* ========================================
+   INFORMAÇÕES DO PRODUTO
+   ======================================== */
 
 .card__infos {
-  padding: 20px;
-  border-top: 1px solid #ddd;
+  padding: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
 }
 
+/* Preço Original Riscado */
+.card__price-original {
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.45);
+  text-decoration: line-through;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Preço Promocional em Destaque */
 .card__price {
-  font-size: 2rem; /* Mantive um tamanho grande para o preço */
-  font-weight: 600;
-  margin-bottom: 10px;
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0;
+  line-height: 1.2;
 }
 
-.card__title {
-  font-size: 1rem;
-  color: #555;
-  font-weight: 500;
+/* Parcelamento */
+.card__installments {
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.65);
+  margin: 0;
+  line-height: 1.4;
 }
+
+.card__installments strong {
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+/* Nome do Produto */
+.card__title {
+  font-size: 0.875rem;
+  color: rgba(0, 0, 0, 0.75);
+  font-weight: 400;
+  line-height: 1.5;
+  margin: 8px 0 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 42px;
+}
+
+/* ========================================
+   BOTÃO DE ADICIONAR AO CARRINHO
+   ======================================== */
 
 .button__add-cart {
-  position: absolute; /* O botão fica "flutuando" sobre o card */
-  top: 15px;
-  right: 15px;
-  
-  /* Estilos para deixar o botão redondo e centralizado */
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  
+  width: 44px;
+  height: 44px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
   font-size: 1.5rem;
-  color: #0c5dd6;
   cursor: pointer;
-  
-  /* MELHORIA PARA O EFEITO HOVER:
-    Em vez de 'display: none', usamos visibilidade e opacidade. 
-    Isso permite adicionar uma transição suave.
-  */
+  z-index: 3;
+
+  /* Efeito de aparecimento suave */
   visibility: hidden;
   opacity: 0;
-  transition: all 0.3s ease;
+  transform: scale(0.8);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* O botão aparece suavemente quando o mouse passa sobre o card inteiro */
+/* Botão aparece no hover do card */
 .product-card:hover .button__add-cart {
   visibility: visible;
   opacity: 1;
+  transform: scale(1);
 }
 
-/* Hover no botão: fundo laranja e ícone branco */
+/* Hover no botão */
 .button__add-cart:hover {
-  background-color: var(--color-primary);
+  background-color: #ff6b00;
+  box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4);
+  transform: scale(1.1);
+}
+
+.button__add-cart:active {
+  transform: scale(0.95);
 }
 
 .button__add-cart:hover .icone_cor {
-  color: var(--color-white);
+  color: #ffffff;
 }
 
 .icone_cor {
-  color: var(--color-primary);
-  transition: color var(--transition-fast);
+  color: #ff6b00;
+  transition: color 0.2s ease;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .product-card {
+    max-width: 100%;
+  }
+
+  .card__image {
+    height: 200px;
+  }
+
+  .card__price {
+    font-size: 1.5rem;
+  }
+
+  .button__add-cart {
+    width: 38px;
+    height: 38px;
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card__image {
+    height: 180px;
+  }
+
+  .card__infos {
+    padding: 12px;
+  }
+
+  .card__price {
+    font-size: 1.4rem;
+  }
+
+  .card__installments {
+    font-size: 0.8rem;
+  }
+
+  .card__title {
+    font-size: 0.8rem;
+  }
 }

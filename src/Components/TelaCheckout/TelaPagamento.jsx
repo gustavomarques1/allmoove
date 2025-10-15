@@ -10,8 +10,10 @@ import MetodosPagamento from './MetodosPagamento/MetodosPagamento';
 import Stepper from '../Shared/Stepper/Stepper';
 import Toast from '../Shared/Toast/Toast';
 
-// Importando service de pedidos
+// Importando services de pedidos (fluxo hierárquico)
 import { createPedido, validarDadosPedido } from '../../api/pedidosServices';
+import { createPedidoGrupo, gerarCodigoTransacao } from '../../api/pedidoGruposServices';
+import { createMultiplosPedidoItems } from '../../api/pedidoItemsServices';
 
 function TelaPagamento() {
   const navigate = useNavigate();
@@ -331,7 +333,12 @@ function TelaPagamento() {
   };
 
   /**
-   * Confirma o pagamento e cria o pedido na API
+   * Confirma o pagamento e cria o pedido na API com fluxo hierárquico
+   *
+   * NOVO FLUXO (3 níveis):
+   * 1. Criar PedidoGrupo (1 compra completa)
+   * 2. Criar Pedidos (1 por fornecedor) vinculados ao grupo
+   * 3. Criar PedidoItems (1 por produto) vinculados a cada pedido
    */
   const handleConfirmPayment = async () => {
     // Validações
@@ -362,7 +369,30 @@ function TelaPagamento() {
       console.log('💳 Método de pagamento:', metodoPagamento);
       console.log('🚚 Opção selecionada:', opcaoSelecionada);
 
-      // Agrupa itens por fornecedor
+      // ======================
+      // 1️⃣ CRIAR PEDIDO GRUPO
+      // ======================
+      console.log('\n🎯 ETAPA 1/3: Criando Grupo de Pedidos');
+
+      const codigoTransacao = gerarCodigoTransacao();
+      const grupoData = {
+        empresa: 1,
+        estabelecimento: 1,
+        codigo: `COMPRA-${Date.now()}`,
+        transacao: codigoTransacao,
+        situacao: 'ATIVO'
+      };
+
+      const grupoCriado = await createPedidoGrupo(grupoData);
+      const grupoId = grupoCriado.id;
+
+      console.log(`✅ Grupo de Pedidos criado com ID: ${grupoId}`);
+      console.log(`📋 Código: ${grupoCriado.codigo}`);
+      console.log(`🔖 Transação: ${grupoCriado.transacao}`);
+
+      // ======================
+      // 2️⃣ AGRUPAR ITENS POR FORNECEDOR
+      // ======================
       const itensPorFornecedor = cartItems.reduce((grupos, item) => {
         const fornecedor = item.fornecedor || item.FORNECEDOR || 'TechParts SP';
         if (!grupos[fornecedor]) {
@@ -372,59 +402,80 @@ function TelaPagamento() {
         return grupos;
       }, {});
 
-      console.log('📦 Itens agrupados por fornecedor:', itensPorFornecedor);
+      console.log(`\n📦 Total de ${Object.keys(itensPorFornecedor).length} fornecedor(es) identificado(s)`);
 
       // Determina tipo de entrega baseado na opção selecionada
       const tipoEntrega = opcaoSelecionada?.tipo === 'urgente' ? 'Urgente' : 'Normal';
 
-      // Cria um pedido para cada fornecedor
+      // ======================
+      // 3️⃣ CRIAR PEDIDOS E ITENS PARA CADA FORNECEDOR
+      // ======================
       const pedidosCriados = [];
 
       for (const [fornecedor, items] of Object.entries(itensPorFornecedor)) {
-        console.log(`\n📤 Criando pedido para fornecedor: ${fornecedor}`);
-        console.log(`📋 ${items.length} itens deste fornecedor`);
+        console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+        console.log(`🏪 Fornecedor: ${fornecedor}`);
+        console.log(`📋 ${items.length} produto(s)`);
 
         // Calcula valores apenas dos itens deste fornecedor
         const valorProdutosFornecedor = items.reduce((acc, item) => {
           const preco = item.precoVenda || item.price || 0;
           return acc + (preco * item.quantity);
         }, 0);
-        const valorFreteFornecedor = valorFrete / Object.keys(itensPorFornecedor).length; // Divide frete entre fornecedores
+        const valorFreteFornecedor = valorFrete / Object.keys(itensPorFornecedor).length;
         const totalPagoFornecedor = valorProdutosFornecedor + valorFreteFornecedor;
 
-        // Monta dados completos do pedido conforme especificação da API
+        console.log(`💰 Subtotal: R$ ${valorProdutosFornecedor.toFixed(2)}`);
+        console.log(`🚚 Frete: R$ ${valorFreteFornecedor.toFixed(2)}`);
+        console.log(`💳 Total: R$ ${totalPagoFornecedor.toFixed(2)}`);
+
+        // 🔹 3A. CRIAR PEDIDO (vinculado ao grupo)
+        console.log(`\n🔹 Criando Pedido para ${fornecedor}...`);
+
         const dadosPedido = {
+          idPedidoGrupo: grupoId, // ⭐ VINCULA AO GRUPO
           idPessoa: parseInt(idPessoa),
           fornecedor: fornecedor,
           tipoEntrega: tipoEntrega,
           metodoPagamento: metodoPagamento,
-          items: items,
+          items: items, // Backend pode processar ou ignorar
           endereco: endereco,
           valorFrete: valorFreteFornecedor,
           valorProdutos: valorProdutosFornecedor,
           totalPago: totalPagoFornecedor
         };
 
-        console.log('📤 Enviando pedido para API:', dadosPedido);
-
         // Valida dados antes de enviar
         const validacao = validarDadosPedido(dadosPedido);
         if (!validacao.valid) {
           console.error('❌ Erros de validação:', validacao.errors);
-          throw new Error(`Dados inválidos para fornecedor ${fornecedor}: ${validacao.errors.join(', ')}`);
+          throw new Error(`Dados inválidos para ${fornecedor}: ${validacao.errors.join(', ')}`);
         }
 
-        // Chama API para criar pedido
         const pedidoCriado = await createPedido(dadosPedido);
-        console.log(`✅ Pedido #${pedidoCriado.id} criado para ${fornecedor}`);
+        const pedidoId = pedidoCriado.id;
 
-        // WORKAROUND: Backend atual não processa todos os dados
+        console.log(`✅ Pedido criado com ID: ${pedidoId}`);
+
+        // 🔹 3B. CRIAR ITENS DO PEDIDO (vinculados ao pedido)
+        console.log(`\n🔹 Criando ${items.length} item(ns) para o Pedido #${pedidoId}...`);
+
+        const resultadoItens = await createMultiplosPedidoItems(pedidoId, items);
+
+        if (resultadoItens.sucesso) {
+          console.log(`✅ Todos os ${resultadoItens.itensCriados.length} itens criados com sucesso!`);
+        } else {
+          console.warn(`⚠️ ${resultadoItens.erros.length} erro(s) ao criar itens:`, resultadoItens.erros);
+        }
+
+        // Monta objeto completo do pedido para navegação
         const pedidoCompleto = {
           ...pedidoCriado,
+          grupoId: grupoId,
           fornecedor: fornecedor,
           tipoEntrega: tipoEntrega,
           metodoPagamento: metodoPagamento,
-          items: items,
+          items: resultadoItens.itensCriados,
           endereco: endereco,
           valorFrete: valorFreteFornecedor,
           valorProdutos: valorProdutosFornecedor,
@@ -437,14 +488,15 @@ function TelaPagamento() {
 
         // Salva no cache local
         try {
-          localStorage.setItem(`pedido_${pedidoCriado.id}`, JSON.stringify({
+          localStorage.setItem(`pedido_${pedidoId}`, JSON.stringify({
+            grupoId: grupoId,
             fornecedor: fornecedor,
             tipoEntrega: tipoEntrega,
             metodoPagamento: metodoPagamento,
             codigoEntrega: pedidoCompleto.codigoEntrega,
             totalPago: totalPagoFornecedor
           }));
-          console.log(`💾 Cache salvo para pedido #${pedidoCriado.id}`);
+          console.log(`💾 Cache salvo para Pedido #${pedidoId}`);
         } catch (e) {
           console.warn('⚠️ Não foi possível salvar cache:', e);
         }
@@ -452,19 +504,31 @@ function TelaPagamento() {
         pedidosCriados.push(pedidoCompleto);
       }
 
-      console.log(`\n✅ Total de ${pedidosCriados.length} pedido(s) criado(s)!`);
+      // ======================
+      // 4️⃣ RESUMO FINAL
+      // ======================
+      console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+      console.log(`✅ COMPRA FINALIZADA COM SUCESSO!`);
+      console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+      console.log(`🆔 Grupo ID: ${grupoId}`);
+      console.log(`📦 ${pedidosCriados.length} pedido(s) criado(s)`);
+      console.log(`🛒 ${cartItems.length} produto(s) no total`);
+      console.log(`💰 Total geral: R$ ${valorTotal.toFixed(2)}`);
 
-      // Navega para tela de confirmação passando todos os pedidos
+      // Navega para tela de confirmação
       navigate('/assistencia/payment-success', {
         state: {
-          pedidoConfirmado: pedidosCriados.length === 1 ? pedidosCriados[0] : pedidosCriados[0], // Por enquanto mostra apenas o primeiro
-          todosPedidos: pedidosCriados // Passa todos para referência futura
+          grupoId: grupoId,
+          codigoTransacao: codigoTransacao,
+          pedidoConfirmado: pedidosCriados[0], // Mostra primeiro pedido
+          todosPedidos: pedidosCriados,
+          totalGeral: valorTotal
         }
       });
 
     } catch (error) {
-      console.error('❌ Erro ao criar pedido:', error);
-      console.error('❌ Erro completo:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      console.error('❌ ERRO AO CRIAR PEDIDO:', error);
+      console.error('❌ Stack completo:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
 
       if (error.response) {
         console.error('❌ Status HTTP:', error.response.status);

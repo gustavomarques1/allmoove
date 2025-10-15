@@ -115,32 +115,32 @@ export const createPedido = async (dadosPedido) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    // Monta payload completo conforme especificação da API
+    // Monta payload com campos que existem na tabela PEDIDO
     const payload = {
-      idPessoa: dadosPedido.idPessoa || dadosPedido.assistenciaTecnicaId, // ✅ Backend espera "idPessoa"
-      empresa: 1, // TODO: Buscar do contexto/usuário
-      estabelecimento: 1, // TODO: Buscar do contexto/usuário
-      fornecedor: dadosPedido.fornecedor,
-      tipoEntrega: dadosPedido.tipoEntrega,
-      metodoPagamento: dadosPedido.metodoPagamento,
-      items: dadosPedido.items.map(item => ({
-        produtoId: item.id || item.produtoId,
-        nome: item.nome || item.name,
-        quantidade: item.quantidade || item.quantity,
-        preco: item.precoVenda || item.preco || item.price
-      })),
-      endereco: {
-        cep: dadosPedido.endereco.cep,
-        logradouro: dadosPedido.endereco.logradouro,
-        numero: dadosPedido.endereco.numero,
-        complemento: dadosPedido.endereco.complemento || '',
-        bairro: dadosPedido.endereco.bairro,
-        cidade: dadosPedido.endereco.cidade,
-        estado: dadosPedido.endereco.estado
-      },
-      valorFrete: dadosPedido.valorFrete,
-      valorProdutos: dadosPedido.valorProdutos,
-      totalPago: dadosPedido.totalPago
+      // Campos obrigatórios/principais
+      idGrupoPedido: dadosPedido.idPedidoGrupo, // Vincula ao grupo de pedidos
+      idPessoa: dadosPedido.idPessoa || dadosPedido.assistenciaTecnicaId,
+      empresa: 1,
+      estabelecimento: 1,
+
+      // Código único do pedido
+      codigo: `PED-${Date.now()}`,
+
+      // Valores
+      valorFrete: dadosPedido.valorFrete || 0,
+
+      // Status
+      situacao: 'PENDENTE', // Status do pedido
+      situacaoRegistro: 'ATIVO' // Status do registro
+
+      // ⚠️ Campos removidos (não existem na tabela PEDIDO):
+      // - fornecedor (string) → deveria ser idDistribuidor (FK)
+      // - tipoEntrega (string) → coluna não existe
+      // - metodoPagamento (string) → deveria ser formaPagamento (numeric)
+      // - items (array) → criados separadamente via PedidoItems
+      // - endereco (object) → deveria ser idEnderecoEntrega (FK)
+      // - valorProdutos (number) → coluna não existe
+      // - totalPago (number) → coluna não existe
     };
 
     console.log('📡 Criando novo pedido completo:', payload);
