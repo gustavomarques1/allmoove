@@ -1,0 +1,62 @@
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  100% {
+    background-position: 468px 0;
+  }
+}
+
+.skeleton-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 12px;
+  padding: var(--spacing-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.skeleton-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.skeleton-text,
+.skeleton-number,
+.skeleton-icon {
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-100) 0px,
+    var(--color-gray-50) 40px,
+    var(--color-gray-100) 80px
+  );
+  background-size: 600px;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: 4px;
+}
+
+.skeleton-title {
+  width: 120px;
+  height: 18px;
+}
+
+.skeleton-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.skeleton-number {
+  width: 80px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.skeleton-description {
+  width: 160px;
+  height: 14px;
+}
