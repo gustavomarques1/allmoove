@@ -1,7 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from './BuscaSegmentada.module.css';
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Smartphone,
+  Car,
+  Monitor,
+  Laptop,
+  Tv,
+  Headphones,
+  Battery,
+  Cpu,
+  Package,
+  ShoppingBag,
+  Box,
+  Clock,
+  Star,
+  Search,
+  ShoppingCart
+} from "lucide-react";
 import {
   getProdutos,
   getFornecedores,
@@ -11,6 +29,42 @@ import {
   getDistribuidoresFavoritos
 } from '../../../api/produtosServices';
 import { useAuth } from '../../../hooks/useAuth';
+
+// Mapeamento de ícones por nome de segmento
+const getIconeSegmento = (nome) => {
+  const nomeNormalizado = nome.toLowerCase().trim();
+
+  const iconMap = {
+    'celulares': Smartphone,
+    'celular': Smartphone,
+    'smartphones': Smartphone,
+    'auto': Car,
+    'automotivo': Car,
+    'automóvel': Car,
+    'telas': Monitor,
+    'tela': Monitor,
+    'monitores': Monitor,
+    'notebooks': Laptop,
+    'notebook': Laptop,
+    'laptops': Laptop,
+    'display': Tv,
+    'displays': Tv,
+    'audio': Headphones,
+    'áudio': Headphones,
+    'som': Headphones,
+    'energia': Battery,
+    'bateria': Battery,
+    'baterias': Battery,
+    'componentes': Cpu,
+    'componente': Cpu,
+    'peças': Cpu,
+    'acessorios': Package,
+    'acessórios': Package,
+    'acessório': Package,
+  };
+
+  return iconMap[nomeNormalizado] || Box; // Box como ícone padrão
+};
 
 // Categorias fallback (caso a API não esteja disponível)
 const segmentosFallback = [
@@ -316,15 +370,19 @@ function BuscaSegmentada() {
           <ChevronLeft size={20} />
         </button>
         <div ref={carouselRef} className={styles.segmentosGrid}>
-          {segmentos.map((segmento) => (
-            <button
-              key={segmento.id}
-              className={`${styles.segmentoBotao} ${selectedSegmento === segmento.id ? styles.selecionado : ''}`}
-              onClick={() => setSelectedSegmento(segmento.id)}
-            >
-              {segmento.nome}
-            </button>
-          ))}
+          {segmentos.map((segmento) => {
+            const IconeSegmento = getIconeSegmento(segmento.nome);
+            return (
+              <button
+                key={segmento.id}
+                className={`${styles.segmentoBotao} ${selectedSegmento === segmento.id ? styles.selecionado : ''}`}
+                onClick={() => setSelectedSegmento(segmento.id)}
+              >
+                <IconeSegmento size={18} className={styles.segmentoIcon} />
+                <span>{segmento.nome}</span>
+              </button>
+            );
+          })}
         </div>
         <button className={styles.navButton} onClick={() => handleScroll(250)}>
           <ChevronRight size={20} />
@@ -338,6 +396,7 @@ function BuscaSegmentada() {
           {/* Últimos Pedidos */}
           <div className={styles.pedidosContainer}>
             <h3 className={styles.colunaTitulo}>
+              <Clock size={20} />
               Últimos Pedidos
             </h3>
             <div className={styles.listaWrapper}>
@@ -365,6 +424,7 @@ function BuscaSegmentada() {
           {/* Distribuidores Favoritos */}
           <div className={styles.pedidosContainer}>
             <h3 className={styles.colunaTitulo}>
+              <Star size={20} />
               Favoritos do Segmento
             </h3>
             <div className={styles.listaWrapper}>
@@ -395,6 +455,7 @@ function BuscaSegmentada() {
           {/* Busca de Distribuidor com Autocomplete */}
           <div className={styles.distribuidorSelector} ref={searchInputRef}>
             <label htmlFor="distribuidor-search" className={styles.distribuidorLabel}>
+              <Search size={18} />
               Buscar Distribuidor:
             </label>
             <div className={styles.searchInputWrapper}>
@@ -450,9 +511,11 @@ function BuscaSegmentada() {
           {/* Botões de Ação */}
           <div className={styles.botoesDistribuidor}>
             <button className={`${styles.botaoAcao} ${styles.primary}`} onClick={handleNavigateToCategoria}>
+              <Search size={18} />
               Pesquisar por categoria
             </button>
             <button className={styles.botaoAcao} onClick={handleNavigateToAllProducts}>
+              <ShoppingCart size={18} />
               Todos os Produtos
             </button>
           </div>

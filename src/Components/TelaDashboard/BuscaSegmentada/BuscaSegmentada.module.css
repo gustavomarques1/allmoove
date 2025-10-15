@@ -90,6 +90,14 @@
   position: relative;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.segmentoIcon {
+  flex-shrink: 0;
+  transition: all 0.3s ease;
 }
 
 .segmentoBotao::before {
@@ -111,6 +119,11 @@
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-color: var(--color-primary-light);
+}
+
+.segmentoBotao:hover .segmentoIcon {
+  transform: scale(1.1);
+  color: var(--color-primary);
 }
 
 /* Botão selecionado - DESTAQUE VISUAL */
@@ -161,6 +174,11 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
+}
+
+.colunaTitulo svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
 }
 
 /* ========================================
@@ -260,6 +278,14 @@
   font-size: var(--text-base);
   font-weight: var(--font-bold);
   color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+.distribuidorLabel svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
 }
 
 .searchInputWrapper {
@@ -412,6 +438,15 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+}
+
+.botaoAcao svg {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
 .botaoAcao::before {
@@ -437,6 +472,10 @@
   box-shadow: 0 6px 16px rgba(255, 54, 0, 0.15);
   border-color: var(--color-primary-hover);
   background: rgba(255, 54, 0, 0.02);
+}
+
+.botaoAcao:hover svg {
+  transform: scale(1.1);
 }
 
 .botaoAcao:active {
