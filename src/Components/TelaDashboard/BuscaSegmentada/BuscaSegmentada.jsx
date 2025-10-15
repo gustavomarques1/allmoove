@@ -6,14 +6,11 @@ import {
   ChevronRight,
   Smartphone,
   Car,
-  Monitor,
-  Laptop,
-  Tv,
-  Headphones,
-  Battery,
+  Bike,
+  Zap,
+  FileText,
   Cpu,
   Package,
-  ShoppingBag,
   Box,
   Clock,
   Star,
@@ -34,30 +31,56 @@ import { useAuth } from '../../../hooks/useAuth';
 const getIconeSegmento = (nome) => {
   const nomeNormalizado = nome.toLowerCase().trim();
 
+  // Mapeamento baseado nas categorias reais da API
   const iconMap = {
+    // Celulares e relacionados
     'celulares': Smartphone,
     'celular': Smartphone,
     'smartphones': Smartphone,
+    'telefone': Smartphone,
+    'telefones': Smartphone,
+
+    // Auto
     'auto': Car,
     'automotivo': Car,
     'automóvel': Car,
-    'telas': Monitor,
-    'tela': Monitor,
-    'monitores': Monitor,
-    'notebooks': Laptop,
-    'notebook': Laptop,
-    'laptops': Laptop,
-    'display': Tv,
-    'displays': Tv,
-    'audio': Headphones,
-    'áudio': Headphones,
-    'som': Headphones,
-    'energia': Battery,
-    'bateria': Battery,
-    'baterias': Battery,
+    'carro': Car,
+    'carros': Car,
+    'veículo': Car,
+    'veículos': Car,
+
+    // Moto
+    'moto': Bike,
+    'motos': Bike,
+    'motocicleta': Bike,
+    'motocicletas': Bike,
+    'bike': Bike,
+    'bicicleta': Bike,
+
+    // Eletro (eletrônicos/eletrodomésticos)
+    'eletro': Zap,
+    'eletrônicos': Zap,
+    'eletronicos': Zap,
+    'eletrodomésticos': Zap,
+    'eletrodomesticos': Zap,
+    'elétrica': Zap,
+    'eletrica': Zap,
+
+    // Papelaria
+    'papelaria': FileText,
+    'papelarias': FileText,
+    'papel': FileText,
+    'escritório': FileText,
+    'escritorio': FileText,
+
+    // Eletrônicos (genérico)
+    'eletrônicos': Cpu,
     'componentes': Cpu,
     'componente': Cpu,
     'peças': Cpu,
+    'pecas': Cpu,
+
+    // Acessórios (fallback para categorias não específicas)
     'acessorios': Package,
     'acessórios': Package,
     'acessório': Package,
