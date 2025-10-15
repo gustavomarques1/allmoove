@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import propTypes from 'prop-types';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Check } from 'lucide-react';
 
 import './ProductCard.css';
 import AppContext from '../../../context/AppContext';
@@ -8,7 +8,13 @@ import formatCurrency from '../../../utils/formatCurrency';
 
 function ProductCard({ data }) {
   const { nome, imagem, precoVenda, price, precoOriginal, desconto, parcelas, valorParcela, freteGratis } = data;
-  const { handleAddItem } = useContext(AppContext);
+  const { handleAddItem, cartItems } = useContext(AppContext);
+  const [isAdding, setIsAdding] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Verifica se o produto está no carrinho e qual a quantidade
+  const itemInCart = cartItems.find(item => item.id === data.id);
+  const quantityInCart = itemInCart ? itemInCart.quantity : 0;
 
   // Usa precoVenda da API ou price do fallback JSON
   const preco = precoVenda || price || 0;
@@ -24,8 +30,25 @@ function ProductCard({ data }) {
   // Imagem: usa imagem da API ou placeholder
   const imagemUrl = imagem || 'https://via.placeholder.com/200x200?text=Sem+Imagem';
 
+  // Handler para adicionar com feedback visual
+  const handleAddToCart = () => {
+    setIsAdding(true);
+    handleAddItem(data);
+
+    // Mostra ícone de sucesso
+    setTimeout(() => {
+      setIsAdding(false);
+      setShowSuccess(true);
+    }, 400);
+
+    // Remove ícone de sucesso após 2s
+    setTimeout(() => {
+      setShowSuccess(false);
+    }, 2000);
+  };
+
   return (
-    <section className="product-card">
+    <section className={`product-card ${isAdding ? 'product-card--adding' : ''}`}>
       {/* Badge de desconto */}
       {percentualDesconto > 0 && (
         <div className="card__discount-badge">
@@ -40,18 +63,27 @@ function ProductCard({ data }) {
         </div>
       )}
 
+      {/* Badge de produto no carrinho */}
+      {quantityInCart > 0 && (
+        <div className="card__in-cart-badge">
+          {quantityInCart} no carrinho
+        </div>
+      )}
+
       <img src={imagemUrl} alt={nome} className="card__image" />
 
       <div className="card__infos">
-        {/* Preço original riscado */}
-        {precoOriginal && (
+        {/* Preço original riscado (sempre mostra quando há desconto) */}
+        {percentualDesconto > 0 && (
           <p className="card__price-original">
-            {formatCurrency(precoAnterior, 'BRL')}
+            De {formatCurrency(precoAnterior, 'BRL')}
           </p>
         )}
 
         {/* Preço promocional em destaque */}
-        <h2 className="card__price">{formatCurrency(preco, 'BRL')}</h2>
+        <h2 className="card__price">
+          {percentualDesconto > 0 ? 'por ' : ''}{formatCurrency(preco, 'BRL')}
+        </h2>
 
         {/* Parcelamento */}
         <p className="card__installments">
@@ -65,11 +97,16 @@ function ProductCard({ data }) {
 
       <button
         type="button"
-        className="button__add-cart"
-        onClick={() => handleAddItem(data)}
+        className={`button__add-cart ${showSuccess ? 'button__add-cart--success' : ''}`}
+        onClick={handleAddToCart}
         aria-label={`Adicionar ${nome} ao carrinho`}
+        disabled={isAdding}
       >
-        <ShoppingCart className="icone_cor" />
+        {showSuccess ? (
+          <Check className="icone_cor icone_success" />
+        ) : (
+          <ShoppingCart className="icone_cor" />
+        )}
       </button>
     </section>
   );
