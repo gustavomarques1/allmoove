@@ -1,93 +1,136 @@
 /* ========================================
    Busca Segmentada - AllMoove Design System
+   Versão Moderna e Atrativa
    ======================================== */
 
 .painelContainer {
   font-family: var(--font-primary);
-  background-color: var(--color-white);
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
   border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-6);
-  max-width: 1100px;
+  border-radius: 16px;
+  padding: var(--spacing-8);
+  max-width: 1200px;
   margin: var(--spacing-8) auto;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
 }
 
-/* Container do carrossel */
+/* ========================================
+   CARROSSEL DE SEGMENTOS - VERSÃO MODERNA
+   ======================================== */
+
 .carouselWrapper {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-6);
-  padding-bottom: var(--spacing-6);
-  border-bottom: 1px solid var(--color-gray-100);
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-8);
+  padding-bottom: var(--spacing-8);
+  border-bottom: 2px solid var(--color-gray-100);
 }
 
-/* Botões de navegação */
+/* Botões de navegação - Mais modernos */
 .navButton {
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-full);
-  width: 40px;
-  height: 40px;
+  background: linear-gradient(135deg, var(--color-white) 0%, #f9fafb 100%);
+  border: 2px solid var(--color-gray-200);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--color-text-secondary);
   flex-shrink: 0;
-  transition: all var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .navButton:hover {
-  background-color: var(--color-gray-50);
-  color: var(--color-text-primary);
-  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.2);
 }
 
-/* Grade rolável do carrossel */
+.navButton:active {
+  transform: scale(0.95);
+}
+
+/* Grade rolável do carrossel - Melhorada */
 .segmentosGrid {
   display: flex;
-  gap: var(--spacing-4);
+  gap: var(--spacing-3);
   overflow-x: auto;
   flex-wrap: nowrap;
   scroll-behavior: smooth;
   scrollbar-width: none;
   flex: 1;
   min-width: 0;
-  justify-content: center; /* Centraliza os itens */
-  padding: 0 var(--spacing-4);
+  padding: var(--spacing-2) var(--spacing-4);
 }
 
 .segmentosGrid::-webkit-scrollbar {
   display: none;
 }
 
-/* Botões de segmento */
+/* Botões de segmento - CARDS MODERNOS */
 .segmentoBotao {
-  padding: var(--spacing-3) var(--spacing-6);
+  padding: var(--spacing-4) var(--spacing-6);
   font-family: var(--font-primary);
   font-size: var(--text-base);
   font-weight: var(--font-medium);
   color: var(--color-text-primary);
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-md);
+  background: var(--color-white);
+  border: 2px solid var(--color-gray-200);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-/* Botão selecionado */
+.segmentoBotao::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s;
+}
+
+.segmentoBotao:hover::before {
+  left: 100%;
+}
+
+.segmentoBotao:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-primary-light);
+}
+
+/* Botão selecionado - DESTAQUE VISUAL */
 .segmentoBotao.selecionado {
-  background-color: var(--color-white);
-  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  color: var(--color-white);
   border-color: var(--color-primary);
-  font-weight: var(--font-semibold);
+  font-weight: var(--font-bold);
+  box-shadow: 0 6px 16px rgba(255, 54, 0, 0.25);
+  transform: translateY(-2px);
 }
 
-/* Layout de duas colunas - Esquerda empilhada + Direita com busca */
+.segmentoBotao.selecionado:hover {
+  box-shadow: 0 8px 20px rgba(255, 54, 0, 0.3);
+}
+
+/* ========================================
+   LAYOUT DE DUAS COLUNAS - MODERNIZADO
+   ======================================== */
+
 .interacaoContainer {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -112,84 +155,110 @@
 
 .colunaTitulo {
   font-size: var(--text-lg);
-  font-weight: var(--font-semibold);
+  font-weight: var(--font-bold);
   color: var(--color-text-primary);
   margin: 0 0 var(--spacing-4) 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
 }
 
+/* ========================================
+   LISTAS DE PEDIDOS/FAVORITOS - CARDS
+   ======================================== */
+
 .listaWrapper {
-  background-color: var(--color-gray-50);
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-4);
-  min-height: 150px;
+  background: var(--color-white);
+  border: 2px solid var(--color-gray-100);
+  border-radius: 12px;
+  padding: var(--spacing-5);
+  min-height: 180px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.listaWrapper:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-color: var(--color-gray-200);
 }
 
 .listaPedidos {
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
 }
 
 .listaPedidos li {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
   align-items: center;
-  gap: var(--spacing-4);
-  padding: var(--spacing-3) var(--spacing-2);
-  border-bottom: 1px solid var(--color-gray-200);
+  gap: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: linear-gradient(135deg, #f9fafb 0%, var(--color-white) 100%);
+  border-radius: 8px;
+  border: 1px solid var(--color-gray-100);
   font-size: var(--text-sm);
-  color: var(--color-text-primary);
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-/* FORNECEDOR - Primeira coluna (deve ficar em UMA linha) */
+.listaPedidos li:hover {
+  transform: translateX(4px);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, rgba(255, 87, 34, 0.05) 100%);
+  border-color: var(--color-primary-light);
+  box-shadow: 0 2px 8px rgba(255, 54, 0, 0.1);
+}
+
+/* FORNECEDOR - Primeira coluna */
 .listaPedidos li span:first-child {
-  font-weight: var(--font-semibold);
+  font-weight: var(--font-bold);
   color: var(--color-primary);
-  white-space: nowrap;  /* ✅ Não quebra linha */
+  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;  /* ✅ Adiciona "..." se muito longo */
+  text-overflow: ellipsis;
   min-width: 100px;
-  max-width: 150px;
+  max-width: 200px;
 }
 
-/* DESCRIÇÃO DO PRODUTO - Segunda coluna (pode quebrar em múltiplas linhas) */
+/* DESCRIÇÃO DO PRODUTO - Segunda coluna */
 .listaPedidos li span:last-child {
   font-size: var(--text-sm);
   color: var(--color-text-secondary);
-  word-wrap: break-word;  /* ✅ Permite quebra de linha */
+  word-wrap: break-word;
   overflow-wrap: break-word;
-  hyphens: auto;
-  line-height: var(--leading-normal);
-}
-
-.listaPedidos li:last-child {
-  border-bottom: none;
+  flex: 1;
 }
 
 .listaVazia {
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
   text-align: center;
-  padding-top: var(--spacing-10);
+  padding: var(--spacing-12) var(--spacing-4);
   font-size: var(--text-sm);
+  font-style: italic;
 }
+
+/* ========================================
+   BUSCA DE DISTRIBUIDOR - MODERNIZADA
+   ======================================== */
 
 .distribuidorContainer {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-5);
+  gap: var(--spacing-6);
 }
 
 .distribuidorSelector {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
 }
 
 .distribuidorLabel {
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
   color: var(--color-text-primary);
 }
 
@@ -201,109 +270,126 @@
 
 .distribuidorSearchInput {
   width: 100%;
-  padding: var(--spacing-3) var(--spacing-10) var(--spacing-3) var(--spacing-3);
+  padding: var(--spacing-4) var(--spacing-10) var(--spacing-4) var(--spacing-5);
   font-family: var(--font-primary);
-  font-size: var(--text-sm);
-  border: 1px solid var(--color-gray-300);
-  border-radius: var(--radius-md);
-  background-color: var(--color-white);
+  font-size: var(--text-base);
+  border: 2px solid var(--color-gray-200);
+  border-radius: 12px;
+  background: var(--color-white);
   color: var(--color-text-primary);
-  transition: all var(--transition-fast);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .distribuidorSearchInput:hover {
-  border-color: var(--color-gray-400);
+  border-color: var(--color-gray-300);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .distribuidorSearchInput:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  box-shadow: 0 0 0 4px rgba(255, 54, 0, 0.1);
 }
 
 .distribuidorSearchInput::placeholder {
   color: var(--color-text-tertiary);
-  font-size: var(--text-xs);
+  font-size: var(--text-sm);
 }
 
 .clearButton {
   position: absolute;
-  right: var(--spacing-2);
+  right: var(--spacing-3);
   top: 50%;
   transform: translateY(-50%);
-  background: none;
+  background: var(--color-gray-100);
   border: none;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
   font-size: var(--text-lg);
   cursor: pointer;
-  padding: var(--spacing-1) var(--spacing-2);
-  border-radius: var(--radius-sm);
-  transition: all var(--transition-fast);
-  line-height: 1;
+  padding: var(--spacing-2);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
 .clearButton:hover {
-  background-color: var(--color-gray-100);
-  color: var(--color-text-primary);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  transform: translateY(-50%) rotate(90deg);
 }
 
+/* Dropdown - Melhorado */
 .dropdownList {
   position: absolute;
-  top: calc(100% + var(--spacing-1));
+  top: calc(100% + var(--spacing-2));
   left: 0;
   right: 0;
   background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  max-height: 200px;
+  border: 2px solid var(--color-gray-200);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  max-height: 280px;
   overflow-y: auto;
   z-index: var(--z-dropdown);
   list-style: none;
-  padding: var(--spacing-1);
+  padding: var(--spacing-2);
   margin: 0;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dropdownItem {
-  padding: var(--spacing-3);
+  padding: var(--spacing-3) var(--spacing-4);
   cursor: pointer;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   font-size: var(--text-sm);
   color: var(--color-text-primary);
-  transition: all var(--transition-fast);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
 }
 
 .dropdownItem:hover {
-  background-color: var(--color-primary-light);
+  background: linear-gradient(135deg, var(--color-primary-light) 0%, rgba(255, 87, 34, 0.1) 100%);
   color: var(--color-primary);
+  transform: translateX(4px);
 }
 
 .dropdownEmpty {
   position: absolute;
-  top: calc(100% + var(--spacing-1));
+  top: calc(100% + var(--spacing-2));
   left: 0;
   right: 0;
   background: var(--color-white);
-  border: 1px solid var(--color-gray-200);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  padding: var(--spacing-3);
+  border: 2px solid var(--color-gray-200);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: var(--spacing-4);
   text-align: center;
   color: var(--color-text-tertiary);
   font-size: var(--text-sm);
   z-index: var(--z-dropdown);
 }
 
-.distribuidorSelecionado {
-  font-size: var(--text-base);
-  color: var(--color-text-primary);
-  margin-bottom: var(--spacing-4);
-  word-break: break-word;
-}
-
-.distribuidorSelecionado span {
-  font-weight: var(--font-bold);
-}
+/* ========================================
+   BOTÕES DE AÇÃO - MODERNIZADOS
+   ======================================== */
 
 .botoesDistribuidor {
   display: flex;
@@ -311,55 +397,82 @@
   flex-wrap: wrap;
 }
 
-/* Botões usando design system (mantidos para compatibilidade) */
 .botaoAcao {
-  padding: var(--spacing-3) var(--spacing-6);
+  flex: 1;
+  padding: var(--spacing-4) var(--spacing-6);
   font-family: var(--font-primary);
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
-  background-color: var(--color-white);
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  background: var(--color-white);
   border: 2px solid var(--color-primary);
   color: var(--color-primary);
-  border-radius: var(--radius-md);
+  border-radius: 12px;
   cursor: pointer;
-  transition: all var(--transition-fast);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.botaoAcao::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 54, 0, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.botaoAcao:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .botaoAcao:hover {
-  background-color: #f0f4ee;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 54, 0, 0.15);
   border-color: var(--color-primary-hover);
+  background: rgba(255, 54, 0, 0.02);
+}
+
+.botaoAcao:active {
+  transform: translateY(0);
 }
 
 .botaoAcao.primary {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
   border-color: var(--color-primary);
   color: var(--color-white);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.25);
 }
 
 .botaoAcao.primary:hover {
-  background-color: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
+  box-shadow: 0 8px 20px rgba(255, 54, 0, 0.35);
+  transform: translateY(-3px);
 }
 
 /* ===== RESPONSIVIDADE ===== */
 
-/* Tablets e telas menores */
 @media (max-width: 768px) {
   .painelContainer {
-    padding: var(--spacing-4);
+    padding: var(--spacing-5);
     margin: var(--spacing-4) auto;
-    border-radius: var(--radius-md);
+    border-radius: 12px;
   }
 
   .carouselWrapper {
     gap: var(--spacing-2);
-    margin-bottom: var(--spacing-5);
-    padding-bottom: var(--spacing-5);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-6);
   }
 
   .navButton {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
   }
 
   .segmentosGrid {
@@ -367,7 +480,7 @@
   }
 
   .segmentoBotao {
-    padding: var(--spacing-2) var(--spacing-5);
+    padding: var(--spacing-3) var(--spacing-5);
     font-size: var(--text-sm);
   }
 
@@ -382,50 +495,28 @@
   }
 
   .listaWrapper {
-    padding: var(--spacing-3);
-  }
-
-  .listaPedidos li {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-2);
-    padding: var(--spacing-2);
-  }
-
-  /* Mobile: Fornecedor pode ter mais espaço */
-  .listaPedidos li span:first-child {
-    max-width: 100%;
+    padding: var(--spacing-4);
   }
 
   .botoesDistribuidor {
     width: 100%;
-    padding-top: var(--spacing-5);
   }
 
   .botaoAcao {
     flex: 1;
     min-width: 120px;
-    padding: var(--spacing-3) var(--spacing-5);
   }
 }
 
-/* Smartphones */
 @media (max-width: 480px) {
   .painelContainer {
-    padding: var(--spacing-3);
+    padding: var(--spacing-4);
     margin: var(--spacing-2) auto;
   }
 
-  .carouselWrapper {
-    gap: var(--spacing-2);
-  }
-
   .navButton {
-    width: 32px;
-    height: 32px;
-  }
-
-  .segmentosGrid {
-    gap: var(--spacing-2);
+    width: 36px;
+    height: 36px;
   }
 
   .segmentoBotao {
@@ -433,44 +524,32 @@
     font-size: var(--text-xs);
   }
 
-  .interacaoContainer {
-    gap: var(--spacing-5);
-  }
-
   .colunaTitulo {
     font-size: var(--text-sm);
   }
 
   .listaWrapper {
-    padding: var(--spacing-2);
-    min-height: 120px;
+    padding: var(--spacing-3);
+    min-height: 140px;
   }
 
   .listaPedidos li {
-    font-size: var(--text-xs);
-    grid-template-columns: 1fr;
-    gap: var(--spacing-1);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3);
   }
 
-  .listaPedidos li span:last-child {
-    color: var(--color-text-secondary);
-    font-size: var(--text-xs);
-  }
-
-  .distribuidorSelecionado {
-    font-size: var(--text-sm);
-    text-align: center;
+  .listaPedidos li span:first-child {
+    max-width: 100%;
   }
 
   .botoesDistribuidor {
     flex-direction: column;
-    padding-top: var(--spacing-4);
     gap: var(--spacing-2);
   }
 
   .botaoAcao {
     width: 100%;
-    padding: var(--spacing-3) var(--spacing-5);
-    font-size: var(--text-sm);
   }
 }
