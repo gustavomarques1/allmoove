@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./TelaDashboard.module.css";
-import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, ShoppingBag, Plus, Truck, X } from "lucide-react";
+import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, ShoppingBag, Plus, Truck, X, RefreshCw, Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { usePedidos } from "../../hooks/usePedidos";
 import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
@@ -13,13 +13,26 @@ function TelaDashboard() {
   const { pedidos, isLoading, error, indicadores, recarregar } = usePedidos();
   const [showAllOrders, setShowAllOrders] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Debounce para busca (evita filtrar a cada tecla)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   // Recarrega pedidos quando a página ganha foco (usuário volta de outra aba/página)
   useEffect(() => {
     const handleFocus = () => {
       console.log('🔄 Dashboard ganhou foco - recarregando pedidos...');
       recarregar();
+      setLastUpdate(new Date());
     };
 
     // Adiciona listener para quando a janela ganha foco
@@ -27,11 +40,41 @@ function TelaDashboard() {
 
     // Também recarrega quando o componente é montado
     console.log('✅ Dashboard montado - carregando pedidos...');
+    setLastUpdate(new Date());
 
     return () => {
       window.removeEventListener('focus', handleFocus);
     };
   }, [recarregar]);
+
+  // Função de refresh manual
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    await recarregar();
+    setLastUpdate(new Date());
+    setTimeout(() => setIsRefreshing(false), 500);
+  }, [recarregar]);
+
+  // Formatar tempo desde última atualização
+  const getTimeAgo = useCallback(() => {
+    const seconds = Math.floor((new Date() - lastUpdate) / 1000);
+    if (seconds < 60) return 'agora há pouco';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes === 1) return 'há 1 minuto';
+    if (minutes < 60) return `há ${minutes} minutos`;
+    const hours = Math.floor(minutes / 60);
+    if (hours === 1) return 'há 1 hora';
+    return `há ${hours} horas`;
+  }, [lastUpdate]);
+
+  // Verificar se pedido é recente (últimas 24h)
+  const isRecentOrder = useCallback((dataPedido) => {
+    if (!dataPedido) return false;
+    const orderDate = new Date(dataPedido);
+    const now = new Date();
+    const diffHours = (now - orderDate) / (1000 * 60 * 60);
+    return diffHours <= 24;
+  }, []);
 
   // Função para obter saudação baseada na hora
   const getSaudacao = () => {
@@ -41,19 +84,21 @@ function TelaDashboard() {
     return 'Boa noite';
   };
 
-  // Filtrar e buscar pedidos
-  const filteredOrders = pedidos.filter(pedido => {
-    const matchesSearch =
-      pedido.id?.toString().includes(searchTerm) ||
-      pedido.fornecedor?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pedido.codigoEntrega?.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filtrar e buscar pedidos (usando debouncedSearchTerm)
+  const filteredOrders = useMemo(() => {
+    return pedidos.filter(pedido => {
+      const matchesSearch =
+        pedido.id?.toString().includes(debouncedSearchTerm) ||
+        pedido.fornecedor?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+        pedido.codigoEntrega?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === 'todos' ||
-      pedido.status?.toLowerCase() === statusFilter.toLowerCase();
+      const matchesStatus =
+        statusFilter === 'todos' ||
+        pedido.status?.toLowerCase() === statusFilter.toLowerCase();
 
-    return matchesSearch && matchesStatus;
-  });
+      return matchesSearch && matchesStatus;
+    });
+  }, [pedidos, debouncedSearchTerm, statusFilter]);
 
   // Limita para 2 pedidos inicialmente
   const displayedOrders = showAllOrders ? filteredOrders : filteredOrders.slice(0, 2);
@@ -84,6 +129,18 @@ function TelaDashboard() {
           <div>
             <p className={styles["dashboard-greeting"]}>{getSaudacao()}!</p>
             <h2 className={styles["dashboard-subtitle"]}>Assistência Técnica</h2>
+            <p className={styles["last-update"]}>
+              Atualizado {getTimeAgo()}
+              <button
+                className={styles["refresh-icon-btn"]}
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                aria-label="Atualizar dados"
+                title="Atualizar dados"
+              >
+                <RefreshCw size={14} className={isRefreshing ? styles["spinning"] : ''} />
+              </button>
+            </p>
           </div>
 
           <Button
@@ -169,18 +226,29 @@ function TelaDashboard() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles["search-input"]}
+                disabled={isLoading}
+                aria-label="Buscar pedidos"
               />
+              {searchTerm !== debouncedSearchTerm && (
+                <span className={styles["search-loading"]}>
+                  <Loader size={14} className={styles["spinner-small"]} />
+                </span>
+              )}
             </div>
             <div className={styles["status-filters"]}>
               <button
                 className={`${styles["filter-btn"]} ${statusFilter === 'todos' ? styles["active"] : ''}`}
                 onClick={() => setStatusFilter('todos')}
+                disabled={isLoading}
+                aria-label="Filtrar todos os pedidos"
               >
                 Todos ({pedidos.length})
               </button>
               <button
                 className={`${styles["filter-btn"]} ${statusFilter === 'pendente' ? styles["active"] : ''}`}
                 onClick={() => setStatusFilter('pendente')}
+                disabled={isLoading}
+                aria-label="Filtrar pedidos pendentes"
               >
                 <Clock size={16} />
                 Pendente
@@ -188,6 +256,8 @@ function TelaDashboard() {
               <button
                 className={`${styles["filter-btn"]} ${statusFilter === 'aceito' ? styles["active"] : ''}`}
                 onClick={() => setStatusFilter('aceito')}
+                disabled={isLoading}
+                aria-label="Filtrar pedidos aceitos"
               >
                 <CheckCircle size={16} />
                 Aceito
@@ -195,6 +265,8 @@ function TelaDashboard() {
               <button
                 className={`${styles["filter-btn"]} ${statusFilter === 'em trânsito' ? styles["active"] : ''}`}
                 onClick={() => setStatusFilter('em trânsito')}
+                disabled={isLoading}
+                aria-label="Filtrar pedidos em trânsito"
               >
                 <Truck size={16} />
                 Em Trânsito
@@ -255,16 +327,27 @@ function TelaDashboard() {
         ) : (
           <>
             <div className={styles["orders-list"]}>
-              {displayedOrders.map((pedido) => {
+              {displayedOrders.map((pedido, index) => {
                 const statusConfig = getStatusConfig(pedido.status);
                 const StatusIcon = statusConfig.icon;
+                const isNew = isRecentOrder(pedido.dataPedido);
 
                 return (
-                  <div key={pedido.id} className={styles["order-item"]}>
+                  <div
+                    key={pedido.id}
+                    className={styles["order-item"]}
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
                     <div className={styles["order-info"]}>
                       <div className={styles["order-header-item"]}>
                         <Package size={20} />
                         <h3>Pedido #{pedido.id}</h3>
+                        {isNew && (
+                          <span className={styles["new-badge"]} title="Pedido recente (últimas 24h)">
+                            <Sparkles size={14} />
+                            Novo
+                          </span>
+                        )}
                       </div>
                       <p className={styles["order-date"]}>
                         {pedido.dataPedido ? new Date(pedido.dataPedido).toLocaleDateString('pt-BR') : '-'}
