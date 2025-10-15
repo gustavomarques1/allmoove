@@ -534,12 +534,12 @@ function BuscaSegmentada() {
           {/* Botões de Ação */}
           <div className={styles.botoesDistribuidor}>
             <button className={`${styles.botaoAcao} ${styles.primary}`} onClick={handleNavigateToCategoria}>
-              <Search size={18} />
-              Pesquisar por categoria
+              <Search size={16} />
+              Buscar na Categoria
             </button>
             <button className={styles.botaoAcao} onClick={handleNavigateToAllProducts}>
-              <ShoppingCart size={18} />
-              Todos os Produtos
+              <ShoppingCart size={16} />
+              Ver Todos
             </button>
           </div>
         </div>
