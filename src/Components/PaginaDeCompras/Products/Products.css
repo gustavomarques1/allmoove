@@ -30,7 +30,8 @@
   text-align: center;
   padding: 60px 20px;
   font-size: 1.125rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   font-weight: 500;
 }
 
@@ -38,7 +39,8 @@
   text-align: center;
   padding: 80px 20px;
   font-size: 1.25rem;
-  color: rgba(0, 0, 0, 0.6);
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   font-weight: 500;
   grid-column: 1 / -1;
 }

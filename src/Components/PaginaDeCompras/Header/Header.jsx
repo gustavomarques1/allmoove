@@ -9,6 +9,11 @@ function Header() {
   return (
     <header className="header">
       <div className="container">
+        <img
+          src="/logos/logobranca.svg"
+          alt="AllMoove"
+          className="header-logo"
+        />
         {/* Agrupa SearchBar e CEPInput */}
         <div className="search-section">
           <SearchBar />

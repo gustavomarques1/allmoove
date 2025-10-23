@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
   transition: all 0.2s ease;
 }
 
@@ -36,7 +36,7 @@
 .headerTitle h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: #333;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .headerTitle p {
@@ -82,7 +82,7 @@
 }
 .secondary { 
   background-color: white; 
-  color: #333; 
+  color: #18304C; /* Azul AllMoove */ 
   border: 1px solid #ccc; 
 }
 .primary:disabled { 

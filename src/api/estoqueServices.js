@@ -1,4 +1,5 @@
 import api from './api';
+import logger from '../utils/logger';
 
 /**
  * Serviço de estoque - integração com API de Produtos
@@ -16,24 +17,75 @@ import api from './api';
 export const getEstoqueDoDistribuidor = async (idDistribuidor = null) => {
   try {
     const token = localStorage.getItem('token');
-    const id = idDistribuidor || localStorage.getItem('idPessoa');
 
-    if (!token) {
-      throw new Error('Usuário não autenticado. Faça login novamente.');
+    // 🔧 IMPORTANTE: Prioriza idDistribuidor do localStorage, depois idPessoa
+    // O idDistribuidor é o ID correto da tabela DISTRIBUIDORES
+    // O idPessoa pode ser o ID da tabela PESSOAS (não é o mesmo!)
+    const id = idDistribuidor
+      || localStorage.getItem('idDistribuidor')
+      || localStorage.getItem('idPessoa');
+
+    if (!token || !id) {
+      throw new Error('Usuário não autenticado ou distribuidor não identificado.');
     }
 
-    console.log('📦 Buscando estoque do distribuidor:', id);
+    logger.info('📦 Buscando estoque do distribuidor ID:', id);
 
-    const response = await api.get('/api/Produtos', {
-      headers: {
-        Authorization: `Bearer ${token}`
+    // 🔧 Tenta buscar produtos apenas deste distribuidor
+    // Opção 1: Endpoint específico (se existir)
+    // Opção 2: Query string (fallback)
+    let response;
+
+    try {
+      // Tenta o endpoint específico primeiro
+      response = await api.get(`/api/Produtos/distribuidor/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      logger.info('✅ Produtos do distribuidor recebidos (endpoint específico):', response.data.length);
+    } catch (endpointError) {
+      // Se der 404, tenta com query string
+      if (endpointError.response?.status === 404) {
+        logger.warn('⚠️ Endpoint /api/Produtos/distribuidor/{id} não existe, tentando query string...');
+
+        response = await api.get('/api/Produtos', {
+          params: { idDistribuidor: id },
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        logger.info('✅ Produtos recebidos (query string):', response.data.length);
+      } else {
+        // Se for outro erro, relança
+        throw endpointError;
       }
-    });
+    }
 
-    console.log('✅ Produtos recebidos da API:', response.data.length);
+    // 🔧 IMPORTANTE: Filtra no frontend também, caso o backend não filtre
+    // Isso garante que apenas produtos do distribuidor logado sejam exibidos
+    let produtosFiltrados = response.data;
+
+    // Verifica se os produtos têm o campo idDistribuidor
+    const primeiroComDistribuidor = produtosFiltrados.find(p => p.idDistribuidor || p.distribuidorId);
+
+    if (primeiroComDistribuidor) {
+      // Se tem o campo, faz filtro no frontend para garantir
+      const campoDistribuidor = primeiroComDistribuidor.idDistribuidor !== undefined ? 'idDistribuidor' : 'distribuidorId';
+
+      produtosFiltrados = produtosFiltrados.filter(produto => {
+        const idDistribuidorProduto = produto[campoDistribuidor];
+        return idDistribuidorProduto && parseInt(idDistribuidorProduto) === parseInt(id);
+      });
+
+      logger.info(`✅ Filtro aplicado: ${response.data.length} produtos → ${produtosFiltrados.length} do distribuidor ${id}`);
+    } else {
+      logger.warn('⚠️ Produtos não têm campo idDistribuidor/distribuidorId. Exibindo todos os produtos.');
+    }
 
     // Mapeia produtos para formato de estoque esperado pela TelaEstoque
-    const estoque = response.data.map(produto => ({
+    const estoque = produtosFiltrados.map(produto => ({
       id: produto.id,
       nome: produto.nome || 'Sem nome',
       descricao: produto.descricao || '',
@@ -50,15 +102,15 @@ export const getEstoqueDoDistribuidor = async (idDistribuidor = null) => {
       ean: produto.ean || ''
     }));
 
-    console.log('📊 Estoque formatado:', estoque.length, 'itens');
+    logger.info('📊 Estoque formatado:', estoque.length, 'itens');
 
     return estoque;
   } catch (error) {
-    console.error('❌ Erro ao buscar estoque:', error);
+    logger.error('❌ Erro ao buscar estoque:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
     }
 
     throw error;
@@ -99,6 +151,14 @@ export const createProdutoEstoque = async (produto) => {
       throw new Error('Valor unitário deve ser maior que zero');
     }
 
+    // 🔧 Associa o produto ao distribuidor logado
+    // IMPORTANTE: Prioriza idDistribuidor do localStorage (não idPessoa!)
+    const idDistribuidor = localStorage.getItem('idDistribuidor') || localStorage.getItem('idPessoa');
+
+    if (!idDistribuidor) {
+      throw new Error('ID do distribuidor não encontrado. Faça login novamente.');
+    }
+
     // Mapeia para formato esperado pela API de Produtos
     const payload = {
       nome: produto.nome,
@@ -112,12 +172,14 @@ export const createProdutoEstoque = async (produto) => {
       fornecedor: produto.fornecedor || '',
       sku: produto.sku || '',
       ean: produto.ean || '',
+      // 🔧 IMPORTANTE: Vincula ao distribuidor logado
+      idDistribuidor: parseInt(idDistribuidor),
       // Campos adicionais que o backend pode esperar
-      empresa: 1, // TODO: Buscar do contexto/usuário
-      estabelecimento: 1 // TODO: Buscar do contexto/usuário
+      empresa: 1,
+      estabelecimento: 1
     };
 
-    console.log('📦 Criando novo produto no estoque:', payload);
+    logger.info('📦 Criando novo produto para o distribuidor ID:', idDistribuidor, payload);
 
     const response = await api.post('/api/Produtos', payload, {
       headers: {
@@ -126,7 +188,7 @@ export const createProdutoEstoque = async (produto) => {
       }
     });
 
-    console.log('✅ Produto criado com sucesso:', response.data);
+    logger.info('✅ Produto criado com sucesso:', response.data);
 
     // Retorna no formato de estoque
     return {
@@ -141,11 +203,11 @@ export const createProdutoEstoque = async (produto) => {
       status: calcularStatus(response.data.quantidade)
     };
   } catch (error) {
-    console.error('❌ Erro ao criar produto:', error);
+    logger.error('❌ Erro ao criar produto:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       if (error.response.status === 400) {
         throw new Error('Dados inválidos. Verifique os campos obrigatórios.');
@@ -171,6 +233,14 @@ export const updateProdutoEstoque = async (id, produto) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
+    // 🔧 Garante que o produto continua associado ao distribuidor logado
+    // IMPORTANTE: Prioriza idDistribuidor do localStorage (não idPessoa!)
+    const idDistribuidor = localStorage.getItem('idDistribuidor') || localStorage.getItem('idPessoa');
+
+    if (!idDistribuidor) {
+      throw new Error('ID do distribuidor não encontrado. Faça login novamente.');
+    }
+
     // Mapeia para formato esperado pela API de Produtos
     const payload = {
       id: id,
@@ -184,10 +254,12 @@ export const updateProdutoEstoque = async (id, produto) => {
       categoria: produto.categoria || '',
       fornecedor: produto.fornecedor || '',
       sku: produto.sku || '',
-      ean: produto.ean || ''
+      ean: produto.ean || '',
+      // 🔧 IMPORTANTE: Mantém o produto vinculado ao distribuidor
+      idDistribuidor: parseInt(idDistribuidor)
     };
 
-    console.log('📝 Atualizando produto:', id, payload);
+    logger.info('📝 Atualizando produto ID:', id, 'do distribuidor:', idDistribuidor);
 
     const response = await api.put(`/api/Produtos/${id}`, payload, {
       headers: {
@@ -196,7 +268,7 @@ export const updateProdutoEstoque = async (id, produto) => {
       }
     });
 
-    console.log('✅ Produto atualizado com sucesso:', response.data);
+    logger.info('✅ Produto atualizado com sucesso:', response.data);
 
     // Retorna no formato de estoque
     return {
@@ -211,11 +283,11 @@ export const updateProdutoEstoque = async (id, produto) => {
       status: calcularStatus(response.data.quantidade)
     };
   } catch (error) {
-    console.error(`❌ Erro ao atualizar produto ${id}:`, error);
+    logger.error(`❌ Erro ao atualizar produto ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       if (error.response.status === 404) {
         throw new Error('Produto não encontrado.');
@@ -242,7 +314,7 @@ export const deleteProdutoEstoque = async (id) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('🗑️ Excluindo produto:', id);
+    logger.info('🗑️ Excluindo produto:', id);
 
     await api.delete(`/api/Produtos/${id}`, {
       headers: {
@@ -250,15 +322,15 @@ export const deleteProdutoEstoque = async (id) => {
       }
     });
 
-    console.log('✅ Produto excluído com sucesso:', id);
+    logger.info('✅ Produto excluído com sucesso:', id);
 
     return { success: true, message: 'Produto excluído com sucesso' };
   } catch (error) {
-    console.error(`❌ Erro ao excluir produto ${id}:`, error);
+    logger.error(`❌ Erro ao excluir produto ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       if (error.response.status === 404) {
         throw new Error('Produto não encontrado.');
@@ -285,7 +357,7 @@ export const getProdutoEstoquePorId = async (id) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('🔍 Buscando produto:', id);
+    logger.info('🔍 Buscando produto:', id);
 
     const response = await api.get(`/api/Produtos/${id}`, {
       headers: {
@@ -293,7 +365,7 @@ export const getProdutoEstoquePorId = async (id) => {
       }
     });
 
-    console.log('✅ Produto encontrado:', response.data);
+    logger.info('✅ Produto encontrado:', response.data);
 
     // Retorna no formato de estoque
     return {
@@ -312,10 +384,10 @@ export const getProdutoEstoquePorId = async (id) => {
       ean: response.data.ean || ''
     };
   } catch (error) {
-    console.error(`❌ Erro ao buscar produto ${id}:`, error);
+    logger.error(`❌ Erro ao buscar produto ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Produto não encontrado.');

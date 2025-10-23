@@ -8,7 +8,6 @@ import TelaEstoque from "./Components/TelaDistribuidor/TelaEstoque/TelaEstoque";
 import TelaEntrega from "./Components/TelaEntrega/TelaEntrega";
 import TelaPagamento from "./Components/TelaCheckout/TelaPagamento";
 import TelaConfirmacao from "./Components/TelaPagamentoConfirmado/TelaConfirmacao";
-import TestePedido from "./Components/TestePedido/TestePedido";
 import Layout from "./Components/Shared/Layout/Layout";
 // import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 // import NaoAutorizado from "./Components/NaoAutorizado/NaoAutorizado";
@@ -96,8 +95,6 @@ function App() {
           }
         />
 
-        {/* Rota de teste para debug de pedidos (apenas desenvolvimento) */}
-        <Route path="/teste-pedido" element={<TestePedido />} />
       </Routes>
     </Router>
   );

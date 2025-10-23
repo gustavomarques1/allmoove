@@ -12,7 +12,7 @@
   gap: 10px;
   font-size: 1.2rem;
   font-weight: 600;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
   padding-bottom: 10px;
   margin-bottom: 15px;
   border-bottom: 1px solid #e5e7eb;
@@ -43,7 +43,7 @@
 }
 .fornecedorNome {
   font-weight: 600;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
   font-size: 1rem;
 }
 
@@ -63,7 +63,8 @@
   justify-content: space-between;
   gap: 20px;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8; /* Leve opacidade */
 }
 
 /* Container para os totais de cada fornecedor */
@@ -76,9 +77,9 @@
 /* Linha de "Total do Pedido" de cada fornecedor */
 .totalFornecedorRow {
   font-weight: 700;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
   margin-top: 5px;
-  font-size: 1rem; 
+  font-size: 1rem;
 }
 
 /* Container da seção final com o total geral */
@@ -95,13 +96,11 @@
   align-items: center;
   padding: 4px 0;
   font-size: 0.95rem;
-  /* --- AJUSTE: Define a cor do texto para preto/cinza escuro --- */
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
 }
 .label {
   font-weight: 500;
-  /* --- AJUSTE: Garante que o rótulo também seja preto/cinza escuro --- */
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
   flex-shrink: 0;
   margin-right: 16px;
 }
@@ -109,10 +108,10 @@
 /* Linha do Total Geral com máximo destaque */
 .totalGeralRow {
   font-weight: 700;
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
   font-size: 1.25rem;
   margin-top: 8px;
 }
 .totalGeralRow strong {
-  color: #16a34a;
+  color: #FF3600; /* Laranja AllMoove */
 }

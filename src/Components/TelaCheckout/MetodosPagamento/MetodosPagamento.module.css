@@ -9,7 +9,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 20px 0;
-  color: #333;
+  color: #18304C; /* Azul AllMoove */
 }
 
 /* Container das abas com fundo cinza claro */
@@ -31,17 +31,19 @@
   cursor: pointer;
   font-weight: 500;
   font-size: 0.9rem;
-  color: #6b7280; /* Cor cinza para texto inativo */
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.6; /* Opacidade para inativo */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, opacity 0.2s;
 }
 
 /* Botão da aba (estado ativo) */
 .tabButton.active {
   background-color: white;
-  color: #333;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 1; /* 100% visível quando ativo */
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }

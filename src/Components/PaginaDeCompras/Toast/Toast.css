@@ -79,7 +79,7 @@
   flex: 1;
   font-size: 14px;
   font-weight: 500;
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
   line-height: 1.4;
 }
 
@@ -100,7 +100,7 @@
 
 .toast__close:hover {
   background-color: #f3f4f6;
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
 }
 
 /* Responsividade */

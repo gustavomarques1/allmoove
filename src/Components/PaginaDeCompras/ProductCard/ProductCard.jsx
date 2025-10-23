@@ -1,13 +1,40 @@
 import React, { useContext, useState } from 'react';
 import propTypes from 'prop-types';
-import { ShoppingCart, Check } from 'lucide-react';
+import { ShoppingCart, Check, Flame } from 'lucide-react';
 
 import './ProductCard.css';
 import AppContext from '../../../context/AppContext';
 import formatCurrency from '../../../utils/formatCurrency';
 
-function ProductCard({ data }) {
-  const { nome, imagem, precoVenda, price, precoOriginal, desconto, parcelas, valorParcela, freteGratis } = data;
+/**
+ * 🏷️ CONTROLE DE PROMOÇÕES
+ *
+ * Lista de produtos em promoção com badge "X% OFF"
+ *
+ * Para ADICIONAR um produto em promoção:
+ * 1. Adicione o ID do produto como chave
+ * 2. Defina o desconto (percentual) e precoOriginal (valor antes do desconto)
+ *
+ * Para REMOVER um produto da promoção:
+ * 1. Delete ou comente a linha do produto
+ *
+ * Exemplo:
+ *   10: { desconto: 15, precoOriginal: 500 }  // Produto ID 10 com 15% OFF
+ */
+const PRODUTOS_EM_PROMOCAO = {
+  // ID: { desconto: percentual, precoOriginal: valor }
+  1: { desconto: 20, precoOriginal: 1875 },   // iPhone 16
+  2: { desconto: 15, precoOriginal: 1176 },   // FOG Preto
+  5: { desconto: 25, precoOriginal: 2000 },
+  8: { desconto: 30, precoOriginal: 1500 },
+  12: { desconto: 10, precoOriginal: 800 },
+  15: { desconto: 35, precoOriginal: 3000 },
+  20: { desconto: 15, precoOriginal: 1200 },
+  25: { desconto: 20, precoOriginal: 2500 },
+};
+
+function ProductCard({ data, isMaisVendido = false }) {
+  const { nome, imagem, precoVenda, price, precoOriginal, desconto, parcelas, valorParcela, freteGratis, fornecedor } = data;
   const { handleAddItem, cartItems } = useContext(AppContext);
   const [isAdding, setIsAdding] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -19,9 +46,16 @@ function ProductCard({ data }) {
   // Usa precoVenda da API ou price do fallback JSON
   const preco = precoVenda || price || 0;
 
-  // Calcula preço original e desconto se não estiverem no JSON
-  const precoAnterior = precoOriginal || (preco * 1.25); // Simula 20% de desconto se não houver
-  const percentualDesconto = desconto || Math.round(((precoAnterior - preco) / precoAnterior) * 100);
+  // 🏷️ Verifica se o produto está na lista de promoções
+  const promocao = PRODUTOS_EM_PROMOCAO[data.id];
+
+  // Calcula preço original e desconto:
+  // 1. Se vier do produto (desconto ou precoOriginal)
+  // 2. Se estiver na lista de promoções
+  // 3. Caso contrário, não tem desconto
+  const precoAnterior = precoOriginal || promocao?.precoOriginal;
+  const percentualDesconto = desconto || promocao?.desconto ||
+    (precoAnterior ? Math.round(((precoAnterior - preco) / precoAnterior) * 100) : 0);
 
   // Calcula parcelamento se não estiver no JSON
   const numeroParcelas = parcelas || (preco > 1000 ? 10 : preco > 500 ? 6 : 3);
@@ -56,10 +90,11 @@ function ProductCard({ data }) {
         </div>
       )}
 
-      {/* Badge de frete grátis */}
-      {freteGratis && (
-        <div className="card__free-shipping">
-          Frete grátis
+      {/* Badge de Mais Vendido */}
+      {isMaisVendido && (
+        <div className="card__best-seller">
+          <Flame size={14} />
+          Mais Vendido
         </div>
       )}
 
@@ -93,6 +128,13 @@ function ProductCard({ data }) {
 
         {/* Nome do produto */}
         <h3 className="card__title">{nome}</h3>
+
+        {/* Fornecedor */}
+        {fornecedor && (
+          <p className="card__supplier">
+            Fornecedor: <strong>{fornecedor}</strong>
+          </p>
+        )}
       </div>
 
       <button
@@ -108,6 +150,13 @@ function ProductCard({ data }) {
           <ShoppingCart className="icone_cor" />
         )}
       </button>
+
+      {/* Badge de frete grátis - CANTO INFERIOR DIREITO */}
+      {freteGratis && (
+        <div className="card__free-shipping-footer">
+          Frete grátis
+        </div>
+      )}
     </section>
   );
 }
@@ -126,5 +175,7 @@ ProductCard.propTypes = {
     parcelas: propTypes.number,
     valorParcela: propTypes.number,
     freteGratis: propTypes.bool,
+    fornecedor: propTypes.string,
   }).isRequired,
+  isMaisVendido: propTypes.bool,
 };

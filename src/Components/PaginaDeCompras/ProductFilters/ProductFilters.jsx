@@ -1,9 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ArrowUpDown, Truck } from 'lucide-react';
+import { ArrowUpDown, Truck, Tag } from 'lucide-react';
 import './ProductFilters.css';
 
-function ProductFilters({ sortBy, onSortChange, showFreeShippingOnly, onFreeShippingToggle, totalProducts }) {
+function ProductFilters({
+  sortBy,
+  onSortChange,
+  showFreeShippingOnly,
+  onFreeShippingToggle,
+  segmentoFilter,
+  onSegmentoChange,
+  segmentos,
+  totalProducts
+}) {
   return (
     <div className="product-filters">
       <div className="product-filters__info">
@@ -11,6 +20,24 @@ function ProductFilters({ sortBy, onSortChange, showFreeShippingOnly, onFreeShip
       </div>
 
       <div className="product-filters__controls">
+        {/* Filtro de Categoria/Segmento */}
+        <div className="sort-control">
+          <Tag size={16} className="sort-icon" />
+          <select
+            value={segmentoFilter}
+            onChange={(e) => onSegmentoChange(e.target.value)}
+            className="sort-select"
+            aria-label="Filtrar por categoria"
+          >
+            <option value="todos">Todas as categorias</option>
+            {segmentos.map((segmento) => (
+              <option key={segmento.id} value={segmento.id}>
+                {segmento.nome || segmento.descricao}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Filtro de Frete Grátis */}
         <button
           type="button"
@@ -48,6 +75,15 @@ ProductFilters.propTypes = {
   onSortChange: PropTypes.func.isRequired,
   showFreeShippingOnly: PropTypes.bool.isRequired,
   onFreeShippingToggle: PropTypes.func.isRequired,
+  segmentoFilter: PropTypes.string.isRequired,
+  onSegmentoChange: PropTypes.func.isRequired,
+  segmentos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      nome: PropTypes.string,
+      descricao: PropTypes.string,
+    })
+  ).isRequired,
   totalProducts: PropTypes.number.isRequired,
 };
 

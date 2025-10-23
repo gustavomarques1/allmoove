@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./TelaDashboard.module.css";
+import logger from "../../utils/logger";
 import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, ShoppingBag, Plus, Truck, X, RefreshCw, Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { usePedidos } from "../../hooks/usePedidos";
@@ -7,6 +8,8 @@ import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
 import Button from "../Shared/Button/Button";
 import Logo from "../Shared/Logo/Logo";
 import SkeletonCard from "./SkeletonCard/SkeletonCard";
+// QuickActions removido - redundante com BuscaSegmentada
+import StatsCards from "./StatsCards/StatsCards";
 
 function TelaDashboard() {
   const navigate = useNavigate();
@@ -30,7 +33,7 @@ function TelaDashboard() {
   // Recarrega pedidos quando a página ganha foco (usuário volta de outra aba/página)
   useEffect(() => {
     const handleFocus = () => {
-      console.log('🔄 Dashboard ganhou foco - recarregando pedidos...');
+      logger.info('🔄 Dashboard ganhou foco - recarregando pedidos...');
       recarregar();
       setLastUpdate(new Date());
     };
@@ -39,7 +42,7 @@ function TelaDashboard() {
     window.addEventListener('focus', handleFocus);
 
     // Também recarrega quando o componente é montado
-    console.log('✅ Dashboard montado - carregando pedidos...');
+    logger.info('✅ Dashboard montado - carregando pedidos...');
     setLastUpdate(new Date());
 
     return () => {
@@ -119,101 +122,53 @@ function TelaDashboard() {
 
   return (
     <div className={styles["dashboard-page"]}>
-      {/* Cabeçalho */}
+      {/* Cabeçalho Melhorado */}
       <div className={styles["dashboard-header-section"]}>
         <div className={styles["dashboard-header"]}>
-          {/* <Logo size={20} /> */}
-        </div>
-        
-        <div className={styles["dashboard-subtitle-and-button"]}>
-          <div>
-            <p className={styles["dashboard-greeting"]}>{getSaudacao()}!</p>
-            <h2 className={styles["dashboard-subtitle"]}>Assistência Técnica</h2>
-            <p className={styles["last-update"]}>
-              Atualizado {getTimeAgo()}
-              <button
-                className={styles["refresh-icon-btn"]}
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                aria-label="Atualizar dados"
-                title="Atualizar dados"
-              >
-                <RefreshCw size={14} className={isRefreshing ? styles["spinning"] : ''} />
-              </button>
+          <div className={styles["welcome-section"]}>
+            <h1 className={styles["welcome-title"]}>
+              {getSaudacao()}, <span className={styles["user-name"]}>Assistência Parceira</span>!
+            </h1>
+            <p className={styles["welcome-subtitle"]}>
+              Veja o resumo dos seus pedidos e gerencie suas solicitações dos produtos
             </p>
           </div>
 
-          <Button
-            variant="primary"
-            size="md"
-            leftIcon={<ShoppingBag size={18} />}
-            onClick={() => navigate('/assistencia/loja')}
-          >
-            Buscar Produtos
-          </Button>
+          <div className={styles["header-actions"]}>
+            {/* Badge de notificações removido - placeholder não funcional */}
+
+            <button
+              className={styles["refresh-btn"]}
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              aria-label={isRefreshing ? "Atualizando dados..." : "Atualizar dados"}
+              title={`Atualizado ${getTimeAgo()}`}
+              role="button"
+              tabIndex={0}
+              aria-busy={isRefreshing}
+            >
+              <RefreshCw
+                size={18}
+                className={isRefreshing ? styles["spinning"] : ''}
+                aria-hidden="true"
+              />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Linha divisória */}
-      <div className={styles["divider"]}></div>
+      {/* Quick Actions removido - funcionalidades duplicadas e não essenciais */}
 
       {/* 2. Adicione o componente BuscaSegmentada aqui */}
       <BuscaSegmentada />
 
-      {/* Cards de Resumo */}
-      <div className={styles["cards-section"]}>
-        {isLoading ? (
-          <div className={styles["cards-grid"]}>
-            <SkeletonCard />
-            <SkeletonCard />
-            <SkeletonCard />
-          </div>
-        ) : error ? (
-          <div className={styles["error-container"]}>
-            <AlertCircle className={styles["error-icon"]} />
-            <p>Erro ao carregar indicadores</p>
-          </div>
-        ) : (
-          <div className={styles["cards-grid"]}>
-            <div className={styles["card"]} style={{ borderTop: `4px solid var(--color-primary)` }}>
-              <div className={styles["card-header"]}>
-                <h3>Meus Pedidos</h3>
-                <Package className={styles["card-icon"]} style={{ color: 'var(--color-primary)' }} />
-              </div>
-              <p className={styles["card-number"]}>{indicadores.totalPedidos}</p>
-              <p className={styles["card-description"]}>
-                Total de pedidos realizados
-              </p>
-            </div>
-            <div className={styles["card"]} style={{ borderTop: `4px solid #16a34a` }}>
-              <div className={styles["card-header"]}>
-                <h3>Pedidos Encerrados</h3>
-                <CheckCircle className={styles["card-icon"]} style={{ color: '#16a34a' }} />
-              </div>
-              <p className={styles["card-number"]}>{indicadores.pedidosEncerrados}</p>
-              <p className={styles["card-description"]}>
-                Pedidos entregues com sucesso
-              </p>
-            </div>
-            <div className={styles["card"]} style={{ borderTop: `4px solid #f59e0b` }}>
-              <div className={styles["card-header"]}>
-                <h3>Pedidos em Andamento</h3>
-                <Clock className={styles["card-icon"]} style={{ color: '#f59e0b' }} />
-              </div>
-              <p className={styles["card-number"]}>{indicadores.pedidosEmAndamento}</p>
-              <p className={styles["card-description"]}>
-                Aceitos ou em trânsito
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Cards de Resumo Modernos */}
+      <StatsCards indicadores={indicadores} isLoading={isLoading} />
       
       {/* Seção Meus Pedidos */}
-      <div className={styles["orders-section"]}>
+      <section className={styles["orders-section"]} aria-labelledby="orders-heading">
         <div className={styles["orders-header"]}>
-          <h1>Meus Pedidos de Peças</h1>
-          <p>Histórico e status dos seus pedidos de peças</p>
+          <h1 id="orders-heading">Pedidos</h1>
         </div>
 
         {/* Filtros e Busca */}
@@ -221,26 +176,33 @@ function TelaDashboard() {
           <div className={styles["filters-section"]}>
             <div className={styles["search-container"]}>
               <input
-                type="text"
+                type="search"
                 placeholder="Buscar por ID, fornecedor ou código..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className={styles["search-input"]}
                 disabled={isLoading}
                 aria-label="Buscar pedidos"
+                aria-describedby="search-hint"
+                autoComplete="off"
               />
+              <span id="search-hint" className="sr-only">
+                Digite para buscar pedidos por ID, nome do fornecedor ou código de entrega
+              </span>
               {searchTerm !== debouncedSearchTerm && (
-                <span className={styles["search-loading"]}>
-                  <Loader size={14} className={styles["spinner-small"]} />
+                <span className={styles["search-loading"]} aria-live="polite">
+                  <Loader size={14} className={styles["spinner-small"]} aria-hidden="true" />
+                  <span className="sr-only">Buscando...</span>
                 </span>
               )}
             </div>
-            <div className={styles["status-filters"]}>
+            <div className={styles["status-filters"]} role="group" aria-label="Filtros de status">
               <button
                 className={`${styles["filter-btn"]} ${statusFilter === 'todos' ? styles["active"] : ''}`}
                 onClick={() => setStatusFilter('todos')}
                 disabled={isLoading}
                 aria-label="Filtrar todos os pedidos"
+                aria-pressed={statusFilter === 'todos'}
               >
                 Todos ({pedidos.length})
               </button>
@@ -249,8 +211,9 @@ function TelaDashboard() {
                 onClick={() => setStatusFilter('pendente')}
                 disabled={isLoading}
                 aria-label="Filtrar pedidos pendentes"
+                aria-pressed={statusFilter === 'pendente'}
               >
-                <Clock size={16} />
+                <Clock size={16} aria-hidden="true" />
                 Pendente
               </button>
               <button
@@ -258,8 +221,9 @@ function TelaDashboard() {
                 onClick={() => setStatusFilter('aceito')}
                 disabled={isLoading}
                 aria-label="Filtrar pedidos aceitos"
+                aria-pressed={statusFilter === 'aceito'}
               >
-                <CheckCircle size={16} />
+                <CheckCircle size={16} aria-hidden="true" />
                 Aceito
               </button>
               <button
@@ -267,8 +231,9 @@ function TelaDashboard() {
                 onClick={() => setStatusFilter('em trânsito')}
                 disabled={isLoading}
                 aria-label="Filtrar pedidos em trânsito"
+                aria-pressed={statusFilter === 'em trânsito'}
               >
-                <Truck size={16} />
+                <Truck size={16} aria-hidden="true" />
                 Em Trânsito
               </button>
             </div>
@@ -333,10 +298,11 @@ function TelaDashboard() {
                 const isNew = isRecentOrder(pedido.dataPedido);
 
                 return (
-                  <div
+                  <article
                     key={pedido.id}
                     className={styles["order-item"]}
                     style={{ animationDelay: `${index * 0.05}s` }}
+                    aria-label={`Pedido número ${pedido.id}`}
                   >
                     <div className={styles["order-info"]}>
                       <div className={styles["order-header-item"]}>
@@ -358,6 +324,35 @@ function TelaDashboard() {
                       <p><strong>Tipo de Entrega:</strong> {pedido.tipoEntrega || 'N/A'}</p>
                       <p><strong>Código de Entrega:</strong> {pedido.codigoEntrega || 'N/A'}</p>
                     </div>
+
+                    {/* Seção de Items do Pedido */}
+                    {pedido.items && pedido.items.length > 0 && (
+                      <div className={styles["order-items-section"]}>
+                        <h4 className={styles["items-title"]}>
+                          <ShoppingBag size={16} />
+                          Produtos ({pedido.items.length} {pedido.items.length === 1 ? 'item' : 'itens'})
+                        </h4>
+                        <div className={styles["items-list"]}>
+                          {pedido.items.map((item, itemIndex) => (
+                            <div key={itemIndex} className={styles["item-row"]}>
+                              <div className={styles["item-info"]}>
+                                <span className={styles["item-name"]}>{item.nome || 'Produto sem nome'}</span>
+                                <span className={styles["item-quantity"]}>Qtd: {item.quantidade || 0}</span>
+                              </div>
+                              <div className={styles["item-prices"]}>
+                                <span className={styles["item-unit-price"]}>
+                                  R$ {(item.preco || 0).toFixed(2)} un.
+                                </span>
+                                <span className={styles["item-subtotal"]}>
+                                  R$ {((item.preco || 0) * (item.quantidade || 0) - (item.desconto || 0)).toFixed(2)}
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div className={styles["order-status"]}>
                       <span
                         className={styles["status-badge-new"]}
@@ -367,13 +362,13 @@ function TelaDashboard() {
                         }}
                       >
                         <StatusIcon size={16} />
-                        {pedido.status || 'Pendente'}
+          {pedido.status || 'Pendente'}
                       </span>
                       <p className={styles["order-total"]}>
                         R$ {pedido.totalPago ? pedido.totalPago.toFixed(2) : '0.00'}
                       </p>
                     </div>
-                  </div>
+                  </article>
                 );
               })}
             </div>
@@ -407,7 +402,7 @@ function TelaDashboard() {
             </div>
           </>
         )}
-      </div>
+      </section>
     </div>
   );
 }

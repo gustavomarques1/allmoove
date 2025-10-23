@@ -1,58 +1,50 @@
 /* Container principal da página */
 .distribuidor-page {
-  max-width: 1200px; /* Ajuste para caber bem o conteúdo */
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 30px 20px; /* Mais padding para o topo */
-  font-family: 'Inter', sans-serif; /* Uma fonte mais moderna */
-  background-color: #f9fafb; /* Cor de fundo levemente cinza */
-  color: #374151;
+  padding: 24px;
+  font-family: var(--font-primary);
 }
 
-/* Header principal Allmoove + Distribuidor */
-.distribuidor-main-header {
-  display: flex;
-  flex-direction: column; /* Em colunas para empilhar logo e título */
-  margin-bottom: 30px;
+/* Header Section com fundo laranja gradiente */
+.distribuidor-header-section {
+  margin-bottom: var(--spacing-6);
+  padding: var(--spacing-6);
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  border-radius: var(--radius-lg);
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
 }
 
-.distribuidor-logo-section {
+.distribuidor-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-  color: #4b5563; /* Cor mais suave para o logo */
+  gap: var(--spacing-6);
 }
 
-.distribuidor-logo-icon {
-  color: white;
-  padding: 6px;
-  background-color: var(--color-primary);
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
+/* Welcome Section */
+.welcome-section {
+  flex: 1;
 }
 
-.distribuidor-app-name {
-  font-size: 24px;
+.welcome-title {
+  font-size: 1.75rem;
+  font-weight: var(--font-bold);
+  color: #ffffff;
+  margin: 0 0 var(--spacing-2) 0;
+  line-height: 1.3;
+}
+
+.user-name {
+  color: #18304C; /* Azul AllMoove */
   font-weight: 700;
+}
+
+.welcome-subtitle {
+  font-size: var(--text-base);
+  color: rgba(255, 255, 255, 0.95);
   margin: 0;
-}
-
-.distribuidor-title-section {
-  margin-top: 5px; /* Espaço entre o logo e o título do dashboard */
-}
-
-.distribuidor-main-title {
-  font-size: 32px;
-  font-weight: 800;
-  margin: 0;
-  color: #111827;
-}
-
-.distribuidor-main-subtitle {
-  font-size: 16px;
-  color: #6b7280;
-  margin: 5px 0 0;
 }
 
 /* Seção de Cards Superiores */
@@ -74,6 +66,25 @@
   min-height: 120px; /* Altura mínima para manter a consistência */
 }
 
+/* Card de Estoque com estilo especial (similar ao botão de cadastrar da tela estoque) */
+.distribuidor-top-card-estoque {
+  background: linear-gradient(135deg, #FF3600 0%, #ff5722 100%);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.distribuidor-top-card-estoque:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 54, 0, 0.4);
+}
+
 .distribuidor-top-card-header {
   display: flex;
   justify-content: space-between;
@@ -84,7 +95,8 @@
 .distribuidor-top-card-title {
   font-size: 16px;
   font-weight: 600;
-  color: #4b5563;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   margin: 0;
 }
 
@@ -99,44 +111,46 @@
 .distribuidor-top-card-number {
   font-size: 32px;
   font-weight: 700;
-  color: #111827;
+  color: #18304C; /* Azul AllMoove */
   margin: 5px 0;
 }
 
 .distribuidor-top-card-description {
   font-size: 14px;
-  color: #6b7280;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   margin: 0;
 }
 
-/* Estilização específica para o botão de estoque */
+/* Estilização específica para o botão de estoque (versão branca no card laranja) */
 .distribuidor-stock-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: var(--color-primary);
-  color: white;
+  background-color: white;
+  color: #FF3600;
   font-weight: 600;
   width: 100%;
   border: none;
-  border-radius: var(--radius-md);
-  padding: 10px 15px;
+  border-radius: 8px;
+  padding: 12px 20px;
   cursor: pointer;
-  transition: all var(--transition-fast);
-  align-self: flex-start;
-  margin-bottom: 8px;
+  transition: all 0.2s ease;
+  font-size: 15px;
 }
 
 .distribuidor-stock-button:hover {
-  background-color: var(--color-primary-hover);
-  box-shadow: var(--shadow-md);
+  background-color: #f8f9fa;
+  transform: scale(1.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .distribuidor-stock-description {
   font-size: 14px;
-  color: #6b7280;
-  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 8px 0 0 0;
+  text-align: center;
 }
 
 /* Seção do meio (Faturamento e Peças por Segmento) */
@@ -164,13 +178,14 @@
 }
 
 .distribuidor-middle-card-icon {
-  color: #4b5563;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
 }
 
 .distribuidor-middle-card-title {
   font-size: 20px;
   font-weight: 700;
-  color: #111827;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
 }
 
@@ -190,7 +205,8 @@
 
 .distribuidor-fat-label {
   flex-basis: 30%; /* Largura fixa para os rótulos */
-  color: #4b5563;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   margin: 0;
 }
 
@@ -217,7 +233,7 @@
 
 .distribuidor-fat-value {
   font-weight: 600;
-  color: #111827;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
 }
 
@@ -233,7 +249,7 @@
 .distribuidor-fat-value-total {
   font-size: 18px;
   font-weight: 700;
-  color: #111827;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
 }
 
@@ -248,7 +264,8 @@
 
 .distribuidor-segment-label {
   flex-basis: 30%; /* Largura fixa para os rótulos */
-  color: #4b5563;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   margin: 0;
 }
 
@@ -269,7 +286,8 @@
 
 .distribuidor-segment-value {
   font-weight: 500;
-  color: #4b5563;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   margin: 0;
 }
 
@@ -285,7 +303,7 @@
 .distribuidor-control-panel-title {
   font-size: 20px;
   font-weight: 700;
-  color: #111827;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
 }
 
@@ -315,7 +333,8 @@
 }
 
 .distribuidor-order-icon {
-  color: #4b5563;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
 }
 
 .distribuidor-order-text {
@@ -326,13 +345,14 @@
 .distribuidor-order-plate {
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
 }
 
 .distribuidor-order-model {
   font-size: 14px;
-  color: #6b7280;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   margin: 2px 0 5px 0;
 }
 
@@ -368,7 +388,7 @@
 .distribuidor-order-price {
   font-size: 18px;
   font-weight: 700;
-  color: #111827;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
 }
 
@@ -400,7 +420,7 @@
 
 .distribuidor-order-button-details {
   background-color: #e5e7eb;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
   font-weight: 600;
   border: none;
   border-radius: 8px;
@@ -418,6 +438,23 @@
 
 /* Responsividade básica */
 @media (max-width: 768px) {
+  .distribuidor-page {
+    padding: var(--spacing-4);
+  }
+
+  .distribuidor-header-section {
+    padding: var(--spacing-4);
+  }
+
+  .distribuidor-header {
+    flex-direction: column;
+    gap: var(--spacing-4);
+  }
+
+  .welcome-title {
+    font-size: 1.5rem;
+  }
+
   .distribuidor-top-cards-grid,
   .distribuidor-middle-section-grid {
     grid-template-columns: 1fr; /* Uma coluna em telas menores */
@@ -448,9 +485,19 @@
 }
 
 @media (max-width: 480px) {
-  .distribuidor-main-title {
-    font-size: 28px;
+  .distribuidor-header-section {
+    padding: var(--spacing-3);
+    border-radius: var(--radius-md);
   }
+
+  .welcome-title {
+    font-size: 1.25rem;
+  }
+
+  .welcome-subtitle {
+    font-size: var(--text-sm);
+  }
+
   .distribuidor-top-card-number {
     font-size: 28px;
   }

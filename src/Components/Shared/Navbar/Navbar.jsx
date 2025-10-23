@@ -36,11 +36,12 @@ function Navbar({ userType = 'assistencia' }) {
       case 'assistencia':
         return [
           { path: '/assistencia/dashboard', label: 'Dashboard', icon: <Home size={18} /> },
-          { path: '/assistencia/loja', label: 'Buscar Peças', icon: <ShoppingBag size={18} /> },
+          { path: '/assistencia/loja', label: 'Buscar Produtos', icon: <ShoppingBag size={18} /> },
         ];
       case 'distribuidor':
         return [
-          { path: '/distribuidor/dashboard', label: 'Dashboard', icon: <Package size={18} /> },
+          { path: '/distribuidor/dashboard', label: 'Dashboard', icon: <Home size={18} /> },
+          { path: '/distribuidor/estoque', label: 'Estoque', icon: <Package size={18} /> },
         ];
       case 'entregador':
         return [

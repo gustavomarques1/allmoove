@@ -13,7 +13,7 @@
   margin: 0 0 15px 0;
   padding-bottom: 15px;
   border-bottom: 1px solid #f0f0f0;
-  color: #333; /* COR DO TÍTULO ALTERADA */
+  color: #18304C; /* Azul AllMoove */
 }
 
 .detailsGrid {
@@ -21,23 +21,25 @@
   grid-template-columns: auto 1fr;
   gap: 12px 20px;
   align-items: center;
-  color: #333; /* COR PADRÃO PARA OS VALORES */
+  color: #18304C; /* Azul AllMoove */
 }
 
 .label, .labelTotal {
   font-weight: 500;
-  color: #555; /* Cor dos labels um pouco mais suave */
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8; /* Leve opacidade para labels */
   text-align: right;
 }
 
 .labelTotal {
   font-weight: 700;
-  color: #333;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 1; /* 100% visível */
 }
 
 .valueTotal {
   font-weight: 700;
-  color: #16a34a;
+  color: #FF3600; /* Laranja AllMoove */
   font-size: 1.1rem;
 }
 

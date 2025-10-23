@@ -2,8 +2,11 @@ import React, { useContext, useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AppContext from '../../../context/AppContext';
 import fetchProducts from '../../../api/fetchProdutos';
+import logger from '../../../utils/logger';
 import ProductCard from '../ProductCard/ProductCard';
 import ProductFilters from '../ProductFilters/ProductFilters';
+import { useProdutosMaisVendidos } from '../../../hooks/useProdutosMaisVendidos';
+import api from '../../../api/api';
 import './Products.css';
 
 function Products() {
@@ -13,9 +16,40 @@ function Products() {
   // Estados de filtros e ordenação
   const [sortBy, setSortBy] = useState('default');
   const [showFreeShippingOnly, setShowFreeShippingOnly] = useState(false);
+  const [segmentoFilter, setSegmentoFilter] = useState('todos');
+  const [segmentos, setSegmentos] = useState([]);
+
+  // Pega o idSegmento da URL para filtrar "mais vendidos" por categoria
+  const idSegmentoQuery = searchParams.get('idSegmento');
+  const idSegmento = idSegmentoQuery ? parseInt(idSegmentoQuery) : null;
+
+  // Top 10 produtos mais vendidos (global ou filtrado por categoria)
+  const { produtosMaisVendidos } = useProdutosMaisVendidos(10, idSegmento);
 
   // Opcional: Estado para notificar o usuário sobre o fallback
   const [notification, setNotification] = useState('');
+
+  // Busca segmentos da API
+  useEffect(() => {
+    const fetchSegmentos = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        const response = await api.get('/api/ProdutoSegmentos', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const segmentosData = response.data || [];
+        setSegmentos(segmentosData);
+        logger.info('✅ Segmentos carregados para filtro:', segmentosData.length);
+      } catch (error) {
+        logger.warn('⚠️ Erro ao carregar segmentos:', error.message);
+      }
+    };
+
+    fetchSegmentos();
+  }, []);
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -35,20 +69,20 @@ function Products() {
           product => product.idSegmento === idSegmento
         );
 
-        console.log(`📊 Filtrado por idSegmento ${idSegmento}:`, fetchedProducts.length, 'produtos');
+        logger.info(`📊 Filtrado por idSegmento ${idSegmento}:`, fetchedProducts.length, 'produtos');
       }
 
       // 3. Filtra por idDistribuidor se especificado
       if (idDistribuidorQuery && fetchedProducts.length > 0) {
         const idDistribuidor = parseInt(idDistribuidorQuery);
-        console.log(`🔍 Filtrando por idDistribuidor: ${idDistribuidor}`);
+        logger.info(`🔍 Filtrando por idDistribuidor: ${idDistribuidor}`);
 
         const produtosAntes = fetchedProducts.length;
         fetchedProducts = fetchedProducts.filter(
           product => product.idDistribuidor === idDistribuidor
         );
 
-        console.log(`📊 Produtos antes: ${produtosAntes}, depois: ${fetchedProducts.length}`);
+        logger.info(`📊 Produtos antes: ${produtosAntes}, depois: ${fetchedProducts.length}`);
       }
 
       // 4. Notificação se não encontrar produtos
@@ -66,6 +100,12 @@ function Products() {
   // Filtragem e ordenação de produtos
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = [...products];
+
+    // Filtro de segmento/categoria
+    if (segmentoFilter !== 'todos') {
+      const idSegmento = parseInt(segmentoFilter);
+      filtered = filtered.filter(product => product.idSegmento === idSegmento);
+    }
 
     // Filtro de frete grátis
     if (showFreeShippingOnly) {
@@ -104,7 +144,7 @@ function Products() {
     }
 
     return filtered;
-  }, [products, sortBy, showFreeShippingOnly]);
+  }, [products, sortBy, showFreeShippingOnly, segmentoFilter]);
 
   if (loading) {
     return <div className="loading-message">Carregando produtos...</div>;
@@ -122,6 +162,9 @@ function Products() {
             onSortChange={setSortBy}
             showFreeShippingOnly={showFreeShippingOnly}
             onFreeShippingToggle={() => setShowFreeShippingOnly(!showFreeShippingOnly)}
+            segmentoFilter={segmentoFilter}
+            onSegmentoChange={setSegmentoFilter}
+            segmentos={segmentos}
             totalProducts={filteredAndSortedProducts.length}
           />
         )}
@@ -129,7 +172,11 @@ function Products() {
         <section className="products container">
           {filteredAndSortedProducts.length > 0 ? (
             filteredAndSortedProducts.map((product) => (
-              <ProductCard key={product.id} data={product} />
+              <ProductCard
+                key={product.id}
+                data={product}
+                isMaisVendido={produtosMaisVendidos.has(product.id)}
+              />
             ))
           ) : (
             <div className="no-products-message">

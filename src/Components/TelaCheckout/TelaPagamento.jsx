@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { flushSync } from 'react-dom';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './TelaPagamento.module.css';
-import { ArrowLeft, MapPin, X, Loader, Edit2, Trash2, Plus, Check } from 'lucide-react';
+import { ArrowLeft, MapPin, X, Loader, Edit2, Trash2, Plus, Check, CheckCircle } from 'lucide-react';
+import logger from '../../utils/logger';
 
 // Importando os componentes filhos
 import ResumoPedido from './ResumoPedidoPagamento/ResumoPedido';
 import MetodosPagamento from './MetodosPagamento/MetodosPagamento';
 import Stepper from '../Shared/Stepper/Stepper';
 import Toast from '../Shared/Toast/Toast';
+import CodigoEntrega from '../TelaPagamentoConfirmado/CodigoEntrega/CodigoEntrega';
+import DetalhesPedido from '../TelaPagamentoConfirmado/DetalhesPedido/DetalhesPedido';
 
 // Importando services de pedidos (fluxo hierárquico)
-import { createPedido, validarDadosPedido } from '../../api/pedidosServices';
+import { createPedido } from '../../api/pedidosServices';
 import { createPedidoGrupo, gerarCodigoTransacao } from '../../api/pedidoGruposServices';
-import { createMultiplosPedidoItems } from '../../api/pedidoItemsServices';
 
 function TelaPagamento() {
   const navigate = useNavigate();
@@ -32,6 +34,8 @@ function TelaPagamento() {
   const [cepError, setCepError] = useState('');
   const [cepSuccess, setCepSuccess] = useState(false);
   const [toast, setToast] = useState(null);
+  const [pagamentoConfirmado, setPagamentoConfirmado] = useState(false);
+  const [pedidoConfirmadoData, setPedidoConfirmadoData] = useState(null);
   const [enderecoForm, setEnderecoForm] = useState({
     descricao: '',
     cep: '',
@@ -258,7 +262,7 @@ function TelaPagamento() {
           setCepError('');
         }
       } catch (error) {
-        console.error('Erro ao buscar CEP:', error);
+        logger.error('Erro ao buscar CEP:', error);
         setCepError('Erro ao buscar CEP. Tente novamente.');
         setCepSuccess(false);
       } finally {
@@ -329,7 +333,7 @@ function TelaPagamento() {
       type: 'success'
     });
 
-    console.log('Endereço salvo:', enderecoSalvo);
+    logger.info('Endereço salvo:', enderecoSalvo);
   };
 
   /**
@@ -364,15 +368,15 @@ function TelaPagamento() {
       }
 
       // Debug: Verifica dados do carrinho
-      console.log('🛒 CartItems recebidos:', cartItems);
-      console.log('📍 Endereço:', endereco);
-      console.log('💳 Método de pagamento:', metodoPagamento);
-      console.log('🚚 Opção selecionada:', opcaoSelecionada);
+      logger.info('🛒 CartItems recebidos:', cartItems);
+      logger.info('📍 Endereço:', endereco);
+      logger.info('💳 Método de pagamento:', metodoPagamento);
+      logger.info('🚚 Opção selecionada:', opcaoSelecionada);
 
       // ======================
       // 1️⃣ CRIAR PEDIDO GRUPO
       // ======================
-      console.log('\n🎯 ETAPA 1/3: Criando Grupo de Pedidos');
+      logger.info('\n🎯 ETAPA 1/3: Criando Grupo de Pedidos');
 
       const codigoTransacao = gerarCodigoTransacao();
       const grupoData = {
@@ -386,9 +390,9 @@ function TelaPagamento() {
       const grupoCriado = await createPedidoGrupo(grupoData);
       const grupoId = grupoCriado.id;
 
-      console.log(`✅ Grupo de Pedidos criado com ID: ${grupoId}`);
-      console.log(`📋 Código: ${grupoCriado.codigo}`);
-      console.log(`🔖 Transação: ${grupoCriado.transacao}`);
+      logger.info(`✅ Grupo de Pedidos criado com ID: ${grupoId}`);
+      logger.info(`📋 Código: ${grupoCriado.codigo}`);
+      logger.info(`🔖 Transação: ${grupoCriado.transacao}`);
 
       // ======================
       // 2️⃣ AGRUPAR ITENS POR FORNECEDOR
@@ -402,7 +406,7 @@ function TelaPagamento() {
         return grupos;
       }, {});
 
-      console.log(`\n📦 Total de ${Object.keys(itensPorFornecedor).length} fornecedor(es) identificado(s)`);
+      logger.info(`\n📦 Total de ${Object.keys(itensPorFornecedor).length} fornecedor(es) identificado(s)`);
 
       // Determina tipo de entrega baseado na opção selecionada
       const tipoEntrega = opcaoSelecionada?.tipo === 'urgente' ? 'Urgente' : 'Normal';
@@ -413,9 +417,9 @@ function TelaPagamento() {
       const pedidosCriados = [];
 
       for (const [fornecedor, items] of Object.entries(itensPorFornecedor)) {
-        console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-        console.log(`🏪 Fornecedor: ${fornecedor}`);
-        console.log(`📋 ${items.length} produto(s)`);
+        logger.info(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+        logger.info(`🏪 Fornecedor: ${fornecedor}`);
+        logger.info(`📋 ${items.length} produto(s)`);
 
         // Calcula valores apenas dos itens deste fornecedor
         const valorProdutosFornecedor = items.reduce((acc, item) => {
@@ -425,80 +429,61 @@ function TelaPagamento() {
         const valorFreteFornecedor = valorFrete / Object.keys(itensPorFornecedor).length;
         const totalPagoFornecedor = valorProdutosFornecedor + valorFreteFornecedor;
 
-        console.log(`💰 Subtotal: R$ ${valorProdutosFornecedor.toFixed(2)}`);
-        console.log(`🚚 Frete: R$ ${valorFreteFornecedor.toFixed(2)}`);
-        console.log(`💳 Total: R$ ${totalPagoFornecedor.toFixed(2)}`);
+        logger.info(`💰 Subtotal: R$ ${valorProdutosFornecedor.toFixed(2)}`);
+        logger.info(`🚚 Frete: R$ ${valorFreteFornecedor.toFixed(2)}`);
+        logger.info(`💳 Total: R$ ${totalPagoFornecedor.toFixed(2)}`);
 
-        // 🔹 3A. CRIAR PEDIDO (vinculado ao grupo)
-        console.log(`\n🔹 Criando Pedido para ${fornecedor}...`);
+        // 🔹 3A. CRIAR PEDIDO + ITEMS (backend cria automaticamente)
+        logger.info(`\n🔹 Criando Pedido para ${fornecedor}...`);
 
         const dadosPedido = {
-          idPedidoGrupo: grupoId, // ⭐ VINCULA AO GRUPO
+          idGrupoPedido: grupoId, // ⭐ VINCULA AO GRUPO
           idPessoa: parseInt(idPessoa),
-          fornecedor: fornecedor,
-          tipoEntrega: tipoEntrega,
-          metodoPagamento: metodoPagamento,
-          items: items, // Backend pode processar ou ignorar
-          endereco: endereco,
           valorFrete: valorFreteFornecedor,
-          valorProdutos: valorProdutosFornecedor,
-          totalPago: totalPagoFornecedor
+          items: items // Backend cria os PedidoItems automaticamente
         };
 
-        // Valida dados antes de enviar
-        const validacao = validarDadosPedido(dadosPedido);
-        if (!validacao.valid) {
-          console.error('❌ Erros de validação:', validacao.errors);
-          throw new Error(`Dados inválidos para ${fornecedor}: ${validacao.errors.join(', ')}`);
-        }
+        logger.info('📤 Enviando para API:', dadosPedido);
 
         const pedidoCriado = await createPedido(dadosPedido);
         const pedidoId = pedidoCriado.id;
 
-        console.log(`✅ Pedido criado com ID: ${pedidoId}`);
+        logger.info(`✅ Pedido + Items criados com ID: ${pedidoId}`);
 
-        // 🔹 3B. CRIAR ITENS DO PEDIDO (vinculados ao pedido)
-        console.log(`\n🔹 Criando ${items.length} item(ns) para o Pedido #${pedidoId}...`);
+        // Gera código de entrega se não vier do backend
+        const codigoEntrega = pedidoCriado.codigoEntrega || `M${Math.floor(1000 + Math.random() * 9000)}X${Math.floor(Math.random() * 10)}`;
 
-        const resultadoItens = await createMultiplosPedidoItems(pedidoId, items);
-
-        if (resultadoItens.sucesso) {
-          console.log(`✅ Todos os ${resultadoItens.itensCriados.length} itens criados com sucesso!`);
-        } else {
-          console.warn(`⚠️ ${resultadoItens.erros.length} erro(s) ao criar itens:`, resultadoItens.erros);
-        }
-
-        // Monta objeto completo do pedido para navegação
+        // Monta objeto completo do pedido para navegação (inclui dados extras para UX)
         const pedidoCompleto = {
           ...pedidoCriado,
           grupoId: grupoId,
           fornecedor: fornecedor,
           tipoEntrega: tipoEntrega,
           metodoPagamento: metodoPagamento,
-          items: resultadoItens.itensCriados,
+          items: items, // Mantém items originais para exibição
           endereco: endereco,
           valorFrete: valorFreteFornecedor,
           valorProdutos: valorProdutosFornecedor,
           totalPago: totalPagoFornecedor,
-          codigoEntrega: pedidoCriado.codigoEntrega || `M${Math.floor(1000 + Math.random() * 9000)}X${Math.floor(Math.random() * 10)}`,
-          status: pedidoCriado.situacao || 'Aguardando Aceite',
+          codigoEntrega: codigoEntrega,
+          status: pedidoCriado.situacao || 'ATIVO',
           prazoEstimado: tipoEntrega === 'Urgente' ? '24-48 horas' : '3-5 dias úteis',
           dataPedido: pedidoCriado.dataHoraCriacaoRegistro || new Date().toISOString()
         };
 
-        // Salva no cache local
+        // Salva dados extras no cache local (workaround para campos não salvos no banco)
         try {
           localStorage.setItem(`pedido_${pedidoId}`, JSON.stringify({
             grupoId: grupoId,
             fornecedor: fornecedor,
             tipoEntrega: tipoEntrega,
             metodoPagamento: metodoPagamento,
-            codigoEntrega: pedidoCompleto.codigoEntrega,
+            codigoEntrega: codigoEntrega,
             totalPago: totalPagoFornecedor
           }));
-          console.log(`💾 Cache salvo para Pedido #${pedidoId}`);
+          logger.info(`💾 Cache salvo para Pedido #${pedidoId}`);
         } catch (e) {
-          console.warn('⚠️ Não foi possível salvar cache:', e);
+          logger.warn('⚠️ Não foi possível salvar cache:', e);
         }
 
         pedidosCriados.push(pedidoCompleto);
@@ -507,32 +492,39 @@ function TelaPagamento() {
       // ======================
       // 4️⃣ RESUMO FINAL
       // ======================
-      console.log(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-      console.log(`✅ COMPRA FINALIZADA COM SUCESSO!`);
-      console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
-      console.log(`🆔 Grupo ID: ${grupoId}`);
-      console.log(`📦 ${pedidosCriados.length} pedido(s) criado(s)`);
-      console.log(`🛒 ${cartItems.length} produto(s) no total`);
-      console.log(`💰 Total geral: R$ ${valorTotal.toFixed(2)}`);
+      logger.info(`\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+      logger.info(`✅ COMPRA FINALIZADA COM SUCESSO!`);
+      logger.info(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+      logger.info(`🆔 Grupo ID: ${grupoId}`);
+      logger.info(`📦 ${pedidosCriados.length} pedido(s) criado(s)`);
+      logger.info(`🛒 ${cartItems.length} produto(s) no total`);
+      logger.info(`💰 Total geral: R$ ${valorTotal.toFixed(2)}`);
 
-      // Navega para tela de confirmação
-      navigate('/assistencia/payment-success', {
-        state: {
-          grupoId: grupoId,
-          codigoTransacao: codigoTransacao,
-          pedidoConfirmado: pedidosCriados[0], // Mostra primeiro pedido
-          todosPedidos: pedidosCriados,
-          totalGeral: valorTotal
-        }
+      // Ao invés de navegar, exibe confirmação inline
+      setPedidoConfirmadoData({
+        grupoId: grupoId,
+        codigoTransacao: codigoTransacao,
+        pedidoConfirmado: pedidosCriados[0], // Mostra primeiro pedido
+        todosPedidos: pedidosCriados,
+        totalGeral: valorTotal
       });
+      setPagamentoConfirmado(true);
+
+      // Scroll suave para a seção de confirmação
+      setTimeout(() => {
+        const confirmacaoSection = document.getElementById('confirmacao-section');
+        if (confirmacaoSection) {
+          confirmacaoSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
 
     } catch (error) {
-      console.error('❌ ERRO AO CRIAR PEDIDO:', error);
-      console.error('❌ Stack completo:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+      logger.error('❌ ERRO AO CRIAR PEDIDO:', error);
+      logger.error('❌ Stack completo:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
 
       if (error.response) {
-        console.error('❌ Status HTTP:', error.response.status);
-        console.error('❌ Dados do erro:', error.response.data);
+        logger.error('❌ Status HTTP:', error.response.status);
+        logger.error('❌ Dados do erro:', error.response.data);
         setErro(`Erro ${error.response.status}: ${error.response.data?.message || error.message}`);
       } else {
         setErro(error.message || 'Erro ao finalizar pedido. Tente novamente.');
@@ -617,6 +609,45 @@ function TelaPagamento() {
           <div className={styles.erroContainer}>
             <span className={styles.erroIcon}>⚠️</span>
             <p className={styles.erroMensagem}>{erro}</p>
+          </div>
+        )}
+
+        {/* Seção de Confirmação do Pagamento (aparece após confirmar) */}
+        {pagamentoConfirmado && pedidoConfirmadoData && (
+          <div id="confirmacao-section" className={styles.confirmacaoSection}>
+            <div className={styles.confirmacaoHeader}>
+              <CheckCircle size={48} className={styles.confirmacaoIcon} />
+              <h2>Pagamento Confirmado!</h2>
+              <p>Seu pedido #{pedidoConfirmadoData.pedidoConfirmado.id} foi criado com sucesso e já está sendo processado.</p>
+            </div>
+
+            {/* Código de Entrega */}
+            <CodigoEntrega codigo={pedidoConfirmadoData.pedidoConfirmado.codigoEntrega} />
+
+            {/* Detalhes do Pedido */}
+            <DetalhesPedido pedido={{
+              ...pedidoConfirmadoData.pedidoConfirmado,
+              itens: pedidoConfirmadoData.pedidoConfirmado.items || pedidoConfirmadoData.pedidoConfirmado.itens,
+              pagamento: pedidoConfirmadoData.pedidoConfirmado.metodoPagamento
+            }} />
+
+            {/* Botões de Ação após Confirmação */}
+            <div className={styles.confirmacaoActions}>
+              {/* VERSÃO FINAL: Background Laranja + Texto Branco AllMoove */}
+              <button
+                className={`${styles.actionButton} ${styles.primaryAllmoove}`}
+                onClick={() => navigate('/assistencia/dashboard')}
+              >
+                Voltar ao Dashboard
+              </button>
+
+              <button
+                className={`${styles.actionButton} ${styles.secondary}`}
+                onClick={() => navigate('/assistencia/loja')}
+              >
+                Fazer Novo Pedido
+              </button>
+            </div>
           </div>
         )}
       </main>
@@ -856,28 +887,31 @@ function TelaPagamento() {
         </div>
       )}
 
-      <footer className={styles.footer}>
-        <button
-          className={`${styles.actionButton} ${styles.secondary}`}
-          onClick={() => navigate(-1)}
-          disabled={criandoPedido}
-        >
-          Voltar
-        </button>
-        <button
-          className={`${styles.actionButton} ${styles.primary}`}
-          onClick={handleConfirmPayment}
-          disabled={!podeConfirmar}
-          title={
-            !podeConfirmar ? (
-              !validarEndereco() ? 'Preencha o endereço de entrega' :
-              cartItems.length === 0 ? 'Adicione itens ao carrinho' : ''
-            ) : ''
-          }
-        >
-          {criandoPedido ? 'Processando...' : 'Confirmar Pagamento'}
-        </button>
-      </footer>
+      {/* Footer - Oculta quando pagamento confirmado */}
+      {!pagamentoConfirmado && (
+        <footer className={styles.footer}>
+          <button
+            className={`${styles.actionButton} ${styles.secondary}`}
+            onClick={() => navigate(-1)}
+            disabled={criandoPedido}
+          >
+            Voltar
+          </button>
+          <button
+            className={`${styles.actionButton} ${styles.primaryAllmoove}`}
+            onClick={handleConfirmPayment}
+            disabled={!podeConfirmar}
+            title={
+              !podeConfirmar ? (
+                !validarEndereco() ? 'Preencha o endereço de entrega' :
+                cartItems.length === 0 ? 'Adicione itens ao carrinho' : ''
+              ) : ''
+            }
+          >
+            {criandoPedido ? 'Processando...' : 'Confirmar Pagamento'}
+          </button>
+        </footer>
+      )}
     </div>
   );
 }

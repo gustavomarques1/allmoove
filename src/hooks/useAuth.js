@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import api from '../api/api';
+import logger from '../utils/logger';
 
 /**
  * Hook customizado para gerenciar autenticação e roles/papéis do usuário
@@ -51,7 +52,7 @@ export const useAuth = () => {
         }
       }
     } catch (error) {
-      console.error('Erro ao verificar autenticação:', error);
+      logger.error('Erro ao verificar autenticação:', error);
     } finally {
       setLoading(false);
     }
@@ -90,40 +91,60 @@ export const useAuth = () => {
 
         // Buscar pessoa pelo email ou login
         const pessoas = pessoasResponse.data;
+
+        logger.info('🔍 Buscando pessoa no array de pessoas...');
+        logger.info('📧 Email de busca:', email);
+        logger.info('📊 Total de pessoas retornadas:', pessoas.length);
+
+        // Log das primeiras 3 pessoas para diagnóstico
+        if (pessoas.length > 0) {
+          logger.info('🔍 Exemplo de pessoa (primeira do array):', {
+            ...pessoas[0],
+            // Mostrar também as propriedades em maiúsculo caso o backend retorne assim
+            Login: pessoas[0].Login,
+            Tipo: pessoas[0].Tipo,
+            CpfCnpj: pessoas[0].CpfCnpj
+          });
+        }
+
         const pessoa = pessoas.find(
-          p => p.login === email ||
-               p.cpfCnpj === email.replace(/[^0-9]/g, '')
+          p => (p.login === email || p.Login === email) ||
+               (p.cpfCnpj === email.replace(/[^0-9]/g, '') || p.CpfCnpj === email.replace(/[^0-9]/g, ''))
         );
 
         if (pessoa) {
           // Pessoa encontrada - armazenar dados
-          const role = pessoa.tipo || 'ASSISTENCIA_TECNICA'; // Default para assistência
+          // Backend pode retornar com letra maiúscula (Tipo) ou minúscula (tipo)
+          const role = pessoa.tipo || pessoa.Tipo || 'ASSISTENCIA_TECNICA'; // Default para assistência
 
-          console.log('👤 Pessoa encontrada na API:', {
-            id: pessoa.id,
-            nome: pessoa.nome,
-            login: pessoa.login,
-            tipo: pessoa.tipo,
+          logger.info('👤 Pessoa encontrada na API:', {
+            id: pessoa.id || pessoa.Id,
+            nome: pessoa.nome || pessoa.Nome,
+            login: pessoa.login || pessoa.Login,
+            tipo: pessoa.tipo || pessoa.Tipo,
             roleAtribuido: role
           });
 
-          localStorage.setItem('idPessoa', pessoa.id.toString());
-          localStorage.setItem('userRole', role);
-          localStorage.setItem('userName', pessoa.nome || email);
+          const idPessoa = pessoa.id || pessoa.Id;
+          const nomePessoa = pessoa.nome || pessoa.Nome || email;
 
-          setUserId(pessoa.id);
+          localStorage.setItem('idPessoa', idPessoa.toString());
+          localStorage.setItem('userRole', role);
+          localStorage.setItem('userName', nomePessoa);
+
+          setUserId(idPessoa);
           setUserRole(role);
-          setUserName(pessoa.nome || email);
+          setUserName(nomePessoa);
           setUserEmail(email);
           setIsAuthenticated(true);
 
-          console.log('✅ Login concluído com sucesso! Role:', role);
+          logger.info('✅ Login concluído com sucesso! Role:', role);
           return { success: true, role };
         } else {
           // Pessoa não encontrada - usar mock para desenvolvimento
-          console.warn('⚠️ Pessoa não encontrada na API. Usando dados mock.');
-          console.log('📧 Email procurado:', email);
-          console.log('📋 Total de pessoas encontradas:', pessoas.length);
+          logger.warn('⚠️ Pessoa não encontrada na API. Usando dados mock.');
+          logger.info('📧 Email procurado:', email);
+          logger.info('📋 Total de pessoas encontradas:', pessoas.length);
 
           const mockId = 1;
           const mockRole = 'ASSISTENCIA_TECNICA';
@@ -142,7 +163,7 @@ export const useAuth = () => {
           return { success: true, role: mockRole };
         }
       } catch (apiError) {
-        console.error('Erro ao buscar dados da pessoa:', apiError);
+        logger.error('Erro ao buscar dados da pessoa:', apiError);
 
         // Fallback: usar mock se a API de pessoas falhar
         const mockId = 1;
@@ -162,7 +183,7 @@ export const useAuth = () => {
         return { success: true, role: mockRole };
       }
     } catch (error) {
-      console.error('Erro no login:', error);
+      logger.error('Erro no login:', error);
 
       let errorMessage = 'Erro ao fazer login. Tente novamente.';
 

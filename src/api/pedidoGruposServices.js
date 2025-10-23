@@ -1,4 +1,5 @@
 import api from './api';
+import logger from '../utils/logger';
 
 /**
  * Serviço de Grupos de Pedidos - Nível 1 da hierarquia
@@ -23,7 +24,7 @@ export const getPedidoGrupos = async () => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Buscando todos os grupos de pedidos');
+    logger.info('📡 Buscando todos os grupos de pedidos');
 
     const response = await api.get('/api/PedidoGrupos', {
       headers: {
@@ -31,14 +32,14 @@ export const getPedidoGrupos = async () => {
       }
     });
 
-    console.log('✅ Grupos de pedidos recebidos:', response.data);
+    logger.info('✅ Grupos de pedidos recebidos:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar grupos de pedidos:', error);
+    logger.error('❌ Erro ao buscar grupos de pedidos:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
     }
 
     throw error;
@@ -59,7 +60,7 @@ export const getPedidoGrupoPorId = async (id) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Buscando grupo de pedidos:', id);
+    logger.info('📡 Buscando grupo de pedidos:', id);
 
     const response = await api.get(`/api/PedidoGrupos/${id}`, {
       headers: {
@@ -67,13 +68,13 @@ export const getPedidoGrupoPorId = async (id) => {
       }
     });
 
-    console.log('✅ Grupo de pedidos encontrado:', response.data);
+    logger.info('✅ Grupo de pedidos encontrado:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao buscar grupo de pedidos ${id}:`, error);
+    logger.error(`❌ Erro ao buscar grupo de pedidos ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Grupo de pedidos não encontrado.');
@@ -109,7 +110,7 @@ export const getPedidoGrupoPorId = async (id) => {
  *   transacao: "TRX-001",
  *   situacao: "ATIVO"
  * });
- * console.log('Grupo criado com ID:', grupo.id);
+ * logger.info('Grupo criado com ID:', grupo.id);
  */
 export const createPedidoGrupo = async (dadosGrupo) => {
   try {
@@ -129,7 +130,7 @@ export const createPedidoGrupo = async (dadosGrupo) => {
       situacaoRegistro: 'ATIVO'
     };
 
-    console.log('📡 Criando novo grupo de pedidos:', payload);
+    logger.info('📡 Criando novo grupo de pedidos:', payload);
 
     const response = await api.post('/api/PedidoGrupos', payload, {
       headers: {
@@ -138,16 +139,16 @@ export const createPedidoGrupo = async (dadosGrupo) => {
       }
     });
 
-    console.log('✅ Grupo de pedidos criado com sucesso:', response.data);
-    console.log('🆔 ID do grupo:', response.data.id);
+    logger.info('✅ Grupo de pedidos criado com sucesso:', response.data);
+    logger.info('🆔 ID do grupo:', response.data.id);
 
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao criar grupo de pedidos:', error);
+    logger.error('❌ Erro ao criar grupo de pedidos:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       if (error.response.data?.details) {
         throw new Error(`Erro de validação: ${JSON.stringify(error.response.data.details)}`);
@@ -178,7 +179,7 @@ export const updatePedidoGrupo = async (id, dadosGrupo) => {
       ...dadosGrupo
     };
 
-    console.log('📡 Atualizando grupo de pedidos:', id, payload);
+    logger.info('📡 Atualizando grupo de pedidos:', id, payload);
 
     const response = await api.put(`/api/PedidoGrupos/${id}`, payload, {
       headers: {
@@ -187,13 +188,13 @@ export const updatePedidoGrupo = async (id, dadosGrupo) => {
       }
     });
 
-    console.log('✅ Grupo de pedidos atualizado:', response.data);
+    logger.info('✅ Grupo de pedidos atualizado:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao atualizar grupo de pedidos ${id}:`, error);
+    logger.error(`❌ Erro ao atualizar grupo de pedidos ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Grupo de pedidos não encontrado.');
@@ -220,7 +221,7 @@ export const deletePedidoGrupo = async (id) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Excluindo grupo de pedidos:', id);
+    logger.info('📡 Excluindo grupo de pedidos:', id);
 
     const response = await api.delete(`/api/PedidoGrupos/${id}`, {
       headers: {
@@ -228,13 +229,13 @@ export const deletePedidoGrupo = async (id) => {
       }
     });
 
-    console.log('✅ Grupo de pedidos excluído:', response.data);
+    logger.info('✅ Grupo de pedidos excluído:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao excluir grupo de pedidos ${id}:`, error);
+    logger.error(`❌ Erro ao excluir grupo de pedidos ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Grupo de pedidos não encontrado.');

@@ -2,25 +2,25 @@
 .cepInput {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 10px 12px;
+  gap: 8px;
+  padding: 12px 16px;
   border: 2px solid var(--color-white);
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-fast);
-  font-size: 12px;
-  color: var(--color-white);
-  background-color: rgba(255, 255, 255, 0.15);
+  font-size: 14px;
+  color: #18304C; /* Azul AllMoove */
+  background-color: var(--color-white);
   white-space: nowrap;
-  min-width: 120px;
-  height: 40px;
+  min-width: 180px;
+  height: 44px;
   box-sizing: border-box;
 }
 
 .cepInput:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  border-color: var(--color-white);
-  color: var(--color-white);
+  background-color: #f5f5f5;
+  border-color: #18304C; /* Azul AllMoove */
+  color: #18304C; /* Azul AllMoove */
 }
 
 .cepInputIcon {
@@ -30,6 +30,7 @@
 
 .cepInputValue {
     font-weight: 700;
+    font-size: 13px;
 }
 
 .cepInputText {
@@ -75,12 +76,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666;
-  transition: color 0.2s ease;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.6;
+  transition: color 0.2s ease, opacity 0.2s ease;
 }
 
 .modalClose:hover {
-  color: #333;
+  opacity: 1;
+  color: #FF3600; /* Laranja AllMoove */
 }
 
 .modalHeader {
@@ -91,15 +94,16 @@
 .modalHeader h3 {
   margin: 0 0 8px 0;
   font-size: 20px;
-  font-weight: 400;
-  color: var(--color-secondary);
+  font-weight: 600;
+  color: #18304C; /* Azul AllMoove */
   line-height: 1.3;
 }
 
 .modalSubtitle {
   margin: 0;
   font-size: 14px;
-  color: #666;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   line-height: 1.4;
 }
 
@@ -117,8 +121,8 @@
 
 .inputLabel {
   font-size: 14px;
-  font-weight: 400;
-  color: #333;
+  font-weight: 500;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
 }
 
@@ -138,7 +142,7 @@
   border: none;
   background: transparent;
   font-size: 16px;
-  color: #333;
+  color: #18304C; /* Azul AllMoove */
   outline: none;
 }
 
@@ -148,7 +152,7 @@
 
 .useButton {
   padding: 10px 20px;
-  background: #3483fa;
+  background: #18304C; /* Azul AllMoove */
   color: white;
   border: none;
   border-radius: 4px;
@@ -160,7 +164,7 @@
 }
 
 .useButton:hover:not(:disabled) {
-  background: #2968c8;
+  background: #0f1f30; /* Azul AllMoove escuro */
 }
 
 .useButton:disabled {
@@ -171,7 +175,7 @@
 .dontKnowButton {
   background: none;
   border: none;
-  color: #3483fa;
+  color: #18304C; /* Azul AllMoove */
   font-size: 13px;
   cursor: pointer;
   padding: 4px 8px;
@@ -183,7 +187,7 @@
 }
 
 .dontKnowButton:hover {
-  color: #2968c8;
+  color: #FF3600; /* Laranja AllMoove */
   text-decoration: underline;
 }
 
@@ -196,7 +200,7 @@
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   padding: 16px;
-  color: #3483fa;
+  color: #18304C; /* Azul AllMoove */
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -205,8 +209,8 @@
 }
 
 .addAddressButton:hover {
-  border-color: #3483fa;
-  background: rgba(52, 131, 250, 0.05);
+  border-color: #18304C; /* Azul AllMoove */
+  background: rgba(24, 48, 76, 0.05);
 }
 
 .plusIcon {
@@ -241,36 +245,58 @@
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .cepInput {
+    min-width: 120px;
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .cepInputValue {
+    font-size: 12px;
+  }
+
+  .cepInputText {
+    font-size: 11px;
+  }
+}
+
 @media (max-width: 480px) {
+  .cepInput {
+    width: 100%;
+    min-width: unset;
+    justify-content: center;
+  }
+
   .modalContent {
     margin: 16px;
     padding: 20px;
     max-width: calc(100vw - 32px);
   }
-  
+
   .modalHeader h3 {
     font-size: 18px;
   }
-  
+
   .modalSubtitle {
     font-size: 13px;
   }
-  
+
   .inputContainer {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .useButton {
     width: 100%;
     padding: 12px 20px;
   }
-  
+
   .addAddressButton {
     flex-direction: column;
     align-items: flex-start;
   }
-  
+
   .dontKnowButton {
     align-self: flex-end;
     margin-left: 0;
@@ -287,7 +313,7 @@
 .formTitle {
   font-size: 16px;
   font-weight: 600;
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
   margin: 0 0 16px 0;
 }
 
@@ -310,7 +336,7 @@
 .formGroup label {
   font-size: 13px;
   font-weight: 500;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .formGroup input,
@@ -319,7 +345,7 @@
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 14px;
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
   transition: all 0.2s ease;
   background: white;
 }
@@ -355,7 +381,7 @@
 
 .cancelButton {
   background-color: #f3f4f6;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .cancelButton:hover {
@@ -445,20 +471,22 @@
   margin: 0 0 4px 0;
   font-size: 15px;
   font-weight: 600;
-  color: #1f2937;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .enderecoItemEndereco {
   margin: 0 0 2px 0;
   font-size: 13px;
-  color: #4b5563;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   line-height: 1.4;
 }
 
 .enderecoItemCidade {
   margin: 0;
   font-size: 12px;
-  color: #6b7280;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   line-height: 1.4;
 }
 
@@ -482,12 +510,12 @@
 }
 
 .btnEditar {
-  color: #3b82f6;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .btnEditar:hover {
-  background-color: #eff6ff;
-  border-color: #3b82f6;
+  background-color: rgba(24, 48, 76, 0.05);
+  border-color: #18304C; /* Azul AllMoove */
 }
 
 .btnExcluir {
@@ -577,12 +605,12 @@
   transition: all 0.2s ease;
   border: 1px solid #d1d5db;
   background-color: white;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .backButton:hover {
   background-color: #f9fafb;
-  border-color: #9ca3af;
+  border-color: #18304C; /* Azul AllMoove */
 }
 
 /* CEP Input Content */
@@ -593,8 +621,8 @@
 }
 
 .cepInputLabel {
-  font-size: 10px;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  color: #6b7280;
   font-weight: 400;
 }
 

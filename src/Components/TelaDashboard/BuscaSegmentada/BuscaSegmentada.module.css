@@ -1,155 +1,465 @@
 /* ========================================
    Busca Segmentada - AllMoove Design System
-   Versão Moderna e Atrativa
+   Versão UX Otimizada - Layout Intuitivo
    ======================================== */
 
 .painelContainer {
   font-family: var(--font-primary);
-  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  background: var(--color-white);
   border: 1px solid var(--color-gray-200);
   border-radius: 16px;
   padding: var(--spacing-8);
   max-width: 1200px;
   margin: var(--spacing-8) auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* ========================================
-   CARROSSEL DE SEGMENTOS - VERSÃO MODERNA
+   HEADER DA SEÇÃO
    ======================================== */
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  margin-bottom: var(--spacing-6);
+  padding-bottom: var(--spacing-4);
+  border-bottom: 2px solid var(--color-gray-100);
+}
+
+.sectionHeader svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+/* ========================================
+   CAMPO DE BUSCA ÚNICO E INTELIGENTE
+   ======================================== */
+
+.searchContainer {
+  margin-bottom: var(--spacing-6);
+}
+
+.searchRow {
+  display: flex;
+  gap: var(--spacing-4);
+  align-items: center;
+  width: 100%;
+}
+
+.searchWrapper {
+  position: relative;
+  flex: 7;
+  min-width: 0;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 16px 60px 16px 48px;
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  border: 2px solid var(--color-gray-200);
+  border-radius: 50px;
+  background: var(--color-white);
+  color: var(--color-text-primary);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.searchInput:hover {
+  border-color: var(--color-gray-300);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(255, 54, 0, 0.1);
+}
+
+.searchInput::placeholder {
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+}
+
+.clearButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-gray-100);
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.clearButton:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.searchButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--color-primary);
+  border: none;
+  color: var(--color-white);
+  cursor: pointer;
+  padding: 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(255, 54, 0, 0.3);
+  z-index: 2;
+}
+
+.searchButton:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.4);
+  transform: translateY(-50%) scale(1.05);
+}
+
+.searchButton:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.viewAllButton {
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: 16px var(--spacing-6);
+  background: var(--color-white);
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  font-family: var(--font-primary);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.viewAllButton:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.3);
+}
+
+.viewAllButton:active {
+  transform: scale(0.98);
+}
+
+/* ========================================
+   CATEGORIAS COMO PILLS/BADGES
+   ======================================== */
+
+.categoriasSection {
+  margin-bottom: var(--spacing-6);
+}
+
+.categoriasLabel {
+  display: inline-block;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
 .carouselWrapper {
   display: flex;
   align-items: center;
-  gap: var(--spacing-4);
-  margin-bottom: var(--spacing-8);
-  padding-bottom: var(--spacing-8);
-  border-bottom: 2px solid var(--color-gray-100);
+  gap: var(--spacing-3);
+  margin-top: var(--spacing-3);
 }
 
-/* Botões de navegação - Mais modernos */
 .navButton {
-  background: linear-gradient(135deg, var(--color-white) 0%, #f9fafb 100%);
-  border: 2px solid var(--color-gray-200);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--color-text-secondary);
   flex-shrink: 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
 }
 
 .navButton:hover {
   background: var(--color-gray-50);
   border-color: var(--color-gray-300);
   color: var(--color-text-primary);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navButton:active {
   transform: scale(0.95);
 }
 
-/* Grade rolável do carrossel - Melhorada */
-.segmentosGrid {
+.categoriasPills {
   display: flex;
-  gap: var(--spacing-3);
+  gap: var(--spacing-2);
   overflow-x: auto;
   flex-wrap: nowrap;
   scroll-behavior: smooth;
   scrollbar-width: none;
   flex: 1;
   min-width: 0;
-  padding: var(--spacing-2) var(--spacing-4);
+  padding: var(--spacing-2) 0;
 }
 
-.segmentosGrid::-webkit-scrollbar {
+.categoriasPills::-webkit-scrollbar {
   display: none;
 }
 
-/* Botões de segmento - CARDS MODERNOS */
-.segmentoBotao {
-  padding: var(--spacing-4) var(--spacing-6);
+.categoriaPill {
+  padding: var(--spacing-2) var(--spacing-4);
   font-family: var(--font-primary);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   font-weight: var(--font-medium);
   color: var(--color-text-primary);
-  background: var(--color-white);
-  border: 2px solid var(--color-gray-200);
-  border-radius: 12px;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 20px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   display: flex;
   align-items: center;
   gap: var(--spacing-2);
-}
-
-.segmentoIcon {
   flex-shrink: 0;
-  transition: all 0.3s ease;
 }
 
-/* Removed shine animation for more professional look */
-
-.segmentoBotao:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-color: var(--color-primary-light);
+.categoriaPill:hover {
+  background: var(--color-gray-100);
+  border-color: var(--color-gray-300);
+  transform: translateY(-1px);
 }
 
-.segmentoBotao:hover .segmentoIcon {
+.categoriaPill svg {
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.categoriaPill:hover svg {
   transform: scale(1.1);
-  color: var(--color-primary);
 }
 
-/* Botão selecionado - DESTAQUE VISUAL */
-.segmentoBotao.selecionado {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+.categoriaPill.pillActive {
+  background: var(--color-primary);
   color: var(--color-white);
   border-color: var(--color-primary);
-  font-weight: var(--font-bold);
-  box-shadow: 0 6px 16px rgba(255, 54, 0, 0.25);
-  transform: translateY(-2px);
+  font-weight: var(--font-semibold);
 }
 
-.segmentoBotao.selecionado:hover {
-  box-shadow: 0 8px 20px rgba(255, 54, 0, 0.3);
+.categoriaPill.pillActive:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 /* ========================================
-   LAYOUT DE DUAS COLUNAS - MODERNIZADO
+   SEPARADOR VISUAL
    ======================================== */
 
-.interacaoContainer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--spacing-8);
-  align-items: flex-start;
+.divider {
+  height: 1px;
+  background: var(--color-gray-200);
+  margin: var(--spacing-6) 0;
 }
 
-/* Coluna esquerda - container para empilhar Pedidos + Favoritos */
-.colunaEsquerda {
+/* ========================================
+   CARROSSEL HORIZONTAL DE DISTRIBUIDORES (ESTILO IFOOD)
+   ======================================== */
+
+.distribuidoresSection {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-6);
+  gap: var(--spacing-8);
 }
 
-.pedidosContainer,
-.distribuidorContainer {
+.distribuidorCard {
   display: flex;
   flex-direction: column;
   width: 100%;
   min-width: 0;
+}
+
+/* Container do carrossel */
+.carrosselWrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Scroll horizontal */
+.carrosselScroll {
+  display: flex;
+  gap: var(--spacing-4);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: var(--spacing-4) 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-300) transparent;
+}
+
+.carrosselScroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.carrosselScroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 0 var(--spacing-2);
+}
+
+.carrosselScroll::-webkit-scrollbar-thumb {
+  background: var(--color-gray-300);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.carrosselScroll::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-400);
+}
+
+/* Item do carrossel - Card retangular horizontal estilo iFood */
+.distribuidorItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 8px;
+  min-width: 220px;
+  max-width: 220px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.distribuidorItem:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+  background: var(--color-gray-50);
+}
+
+.distribuidorItem:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Logo circular do fornecedor */
+.distribuidorLogo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+/* Info do distribuidor (nome + categoria) */
+.distribuidorInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+  flex: 1;
+  min-width: 0;
+}
+
+/* Nome do fornecedor */
+.distribuidorNome {
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Categoria/tipo */
+.distribuidorCategoria {
+  font-size: var(--text-xs);
+  font-weight: var(--font-normal);
+  color: var(--color-text-tertiary);
+  line-height: 1.2;
+}
+
+/* Botão de favorito (ícone no canto) */
+.favoritoBtn {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+  background: transparent;
+  border: none;
+  color: var(--color-gray-400);
+  cursor: pointer;
+  padding: var(--spacing-1);
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favoritoBtn:hover {
+  color: var(--color-primary);
+  background: var(--color-gray-50);
+}
+
+.favoritoBtn.favorited {
+  color: var(--color-primary);
 }
 
 .colunaTitulo {
@@ -167,73 +477,7 @@
   flex-shrink: 0;
 }
 
-/* ========================================
-   LISTAS DE PEDIDOS/FAVORITOS - CARDS
-   ======================================== */
-
-.listaWrapper {
-  background: var(--color-white);
-  border: 2px solid var(--color-gray-100);
-  border-radius: 12px;
-  padding: var(--spacing-5);
-  min-height: 180px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  transition: all 0.3s ease;
-}
-
-.listaWrapper:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  border-color: var(--color-gray-200);
-}
-
-.listaPedidos {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3);
-}
-
-.listaPedidos li {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-  padding: var(--spacing-3) var(--spacing-4);
-  background: var(--color-white);
-  border-radius: 8px;
-  border: 1px solid var(--color-gray-100);
-  font-size: var(--text-sm);
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.listaPedidos li:hover {
-  background: var(--color-gray-50);
-  border-color: var(--color-gray-200);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-}
-
-/* FORNECEDOR - Primeira coluna */
-.listaPedidos li span:first-child {
-  font-weight: var(--font-bold);
-  color: var(--color-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-width: 100px;
-  max-width: 200px;
-}
-
-/* DESCRIÇÃO DO PRODUTO - Segunda coluna */
-.listaPedidos li span:last-child {
-  font-size: var(--text-sm);
-  color: var(--color-text-secondary);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  flex: 1;
-}
-
+/* Estado vazio */
 .listaVazia {
   color: var(--color-text-tertiary);
   text-align: center;
@@ -243,98 +487,30 @@
 }
 
 /* ========================================
-   BUSCA DE DISTRIBUIDOR - MODERNIZADA
+   ESTADOS DE CARREGAMENTO E VAZIO
    ======================================== */
 
-.distribuidorContainer {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-6);
-}
-
-.distribuidorSelector {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-3);
-}
-
-.distribuidorLabel {
-  font-size: var(--text-base);
-  font-weight: var(--font-bold);
-  color: var(--color-text-primary);
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-}
-
-.distribuidorLabel svg {
-  color: var(--color-primary);
-  flex-shrink: 0;
-}
-
-.searchInputWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.distribuidorSearchInput {
-  width: 100%;
-  padding: var(--spacing-4) var(--spacing-10) var(--spacing-4) var(--spacing-5);
-  font-family: var(--font-primary);
-  font-size: var(--text-base);
-  border: 2px solid var(--color-gray-200);
-  border-radius: 12px;
-  background: var(--color-white);
-  color: var(--color-text-primary);
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-.distribuidorSearchInput:hover {
-  border-color: var(--color-gray-300);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
-
-.distribuidorSearchInput:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(255, 54, 0, 0.1);
-}
-
-.distribuidorSearchInput::placeholder {
+.loadingState {
   color: var(--color-text-tertiary);
+  text-align: center;
+  padding: var(--spacing-8) var(--spacing-4);
   font-size: var(--text-sm);
+  font-style: italic;
 }
 
-.clearButton {
-  position: absolute;
-  right: var(--spacing-3);
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--color-gray-100);
-  border: none;
-  color: var(--color-text-secondary);
-  font-size: var(--text-lg);
-  cursor: pointer;
-  padding: var(--spacing-2);
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
+.emptyState {
+  color: var(--color-text-tertiary);
+  text-align: center;
+  padding: var(--spacing-8) var(--spacing-4);
+  font-size: var(--text-sm);
+  font-style: italic;
+  margin: 0;
 }
 
-.clearButton:hover {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  transform: translateY(-50%) rotate(90deg);
-}
+/* ========================================
+   DROPDOWN - AUTOCOMPLETE
+   ======================================== */
 
-/* Dropdown - Melhorado */
 .dropdownList {
   position: absolute;
   top: calc(100% + var(--spacing-2));
@@ -342,11 +518,11 @@
   right: 0;
   background: var(--color-white);
   border: 2px solid var(--color-gray-200);
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  max-height: 280px;
+  max-height: 300px;
   overflow-y: auto;
-  z-index: var(--z-dropdown);
+  z-index: 100;
   list-style: none;
   padding: var(--spacing-2);
   margin: 0;
@@ -373,12 +549,16 @@
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: var(--spacing-3);
 }
 
 .dropdownItem:hover {
   background: var(--color-gray-50);
-  color: var(--color-text-primary);
+  color: var(--color-primary);
+}
+
+.dropdownItem svg {
+  color: var(--color-primary);
 }
 
 .dropdownEmpty {
@@ -388,78 +568,13 @@
   right: 0;
   background: var(--color-white);
   border: 2px solid var(--color-gray-200);
-  border-radius: 12px;
+  border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: var(--spacing-4);
   text-align: center;
   color: var(--color-text-tertiary);
   font-size: var(--text-sm);
-  z-index: var(--z-dropdown);
-}
-
-/* ========================================
-   BOTÕES DE AÇÃO - MODERNIZADOS
-   ======================================== */
-
-.botoesDistribuidor {
-  display: flex;
-  gap: var(--spacing-3);
-  flex-wrap: wrap;
-}
-
-.botaoAcao {
-  flex: 1;
-  padding: var(--spacing-3) var(--spacing-5);
-  font-family: var(--font-primary);
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
-  background: var(--color-white);
-  border: 2px solid var(--color-primary);
-  color: var(--color-primary);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-2);
-  white-space: nowrap;
-}
-
-.botaoAcao svg {
-  flex-shrink: 0;
-  transition: transform 0.3s ease;
-}
-
-/* Removed ripple effect for cleaner professional look */
-
-.botaoAcao:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  border-color: var(--color-primary-hover);
-}
-
-.botaoAcao:hover svg {
-  transform: scale(1.1);
-}
-
-.botaoAcao:active {
-  transform: translateY(0);
-}
-
-.botaoAcao.primary {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
-  border-color: var(--color-primary);
-  color: var(--color-white);
-  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.25);
-}
-
-.botaoAcao.primary:hover {
-  box-shadow: 0 8px 20px rgba(255, 54, 0, 0.35);
-  transform: translateY(-3px);
+  z-index: 100;
 }
 
 /* ===== RESPONSIVIDADE ===== */
@@ -471,28 +586,49 @@
     border-radius: 12px;
   }
 
-  .carouselWrapper {
-    gap: var(--spacing-2);
-    margin-bottom: var(--spacing-6);
-    padding-bottom: var(--spacing-6);
+  .sectionHeader h2 {
+    font-size: var(--text-lg);
   }
 
-  .navButton {
-    width: 40px;
-    height: 40px;
+  .searchRow {
+    flex-direction: column;
+    gap: var(--spacing-3);
   }
 
-  .segmentosGrid {
-    gap: var(--spacing-2);
+  .searchWrapper {
+    flex: 1;
+    width: 100%;
   }
 
-  .segmentoBotao {
-    padding: var(--spacing-3) var(--spacing-5);
+  .viewAllButton {
+    flex: 1;
+    width: 100%;
+  }
+
+  .searchInput {
+    padding: 14px 60px 14px 44px;
     font-size: var(--text-sm);
   }
 
-  .interacaoContainer {
-    grid-template-columns: 1fr;
+  .searchIcon {
+    left: 16px;
+  }
+
+  .carouselWrapper {
+    gap: var(--spacing-2);
+  }
+
+  .navButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .categoriaPill {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--text-xs);
+  }
+
+  .distribuidoresSection {
     gap: var(--spacing-6);
   }
 
@@ -501,17 +637,28 @@
     margin-bottom: var(--spacing-3);
   }
 
-  .listaWrapper {
-    padding: var(--spacing-4);
+  .distribuidorItem {
+    min-width: 200px;
+    max-width: 200px;
+    padding: var(--spacing-3);
   }
 
-  .botoesDistribuidor {
-    width: 100%;
+  .distribuidorLogo {
+    width: 48px;
+    height: 48px;
   }
 
-  .botaoAcao {
-    flex: 1;
-    min-width: 120px;
+  .distribuidorLogo svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .distribuidorNome {
+    font-size: var(--text-sm);
+  }
+
+  .distribuidorCategoria {
+    font-size: 0.7rem;
   }
 }
 
@@ -521,42 +668,132 @@
     margin: var(--spacing-2) auto;
   }
 
-  .navButton {
+  .sectionHeader {
+    margin-bottom: var(--spacing-4);
+  }
+
+  .sectionHeader h2 {
+    font-size: var(--text-base);
+  }
+
+  .sectionHeader svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .searchContainer {
+    margin-bottom: var(--spacing-4);
+  }
+
+  .searchInput {
+    padding: 12px 52px 12px 40px;
+    font-size: var(--text-sm);
+    border-radius: 40px;
+  }
+
+  .searchIcon {
+    left: 14px;
+  }
+
+  .searchIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .searchButton {
+    right: 6px;
     width: 36px;
     height: 36px;
   }
 
-  .segmentoBotao {
-    padding: var(--spacing-2) var(--spacing-4);
+  .clearButton {
+    right: 8px;
+    width: 28px;
+    height: 28px;
+  }
+
+  .categoriasSection {
+    margin-bottom: var(--spacing-4);
+  }
+
+  .categoriasLabel {
     font-size: var(--text-xs);
+  }
+
+  .navButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .navButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .categoriaPill {
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--text-xs);
+  }
+
+  .categoriaPill svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .divider {
+    margin: var(--spacing-4) 0;
+  }
+
+  .distribuidoresSection {
+    gap: var(--spacing-5);
   }
 
   .colunaTitulo {
     font-size: var(--text-sm);
   }
 
-  .listaWrapper {
+  .distribuidorItem {
+    min-width: 180px;
+    max-width: 180px;
     padding: var(--spacing-3);
-    min-height: 140px;
-  }
-
-  .listaPedidos li {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-2);
-    padding: var(--spacing-3);
-  }
-
-  .listaPedidos li span:first-child {
-    max-width: 100%;
-  }
-
-  .botoesDistribuidor {
-    flex-direction: column;
     gap: var(--spacing-2);
   }
 
-  .botaoAcao {
-    width: 100%;
+  .distribuidorLogo {
+    width: 44px;
+    height: 44px;
+  }
+
+  .distribuidorLogo svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .distribuidorNome {
+    font-size: var(--text-xs);
+  }
+
+  .distribuidorCategoria {
+    font-size: 0.65rem;
+  }
+
+  .carrosselScroll {
+    gap: var(--spacing-3);
+  }
+
+  .favoritoBtn {
+    top: var(--spacing-1);
+    right: var(--spacing-1);
+  }
+
+  .favoritoBtn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .loadingState,
+  .listaVazia {
+    padding: var(--spacing-6) var(--spacing-2);
+    font-size: var(--text-xs);
   }
 }

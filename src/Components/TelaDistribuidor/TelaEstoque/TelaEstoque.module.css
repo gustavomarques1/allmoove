@@ -26,24 +26,6 @@
 .logoSection {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.logoIcon {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.logoText {
-  font-size: 20px;
-  font-weight: 600;
-  color: #1a1a1a;
 }
 
 .headerContent {
@@ -55,13 +37,14 @@
 .title {
   font-size: 28px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #18304C; /* Azul AllMoove */
   margin: 0 0 8px 0;
 }
 
 .subtitle {
   font-size: 14px;
-  color: #6c757d;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   margin: 0;
 }
 
@@ -95,47 +78,49 @@
 
 .metricLabel {
   font-size: 14px;
-  color: #6c757d;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   font-weight: 500;
 }
 
 .metricIcon {
-  color: #ff6b35;
+  color: #FF3600;
   opacity: 0.8;
 }
 
 .metricValue {
   font-size: 36px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: #18304C; /* Azul AllMoove */
   margin-bottom: 8px;
 }
 
 .metricSubtext {
   font-size: 13px;
-  color: #6c757d;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
 }
 
 .metricCardAction {
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  background: linear-gradient(135deg, #FF3600 0%, #ff5722 100%);
   border-radius: 12px;
   padding: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.3);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .metricCardAction:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 6px 16px rgba(255, 54, 0, 0.4);
 }
 
 .cadastrarButton {
   width: 100%;
   background: white !important;
-  color: #ff6b35 !important;
+  color: #FF3600 !important;
   font-weight: 600;
   border: none;
 }
@@ -174,7 +159,7 @@
 .filterTitle {
   font-size: 18px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #18304C; /* Azul AllMoove */
   margin: 0 0 20px 0;
   display: flex;
   align-items: center;
@@ -197,7 +182,8 @@
 .filterLabel {
   font-size: 14px;
   font-weight: 500;
-  color: #495057;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
 }
 
 .searchInput,
@@ -207,15 +193,16 @@
   border: 1px solid #dee2e6;
   border-radius: 8px;
   font-size: 14px;
-  color: #495057;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .searchInput:focus,
 .selectInput:focus {
   outline: none;
-  border-color: #ff6b35;
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  border-color: #FF3600;
+  box-shadow: 0 0 0 3px rgba(255, 54, 0, 0.1);
 }
 
 .clearButton {
@@ -237,13 +224,14 @@
 .stockTitle {
   font-size: 20px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #18304C; /* Azul AllMoove */
   margin: 0 0 8px 0;
 }
 
 .stockSubtitle {
   font-size: 14px;
-  color: #6c757d;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   margin: 0;
 }
 
@@ -264,15 +252,15 @@
 }
 
 .stockItem:hover {
-  border-color: #ff6b35;
-  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.1);
+  border-color: #FF3600;
+  box-shadow: 0 2px 8px rgba(255, 54, 0, 0.1);
 }
 
 .itemIcon {
   flex-shrink: 0;
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  background: linear-gradient(135deg, #FF3600 0%, #ff5722 100%);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -293,11 +281,56 @@
   align-items: center;
 }
 
+.itemTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .itemName {
   font-size: 18px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #18304C; /* Azul AllMoove */
   margin: 0;
+}
+
+.badgeMaisVendido {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, #FF3600 0%, #ff5722 100%);
+  color: white;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 4px rgba(255, 54, 0, 0.3);
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.badgeMaisVendido svg {
+  animation: flickerFlame 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 2px 4px rgba(255, 54, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 2px 8px rgba(255, 54, 0, 0.5);
+  }
+}
+
+@keyframes flickerFlame {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 .itemActions {
@@ -314,14 +347,15 @@
   background: white;
   border-radius: 6px;
   font-size: 13px;
-  color: #495057;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .actionButton:hover {
-  border-color: #ff6b35;
-  color: #ff6b35;
+  border-color: #FF3600;
+  color: #FF3600;
 }
 
 .deleteButton:hover {
@@ -331,7 +365,8 @@
 
 .itemDescription {
   font-size: 14px;
-  color: #6c757d;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   margin: 0;
 }
 
@@ -349,11 +384,12 @@
 
 .detailLabel {
   font-weight: 500;
-  color: #495057;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
 }
 
 .detailValue {
-  color: #1a1a1a;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .itemFooter {
@@ -372,11 +408,12 @@
 
 .valorTotal {
   font-size: 14px;
-  color: #495057;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
 }
 
 .valorTotal strong {
-  color: #1a1a1a;
+  color: #18304C; /* Azul AllMoove */
   font-weight: 600;
 }
 
@@ -414,7 +451,8 @@
   border-radius: 6px;
   font-size: 12px;
   font-weight: 500;
-  color: #495057;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
 }
 
 /* Empty State */
@@ -435,13 +473,15 @@
 .emptyText {
   font-size: 18px;
   font-weight: 600;
-  color: #495057;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8;
   margin: 0 0 8px 0;
 }
 
 .emptySubtext {
   font-size: 14px;
-  color: #6c757d;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7;
   margin: 0;
 }
 

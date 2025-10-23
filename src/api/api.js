@@ -4,4 +4,18 @@ const api = axios.create({
     baseURL : "https://localhost:44370/",
 })
 
+// Interceptor para adicionar token automaticamente em todas as requisições
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export default api;

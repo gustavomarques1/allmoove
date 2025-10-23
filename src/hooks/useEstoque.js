@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getEstoqueDoDistribuidor } from '../api/estoqueServices';
+import logger from '../utils/logger';
 
 /**
  * Hook customizado para gerenciar o estoque do distribuidor
@@ -20,14 +21,14 @@ export const useEstoque = (idDistribuidor = null) => {
       setIsLoading(true);
       setError(null);
 
-      console.log('🔄 Carregando estoque...');
+      logger.info('🔄 Carregando estoque...');
 
       const data = await getEstoqueDoDistribuidor(idDistribuidor);
       setEstoque(data);
 
-      console.log('✅ Estoque carregado com sucesso:', data.length, 'itens');
+      logger.info('✅ Estoque carregado com sucesso:', data.length, 'itens');
     } catch (err) {
-      console.error('❌ Erro ao carregar estoque:', err);
+      logger.error('❌ Erro ao carregar estoque:', err);
       setError(err.message || 'Erro ao carregar estoque');
       setEstoque([]);
     } finally {

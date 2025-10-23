@@ -1,0 +1,117 @@
+/* ========================================
+   Quick Actions - Ações Rápidas Clean
+   ======================================== */
+
+.container {
+  margin: var(--spacing-8) 0;
+}
+
+.header {
+  margin-bottom: var(--spacing-5);
+}
+
+.title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-1) 0;
+}
+
+.subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-3);
+}
+
+.actionCard {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+  padding: var(--spacing-4);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-family: inherit;
+}
+
+.actionCard:hover {
+  border-color: var(--action-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.actionCard:hover .iconWrapper {
+  background: var(--action-color);
+  color: white;
+}
+
+.actionCard:hover .arrow {
+  opacity: 1;
+}
+
+.actionCard:active {
+  transform: scale(0.98);
+}
+
+.iconWrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--action-bg);
+  color: var(--action-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+.actionTitle {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-1) 0;
+}
+
+.actionDescription {
+  font-size: var(--text-sm);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.arrow {
+  font-size: var(--text-lg);
+  color: var(--color-text-tertiary);
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-3);
+  }
+
+  .actionCard {
+    padding: var(--spacing-4);
+  }
+
+  .iconWrapper {
+    width: 40px;
+    height: 40px;
+  }
+}

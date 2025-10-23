@@ -1,4 +1,5 @@
 import api from './api';
+import logger from '../utils/logger';
 
 /**
  * Serviço de produtos - integração com API
@@ -13,20 +14,20 @@ export const getProdutos = async () => {
     const token = localStorage.getItem('token');
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-    console.log('🔍 getProdutos: Buscando produtos...');
-    console.log('🔐 Token disponível:', token ? 'SIM' : 'NÃO');
+    logger.info('🔍 getProdutos: Buscando produtos...');
+    logger.debug('🔐 Token disponível:', token ? 'SIM' : 'NÃO');
 
     const response = await api.get('/api/Produtos', { headers });
 
-    console.log('✅ getProdutos: Resposta recebida');
-    console.log('📦 Total de produtos:', response.data?.length || 0);
-    console.log('📋 Produtos:', response.data);
+    logger.info('✅ getProdutos: Resposta recebida');
+    logger.info('📦 Total de produtos:', response.data?.length || 0);
+    logger.debug('📋 Produtos:', response.data);
 
     return response.data;
   } catch (error) {
-    console.error('❌ getProdutos: Erro ao buscar produtos:', error);
-    console.error('❌ Status:', error.response?.status);
-    console.error('❌ Mensagem:', error.response?.data || error.message);
+    logger.error('❌ getProdutos: Erro ao buscar produtos:', error);
+    logger.error('❌ Status:', error.response?.status);
+    logger.error('❌ Mensagem:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -41,7 +42,7 @@ export const getProdutosPorCategoria = async (categoria) => {
     const response = await api.get(`/api/Produtos?categoria=${categoria}`);
     return response.data;
   } catch (error) {
-    console.error(`Erro ao buscar produtos da categoria ${categoria}:`, error);
+    logger.error(`Erro ao buscar produtos da categoria ${categoria}:`, error);
     throw error;
   }
 };
@@ -56,7 +57,7 @@ export const getProdutosPorFornecedor = async (fornecedor) => {
     const response = await api.get(`/api/Produtos?fornecedor=${encodeURIComponent(fornecedor)}`);
     return response.data;
   } catch (error) {
-    console.error(`Erro ao buscar produtos do fornecedor ${fornecedor}:`, error);
+    logger.error(`Erro ao buscar produtos do fornecedor ${fornecedor}:`, error);
     throw error;
   }
 };
@@ -72,7 +73,7 @@ export const getProdutosPorCategoriaEFornecedor = async (categoria, fornecedor) 
     const response = await api.get(`/api/Produtos?categoria=${categoria}&fornecedor=${encodeURIComponent(fornecedor)}`);
     return response.data;
   } catch (error) {
-    console.error(`Erro ao buscar produtos da categoria ${categoria} e fornecedor ${fornecedor}:`, error);
+    logger.error(`Erro ao buscar produtos da categoria ${categoria} e fornecedor ${fornecedor}:`, error);
     throw error;
   }
 };
@@ -87,7 +88,7 @@ export const getProdutoPorId = async (id) => {
     const response = await api.get(`/api/Produtos/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Erro ao buscar produto ${id}:`, error);
+    logger.error(`Erro ao buscar produto ${id}:`, error);
     throw error;
   }
 };
@@ -101,7 +102,7 @@ export const getFornecedores = async () => {
     const response = await api.get('/api/Fornecedores');
     return response.data;
   } catch (error) {
-    console.error('Erro ao buscar fornecedores:', error);
+    logger.error('Erro ao buscar fornecedores:', error);
     throw error;
   }
 };
@@ -119,22 +120,19 @@ export const getFornecedores = async () => {
  */
 export const buscarProdutosParaCarrinho = async (campoConsulta = '') => {
   try {
-    const token = localStorage.getItem('token');
-    const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
+    // Token é adicionado automaticamente pelo interceptor em api.js
     const response = await api.get('/api/ProdutoEscolhaCarrinho', {
-      params: { campoConsulta },
-      headers
+      params: { campoConsulta }
     });
 
-    console.log(`✅ Produtos encontrados (busca: "${campoConsulta}"):`, response.data.length);
+    logger.info(`✅ Produtos encontrados (busca: "${campoConsulta}"):`, response.data.length);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar produtos para carrinho:', error);
+    logger.error('❌ Erro ao buscar produtos para carrinho:', error);
 
     // Se der erro 404 ou 401, usa fallback
     if (error.response?.status === 404 || error.response?.status === 401) {
-      console.warn('⚠️ Endpoint /api/ProdutoEscolhaCarrinho não encontrado ou requer auth. Usando fallback.');
+      logger.warn('⚠️ Endpoint /api/ProdutoEscolhaCarrinho não encontrado ou requer auth. Usando fallback.');
       // Fallback para o endpoint antigo
       return getProdutos();
     }
@@ -153,10 +151,10 @@ export const getSegmentos = async () => {
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
     const response = await api.get('/api/ProdutoSegmentos', { headers });
-    console.log('✅ Segmentos carregados da API:', response.data.length);
+    logger.info('✅ Segmentos carregados da API:', response.data.length);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar segmentos:', error);
+    logger.error('❌ Erro ao buscar segmentos:', error);
     throw error;
   }
 };
@@ -173,7 +171,7 @@ export const getGrupos = async () => {
     const response = await api.get('/api/ProdutoGrupos', { headers });
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar grupos:', error);
+    logger.error('❌ Erro ao buscar grupos:', error);
     throw error;
   }
 };
@@ -190,7 +188,7 @@ export const getMarcas = async () => {
     const response = await api.get('/api/ProdutoMarcas', { headers });
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar marcas:', error);
+    logger.error('❌ Erro ao buscar marcas:', error);
     throw error;
   }
 };
@@ -207,7 +205,7 @@ export const getModelos = async () => {
     const response = await api.get('/api/ProdutoModelos', { headers });
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar modelos:', error);
+    logger.error('❌ Erro ao buscar modelos:', error);
     throw error;
   }
 };
@@ -224,7 +222,7 @@ export const getTags = async () => {
     const response = await api.get('/api/ProdutoTags', { headers });
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar tags:', error);
+    logger.error('❌ Erro ao buscar tags:', error);
     throw error;
   }
 };
@@ -244,10 +242,10 @@ export const getProdutosPorGrupo = async (idGrupo) => {
     // Filtrar no cliente por idGrupo
     const produtosFiltrados = response.data.filter(p => p.idGrupo === idGrupo);
 
-    console.log(`✅ Produtos do grupo ${idGrupo}:`, produtosFiltrados.length);
+    logger.info(`✅ Produtos do grupo ${idGrupo}:`, produtosFiltrados.length);
     return produtosFiltrados;
   } catch (error) {
-    console.error(`❌ Erro ao buscar produtos do grupo ${idGrupo}:`, error);
+    logger.error(`❌ Erro ao buscar produtos do grupo ${idGrupo}:`, error);
     throw error;
   }
 };
@@ -271,10 +269,10 @@ export const getProdutosPorGrupoEFornecedor = async (idGrupo, fornecedor) => {
       (p.fornecedor === fornecedor || p.distribuidor === fornecedor)
     );
 
-    console.log(`✅ Produtos do grupo ${idGrupo} e fornecedor ${fornecedor}:`, produtosFiltrados.length);
+    logger.info(`✅ Produtos do grupo ${idGrupo} e fornecedor ${fornecedor}:`, produtosFiltrados.length);
     return produtosFiltrados;
   } catch (error) {
-    console.error(`❌ Erro ao buscar produtos do grupo ${idGrupo} e fornecedor ${fornecedor}:`, error);
+    logger.error(`❌ Erro ao buscar produtos do grupo ${idGrupo} e fornecedor ${fornecedor}:`, error);
     throw error;
   }
 };
@@ -291,10 +289,10 @@ export const getDistribuidoresPorSegmento = async (idSegmento) => {
 
     const response = await api.get(`/api/Distribuidor/consulta?idSegmento=${idSegmento}`, { headers });
 
-    console.log(`✅ Distribuidores do segmento ${idSegmento}:`, response.data.length);
+    logger.info(`✅ Distribuidores do segmento ${idSegmento}:`, response.data.length);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao buscar distribuidores do segmento ${idSegmento}:`, error);
+    logger.error(`❌ Erro ao buscar distribuidores do segmento ${idSegmento}:`, error);
     throw error;
   }
 };
@@ -311,10 +309,10 @@ export const getUltimosPedidos = async (idAssistencia) => {
 
     const response = await api.get(`/api/Distribuidor/ultimospedidos/${idAssistencia}`, { headers });
 
-    console.log(`✅ Últimos pedidos da assistência ${idAssistencia}:`, response.data.length);
+    logger.info(`✅ Últimos pedidos da assistência ${idAssistencia}:`, response.data.length);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao buscar últimos pedidos:`, error);
+    logger.error(`❌ Erro ao buscar últimos pedidos:`, error);
     throw error;
   }
 };
@@ -332,10 +330,10 @@ export const getDistribuidoresFavoritos = async (idSegmento, idAssistencia) => {
 
     const response = await api.get(`/api/Distribuidor/favoritos/${idSegmento}/${idAssistencia}`, { headers });
 
-    console.log(`✅ Distribuidores favoritos (segmento ${idSegmento}, assistência ${idAssistencia}):`, response.data.length);
+    logger.info(`✅ Distribuidores favoritos (segmento ${idSegmento}, assistência ${idAssistencia}):`, response.data.length);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao buscar distribuidores favoritos:`, error);
+    logger.error(`❌ Erro ao buscar distribuidores favoritos:`, error);
     throw error;
   }
 };

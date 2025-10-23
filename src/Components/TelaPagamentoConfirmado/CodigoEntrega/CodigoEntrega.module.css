@@ -14,12 +14,12 @@
   font-size: 1.1rem;
   font-weight: 600;
   margin-bottom: 15px;
-  color: #333; /* COR DO TEXTO ALTERADA */
+  color: #18304C; /* Azul AllMoove */
 }
 .cardHeader h3 { margin: 0; }
 
 .deliveryCodeWrapper {
-  background-color: #eefbf3;
+  background-color: #fff7ed;
   border-radius: 8px;
   padding: 20px;
   text-align: center;
@@ -28,7 +28,7 @@
 .deliveryCode {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #15803d;
+  color: #FF3600;
   letter-spacing: 2px;
 }
 
@@ -44,16 +44,19 @@
   justify-content: center;
   gap: 8px;
   font-weight: 500;
-  transition: background-color 0.2s;
-  color: #374151;
+  transition: all 0.2s;
+  color: #18304C; /* Azul AllMoove */
 }
 .copyButton:hover {
-  background-color: #f9fafb;
+  background-color: #fff7ed; /* Tom claro do laranja */
+  border-color: #FF3600; /* Laranja AllMoove */
+  color: #FF3600; /* Laranja AllMoove */
 }
 
 .importantNote {
   font-size: 0.8rem;
   text-align: center;
-  color: #888;
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.7; /* Leve opacidade */
   margin-top: 15px;
 }

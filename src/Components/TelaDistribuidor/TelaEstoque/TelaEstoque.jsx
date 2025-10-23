@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Package, AlertTriangle, DollarSign, Plus, Edit2, Trash2, Search } from 'lucide-react';
+import { ArrowLeft, Package, AlertTriangle, DollarSign, Plus, Edit2, Trash2, Search, Flame } from 'lucide-react';
+import logger from '../../../utils/logger';
 import Button from '../../Shared/Button/Button';
+import Logo from '../../Shared/Logo/Logo';
+import ModalCadastrarProduto from './ModalCadastrarProduto';
+import ModalEditarProduto from './ModalEditarProduto';
 import styles from './TelaEstoque.module.css';
 import { useEstoque } from '../../../hooks/useEstoque';
+import { useProdutosMaisVendidos } from '../../../hooks/useProdutosMaisVendidos';
 import {
   deleteProdutoEstoque,
   updateProdutoEstoque,
@@ -13,9 +18,13 @@ import {
 function TelaEstoque() {
   const navigate = useNavigate();
   const { estoque, isLoading, error, recarregar } = useEstoque();
+  const { produtosMaisVendidos } = useProdutosMaisVendidos(10); // Top 10 produtos
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
   const [processando, setProcessando] = useState(false);
+  const [modalCadastroAberto, setModalCadastroAberto] = useState(false);
+  const [modalEdicaoAberto, setModalEdicaoAberto] = useState(false);
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
 
   // Calcula métricas
   const totalItens = estoque.reduce((acc, item) => acc + item.quantidade, 0);
@@ -44,15 +53,41 @@ function TelaEstoque() {
   };
 
   const handleCadastrar = () => {
-    // TODO: Implementar modal de cadastro
-    alert('Funcionalidade de cadastro será implementada em breve.\n\nPor enquanto, você pode cadastrar produtos diretamente no backend.');
+    setModalCadastroAberto(true);
+  };
+
+  const handleSubmitCadastro = async (produtoData) => {
+    try {
+      await createProdutoEstoque(produtoData);
+      alert('Produto cadastrado com sucesso!');
+      recarregar(); // Recarrega a lista de produtos
+    } catch (err) {
+      logger.error('Erro ao cadastrar produto:', err);
+      alert('Erro ao cadastrar produto: ' + (err.message || 'Erro desconhecido'));
+      throw err; // Re-throw para o modal tratar
+    }
   };
 
   const handleEditar = (id) => {
-    // TODO: Implementar modal de edição
     const produto = estoque.find(item => item.id === id);
     if (produto) {
-      alert(`Editar produto: ${produto.nome}\n\nModal de edição será implementado em breve.`);
+      setProdutoSelecionado(produto);
+      setModalEdicaoAberto(true);
+    }
+  };
+
+  const handleSubmitEdicao = async (id, produtoData) => {
+    try {
+      setProcessando(true);
+      await updateProdutoEstoque(id, produtoData);
+      alert('Produto atualizado com sucesso!');
+      recarregar(); // Recarrega a lista de produtos
+    } catch (err) {
+      logger.error('Erro ao atualizar produto:', err);
+      alert('Erro ao atualizar produto: ' + (err.message || 'Erro desconhecido'));
+      throw err; // Re-throw para o modal tratar
+    } finally {
+      setProcessando(false);
     }
   };
 
@@ -77,7 +112,7 @@ function TelaEstoque() {
       alert('Produto excluído com sucesso!');
       recarregar(); // Recarrega a lista
     } catch (err) {
-      console.error('Erro ao excluir produto:', err);
+      logger.error('Erro ao excluir produto:', err);
       alert('Erro ao excluir produto: ' + (err.message || 'Erro desconhecido'));
     } finally {
       setProcessando(false);
@@ -104,10 +139,7 @@ function TelaEstoque() {
       <header className={styles.header}>
         <div className={styles.headerTop}>
           <div className={styles.logoSection}>
-            <div className={styles.logoIcon}>
-              <Package size={24} />
-            </div>
-            <span className={styles.logoText}>Allmoove</span>
+            <Logo size={28} />
           </div>
           <Button
             variant="ghost"
@@ -122,7 +154,7 @@ function TelaEstoque() {
         <div className={styles.headerContent}>
           <div>
             <h1 className={styles.title}>Gerenciar Estoque</h1>
-            <p className={styles.subtitle}>Controle de lotes e inventário de peças</p>
+            <p className={styles.subtitle}>Monitore e Gerencie seus produtos</p>
           </div>
         </div>
       </header>
@@ -260,7 +292,7 @@ function TelaEstoque() {
           <h2 className={styles.stockTitle}>
             Itens em Estoque ({itensFiltrados.length})
           </h2>
-          <p className={styles.stockSubtitle}>Gerencie seus lotes de peças e monitore quantidades</p>
+          <p className={styles.stockSubtitle}>Monitore e Gerencie seus produtos</p>
         </div>
 
         <div className={styles.stockList}>
@@ -272,7 +304,15 @@ function TelaEstoque() {
 
               <div className={styles.itemContent}>
                 <div className={styles.itemHeader}>
-                  <h3 className={styles.itemName}>{item.nome}</h3>
+                  <div className={styles.itemTitleRow}>
+                    <h3 className={styles.itemName}>{item.nome}</h3>
+                    {produtosMaisVendidos.has(item.id) && (
+                      <span className={styles.badgeMaisVendido}>
+                        <Flame size={14} />
+                        Mais Vendido
+                      </span>
+                    )}
+                  </div>
                   <div className={styles.itemActions}>
                     <button
                       className={styles.actionButton}
@@ -352,6 +392,24 @@ function TelaEstoque() {
       </div>
       </>
       )}
+
+      {/* Modal de Cadastro */}
+      <ModalCadastrarProduto
+        isOpen={modalCadastroAberto}
+        onClose={() => setModalCadastroAberto(false)}
+        onSubmit={handleSubmitCadastro}
+      />
+
+      {/* Modal de Edição */}
+      <ModalEditarProduto
+        isOpen={modalEdicaoAberto}
+        onClose={() => {
+          setModalEdicaoAberto(false);
+          setProdutoSelecionado(null);
+        }}
+        onSubmit={handleSubmitEdicao}
+        produto={produtoSelecionado}
+      />
     </div>
   );
 }

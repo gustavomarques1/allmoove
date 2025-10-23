@@ -1,4 +1,5 @@
 import api from './api';
+import logger from '../utils/logger';
 
 /**
  * Serviço de pedidos - integração completa com API
@@ -23,11 +24,11 @@ export const getPedidosDoDistribuidor = async (idDistribuidor = null) => {
     const id = idDistribuidor || localStorage.getItem('idPessoa');
 
     if (!token || !id) {
-      console.warn('⚠️ Token ou ID não encontrado. Token:', !!token, 'ID:', id);
+      logger.warn('⚠️ Token ou ID não encontrado. Token:', !!token, 'ID:', id);
       throw new Error('Usuário não autenticado ou distribuidor não identificado.');
     }
 
-    console.log('📡 Buscando pedidos do distribuidor ID:', id);
+    logger.info('📡 Buscando pedidos do distribuidor ID:', id);
 
     const response = await api.get(`/api/Pedidos/distribuidor/${id}`, {
       headers: {
@@ -35,18 +36,18 @@ export const getPedidosDoDistribuidor = async (idDistribuidor = null) => {
       }
     });
 
-    console.log('✅ Pedidos do distribuidor recebidos:', response.data);
+    logger.info('✅ Pedidos do distribuidor recebidos:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar pedidos do distribuidor:', error);
+    logger.error('❌ Erro ao buscar pedidos do distribuidor:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       // Se o endpoint não existir, retornar array vazio (desenvolvimento)
       if (error.response.status === 404) {
-        console.warn('⚠️ Endpoint não implementado no backend. Retornando array vazio.');
+        logger.warn('⚠️ Endpoint não implementado no backend. Retornando array vazio.');
         return [];
       }
     }
@@ -70,7 +71,7 @@ export const getPedidosDaAssistencia = async (idPessoa = null) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Buscando pedidos da assistência:', id);
+    logger.info('📡 Buscando pedidos da assistência:', id);
 
     const response = await api.get(`/api/Pedidos/assistencia/${id}`, {
       headers: {
@@ -78,14 +79,14 @@ export const getPedidosDaAssistencia = async (idPessoa = null) => {
       }
     });
 
-    console.log('✅ Pedidos recebidos:', response.data);
+    logger.info('✅ Pedidos recebidos:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar pedidos da assistência:', error);
+    logger.error('❌ Erro ao buscar pedidos da assistência:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
     }
 
     throw error;
@@ -93,19 +94,37 @@ export const getPedidosDaAssistencia = async (idPessoa = null) => {
 };
 
 /**
- * Cria um novo pedido de peças
+ * Cria um novo pedido de peças usando o PedidoCreateDto do backend
+ *
+ * O backend aceita PedidoCreateDto que cria PEDIDO + PEDIDO_ITEMS automaticamente:
+ * - Cria o registro na tabela PEDIDO
+ * - Cria automaticamente os registros em PEDIDO_ITEM vinculados
+ *
  * @param {Object} dadosPedido - Dados completos do pedido
- * @param {number} dadosPedido.idPessoa - ID da pessoa/assistência técnica
- * @param {string} dadosPedido.fornecedor - Nome do fornecedor
- * @param {string} dadosPedido.tipoEntrega - "Normal" ou "Urgente"
- * @param {string} dadosPedido.metodoPagamento - "Pix" ou "Cartão de Crédito"
- * @param {Array} dadosPedido.items - Itens do pedido [{produtoId, nome, quantidade, preco}]
- * @param {Object} dadosPedido.endereco - Endereço de entrega completo
+ * @param {number} dadosPedido.idGrupoPedido - ID do grupo de pedidos (obrigatório)
+ * @param {number} dadosPedido.idPessoa - ID da pessoa/assistência técnica (obrigatório)
+ * @param {number} [dadosPedido.idDistribuidor] - ID do distribuidor/fornecedor (opcional)
+ * @param {number} [dadosPedido.idEntregador] - ID do entregador (opcional)
  * @param {number} dadosPedido.valorFrete - Valor do frete
- * @param {number} dadosPedido.valorProdutos - Valor total dos produtos
- * @param {number} dadosPedido.totalPago - Valor total (produtos + frete)
- * @returns {Promise<Object>} Dados do pedido criado com ID, codigoEntrega e status
+ * @param {Array} dadosPedido.items - Itens do pedido (obrigatório)
+ * @param {number} dadosPedido.items[].idProduto - ID do produto
+ * @param {string} dadosPedido.items[].nome - Nome do produto
+ * @param {number} dadosPedido.items[].quantidade - Quantidade
+ * @param {number} dadosPedido.items[].preco - Preço unitário
+ * @param {number} [dadosPedido.items[].desconto] - Desconto (opcional)
+ * @returns {Promise<Object>} Dados do pedido criado com ID e items
  * @throws {Error} Se os dados forem inválidos ou houver erro na criação
+ *
+ * @example
+ * const pedido = await createPedido({
+ *   idGrupoPedido: 27,
+ *   idPessoa: 1,
+ *   valorFrete: 15.00,
+ *   items: [
+ *     { idProduto: 1, nome: "iPhone 16", quantidade: 2, preco: 150.00 },
+ *     { idProduto: 2, nome: "FOG Preto", quantidade: 10, preco: 100.00 }
+ *   ]
+ * });
  */
 export const createPedido = async (dadosPedido) => {
   try {
@@ -115,35 +134,32 @@ export const createPedido = async (dadosPedido) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    // Monta payload com campos que existem na tabela PEDIDO
+    // Monta payload usando PedidoCreateDto do backend
     const payload = {
-      // Campos obrigatórios/principais
-      idGrupoPedido: dadosPedido.idPedidoGrupo, // Vincula ao grupo de pedidos
-      idPessoa: dadosPedido.idPessoa || dadosPedido.assistenciaTecnicaId,
+      // Campos obrigatórios
       empresa: 1,
       estabelecimento: 1,
+      idGrupoPedido: dadosPedido.idGrupoPedido || dadosPedido.idPedidoGrupo,
+      idPessoa: dadosPedido.idPessoa,
 
-      // Código único do pedido
-      codigo: `PED-${Date.now()}`,
-
-      // Valores
+      // Campos opcionais
+      idDistribuidor: dadosPedido.idDistribuidor || null,
+      idEntregador: dadosPedido.idEntregador || null,
       valorFrete: dadosPedido.valorFrete || 0,
 
-      // Status
-      situacao: 'PENDENTE', // Status do pedido
-      situacaoRegistro: 'ATIVO' // Status do registro
-
-      // ⚠️ Campos removidos (não existem na tabela PEDIDO):
-      // - fornecedor (string) → deveria ser idDistribuidor (FK)
-      // - tipoEntrega (string) → coluna não existe
-      // - metodoPagamento (string) → deveria ser formaPagamento (numeric)
-      // - items (array) → criados separadamente via PedidoItems
-      // - endereco (object) → deveria ser idEnderecoEntrega (FK)
-      // - valorProdutos (number) → coluna não existe
-      // - totalPago (number) → coluna não existe
+      // Items - backend cria automaticamente os PedidoItems
+      items: dadosPedido.items.map(item => ({
+        idProduto: item.id || item.idProduto || item.produtoId,
+        produtoId: item.id || item.idProduto || item.produtoId, // Alias para compatibilidade
+        nome: item.nome || item.name || '',
+        // 🔧 FIX: Prioriza quantity (carrinho) ao invés de quantidade (estoque)
+        quantidade: item.quantity || item.quantidade || 0,
+        preco: item.preco || item.price || item.precoVenda || 0,
+        desconto: item.desconto || 0
+      }))
     };
 
-    console.log('📡 Criando novo pedido completo:', payload);
+    logger.info('📡 Criando pedido com items (PedidoCreateDto):', payload);
 
     const response = await api.post('/api/Pedidos', payload, {
       headers: {
@@ -152,14 +168,14 @@ export const createPedido = async (dadosPedido) => {
       }
     });
 
-    console.log('✅ Pedido criado com sucesso:', response.data);
+    logger.info('✅ Pedido criado com sucesso:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao criar pedido:', error);
+    logger.error('❌ Erro ao criar pedido:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       // Se houver mensagem de validação do backend, lança com detalhes
       if (error.response.data?.details) {
@@ -185,7 +201,7 @@ export const getPedidoPorId = async (id) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Buscando pedido:', id);
+    logger.info('📡 Buscando pedido:', id);
 
     const response = await api.get(`/api/Pedidos/${id}`, {
       headers: {
@@ -193,13 +209,13 @@ export const getPedidoPorId = async (id) => {
       }
     });
 
-    console.log('✅ Pedido encontrado:', response.data);
+    logger.info('✅ Pedido encontrado:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao buscar pedido ${id}:`, error);
+    logger.error(`❌ Erro ao buscar pedido ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Pedido não encontrado.');
@@ -228,7 +244,7 @@ export const updateStatusPedido = async (id, novoStatus, observacao = '') => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Atualizando status do pedido:', { id, novoStatus, observacao });
+    logger.info('📡 Atualizando status do pedido:', { id, novoStatus, observacao });
 
     const response = await api.put(
       `/api/Pedidos/${id}/status`,
@@ -244,14 +260,14 @@ export const updateStatusPedido = async (id, novoStatus, observacao = '') => {
       }
     );
 
-    console.log('✅ Status atualizado com sucesso:', response.data);
+    logger.info('✅ Status atualizado com sucesso:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao atualizar status do pedido ${id}:`, error);
+    logger.error(`❌ Erro ao atualizar status do pedido ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       if (error.response.status === 400) {
         throw new Error(error.response.data?.error || 'Status inválido ou transição não permitida.');
@@ -281,7 +297,7 @@ export const cancelPedido = async (id, motivo = '') => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Cancelando pedido:', { id, motivo });
+    logger.info('📡 Cancelando pedido:', { id, motivo });
 
     const response = await api.delete(`/api/Pedidos/${id}`, {
       headers: {
@@ -291,14 +307,14 @@ export const cancelPedido = async (id, motivo = '') => {
       data: motivo ? { motivo } : undefined
     });
 
-    console.log('✅ Pedido cancelado com sucesso:', response.data);
+    logger.info('✅ Pedido cancelado com sucesso:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao cancelar pedido ${id}:`, error);
+    logger.error(`❌ Erro ao cancelar pedido ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       if (error.response.status === 400) {
         throw new Error(error.response.data?.error || 'Não é possível cancelar este pedido.');

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styles from './BuscaSegmentada.module.css';
 import { useNavigate } from "react-router-dom";
+import logger from '../../../utils/logger';
 import {
   ChevronLeft,
   ChevronRight,
@@ -18,11 +19,9 @@ import {
   ShoppingCart
 } from "lucide-react";
 import {
-  getProdutos,
   getFornecedores,
   getSegmentos,
   getDistribuidoresPorSegmento,
-  getUltimosPedidos,
   getDistribuidoresFavoritos
 } from '../../../api/produtosServices';
 import { useAuth } from '../../../hooks/useAuth';
@@ -73,8 +72,7 @@ const getIconeSegmento = (nome) => {
     'escritório': FileText,
     'escritorio': FileText,
 
-    // Eletrônicos (genérico)
-    'eletrônicos': Cpu,
+    // Componentes eletrônicos
     'componentes': Cpu,
     'componente': Cpu,
     'peças': Cpu,
@@ -110,23 +108,6 @@ const distribuidores = [
   { id: 'Display Brasil', nome: 'Display Brasil' },
 ];
 
-// Mock de pedidos por categoria e distribuidor
-const mockPedidos = [
-  { id: 1, distribuidor: "TechParts SP", produto: "6S BRANCO", segmentoId: 'celulares' },
-  { id: 2, distribuidor: "TechParts SP", produto: "E20 PRETO C/ARO WE KEEP", segmentoId: 'celulares' },
-  { id: 3, distribuidor: "Global Peças RJ", produto: "A51 PRETO C/ ARO OLED", segmentoId: 'celulares' },
-  { id: 4, distribuidor: "Distribuidor B", produto: "Pastilhas de Freio Automotivo", segmentoId: 'auto' },
-  { id: 5, distribuidor: "Distribuidor B", produto: "Filtro de Óleo para Carro", segmentoId: 'auto' },
-  { id: 6, distribuidor: "TechParts SP", produto: "Macbook Pro 16 M4", segmentoId: 'notebooks' },
-  { id: 7, distribuidor: "Global Peças RJ", produto: "Dell XPS 15", segmentoId: 'notebooks' },
-  { id: 8, distribuidor: "Display Brasil", produto: "Monitor Dell UltraSharp 27\"", segmentoId: 'telas' },
-  { id: 9, distribuidor: "TechParts SP", produto: "Monitor Gamer LG UltraGear", segmentoId: 'telas' },
-  { id: 10, distribuidor: "Distribuidor D", produto: "Display AMOLED para Monitor", segmentoId: 'display' },
-  { id: 11, distribuidor: "Display Brasil", produto: "Hub USB-C Multiportas", segmentoId: 'acessorios' },
-  { id: 12, distribuidor: "ImportaCell", produto: "Carregador de Parede Rápido", segmentoId: 'acessorios' },
-  { id: 13, distribuidor: "ImportaCell", produto: "iPhone 15 Pro Max", segmentoId: 'celulares' },
-];
-
 function BuscaSegmentada() {
   const [segmentos, setSegmentos] = useState(segmentosFallback);
   const [selectedSegmento, setSelectedSegmento] = useState('');
@@ -138,7 +119,6 @@ function BuscaSegmentada() {
   const [distribuidoresDisponiveis, setDistribuidoresDisponiveis] = useState(distribuidores);
   const [isLoadingPedidos, setIsLoadingPedidos] = useState(false);
   const [isLoadingFavoritos, setIsLoadingFavoritos] = useState(false);
-  const [useAPI, setUseAPI] = useState(false); // Flag para tentar usar API
 
   const carouselRef = useRef(null);
   const searchInputRef = useRef(null);
@@ -165,14 +145,12 @@ function BuscaSegmentada() {
           if (segmentosFormatados.length > 0) {
             setSelectedSegmento(segmentosFormatados[0].id);
           }
-          setUseAPI(true);
-          console.log('✅ Segmentos carregados da API:', segmentosFormatados.length);
+          logger.info('✅ Segmentos carregados da API:', segmentosFormatados.length);
         }
       } catch (error) {
-        console.log('⚠️ API de segmentos não disponível, usando categorias fallback', error);
+        logger.info('⚠️ API de segmentos não disponível, usando categorias fallback', error);
         setSegmentos(segmentosFallback);
         setSelectedSegmento(segmentosFallback[0].id);
-        setUseAPI(false);
       }
     };
 
@@ -192,28 +170,28 @@ function BuscaSegmentada() {
         const distribuidoresAPI = await getDistribuidoresPorSegmento(selectedSegmento);
 
         if (distribuidoresAPI && distribuidoresAPI.length > 0) {
-          console.log('📦 Distribuidor da API (RAW):', distribuidoresAPI[0]);
+          logger.info('📦 Distribuidor da API (RAW):', distribuidoresAPI[0]);
 
           const distribuidoresFormatados = distribuidoresAPI.map(d => ({
             id: d.idDistribuidor || d.id || d.idPessoa,
             nome: d.nome || d.razaoSocial || d.nomeFantasia || 'Sem nome'
           }));
           setDistribuidoresDisponiveis(distribuidoresFormatados);
-          console.log(`✅ Distribuidores do segmento ${selectedSegmento}:`, distribuidoresAPI.length);
-          console.log('📋 Lista de distribuidores formatados:', distribuidoresFormatados);
+          logger.info(`✅ Distribuidores do segmento ${selectedSegmento}:`, distribuidoresAPI.length);
+          logger.info('📋 Lista de distribuidores formatados:', distribuidoresFormatados);
         } else {
           // Fallback: tenta API de fornecedores genérica
-          console.log('⚠️ Nenhum distribuidor encontrado no segmento, tentando API genérica');
+          logger.info('⚠️ Nenhum distribuidor encontrado no segmento, tentando API genérica');
           const fornecedoresAPI = await getFornecedores();
           if (fornecedoresAPI && fornecedoresAPI.length > 0) {
             setDistribuidoresDisponiveis(
               fornecedoresAPI.map(f => ({ id: f, nome: f }))
             );
-            console.log('✅ Fornecedores carregados da API genérica:', fornecedoresAPI.length);
+            logger.info('✅ Fornecedores carregados da API genérica:', fornecedoresAPI.length);
           }
         }
       } catch (error) {
-        console.log('⚠️ Erro ao buscar distribuidores, usando dados estáticos', error);
+        logger.info('⚠️ Erro ao buscar distribuidores, usando dados estáticos', error);
         // Mantém dados estáticos em caso de erro
       }
     };
@@ -229,7 +207,7 @@ function BuscaSegmentada() {
 
     const loadUltimosPedidos = async () => {
       setIsLoadingPedidos(true);
-      console.log(`\n🔍 Buscando últimos pedidos do segmento ${selectedSegmento} para assistência ${userId}`);
+      logger.info(`\n🔍 Buscando últimos pedidos do segmento ${selectedSegmento} para assistência ${userId}`);
 
       try {
         // API com filtro por segmento: /api/Pedidos/ultimos-produtos/{idAssistencia}/segmento/{idSegmento}
@@ -246,7 +224,7 @@ function BuscaSegmentada() {
         const produtosAPI = await response.json();
 
         if (produtosAPI && produtosAPI.length > 0) {
-          console.log(`✅ ${produtosAPI.length} produtos encontrados no segmento ${selectedSegmento}`);
+          logger.info(`✅ ${produtosAPI.length} produtos encontrados no segmento ${selectedSegmento}`);
 
           // Transforma para formato de exibição
           const produtosFormatados = produtosAPI.slice(0, 5).map(item => ({
@@ -260,11 +238,11 @@ function BuscaSegmentada() {
 
           setUltimosPedidos(produtosFormatados);
         } else {
-          console.log('⚠️ Nenhum produto encontrado neste segmento');
+          logger.info('⚠️ Nenhum produto encontrado neste segmento');
           setUltimosPedidos([]);
         }
       } catch (error) {
-        console.error('❌ Erro ao carregar últimos pedidos:', error);
+        logger.error('❌ Erro ao carregar últimos pedidos:', error);
         setUltimosPedidos([]);
       } finally {
         setIsLoadingPedidos(false);
@@ -282,13 +260,13 @@ function BuscaSegmentada() {
 
     const loadFavoritos = async () => {
       setIsLoadingFavoritos(true);
-      console.log(`\n🔍 Buscando favoritos para segmento ${selectedSegmento} e assistência ${userId}`);
+      logger.info(`\n🔍 Buscando favoritos para segmento ${selectedSegmento} e assistência ${userId}`);
 
       try {
         const favoritosAPI = await getDistribuidoresFavoritos(selectedSegmento, userId);
 
         if (favoritosAPI && favoritosAPI.length > 0) {
-          console.log(`✅ Distribuidores favoritos:`, favoritosAPI);
+          logger.info(`✅ Distribuidores favoritos:`, favoritosAPI);
 
           // Transforma para formato de exibição
           const favoritosFormatados = favoritosAPI.slice(0, 5).map(dist => ({
@@ -300,11 +278,11 @@ function BuscaSegmentada() {
 
           setDistribuidoresFavoritos(favoritosFormatados);
         } else {
-          console.log('⚠️ Nenhum distribuidor favorito neste segmento');
+          logger.info('⚠️ Nenhum distribuidor favorito neste segmento');
           setDistribuidoresFavoritos([]);
         }
       } catch (error) {
-        console.error('❌ Erro ao carregar favoritos:', error);
+        logger.error('❌ Erro ao carregar favoritos:', error);
         setDistribuidoresFavoritos([]);
       } finally {
         setIsLoadingFavoritos(false);
@@ -338,12 +316,8 @@ function BuscaSegmentada() {
       url += `?${queryString}`;
     }
 
-    console.log('🔍 Navegando para loja com filtros:', url);
+    logger.info('🔍 Navegando para loja com filtros:', url);
     navigate(url);
-  };
-
-  const handleNavigateToAllProducts = () => {
-    navigate('/assistencia/loja');
   };
 
   // Filtra fornecedores baseado na busca
@@ -353,9 +327,9 @@ function BuscaSegmentada() {
 
   // Debug temporário
   if (searchDistribuidor) {
-    console.log('🔍 Buscando:', searchDistribuidor);
-    console.log('📦 Distribuidores disponíveis:', distribuidoresDisponiveis);
-    console.log('✅ Filtrados:', filteredDistribuidores);
+    logger.info('🔍 Buscando:', searchDistribuidor);
+    logger.info('📦 Distribuidores disponíveis:', distribuidoresDisponiveis);
+    logger.info('✅ Filtrados:', filteredDistribuidores);
   }
 
   // Seleciona fornecedor do dropdown
@@ -372,6 +346,48 @@ function BuscaSegmentada() {
     setShowDropdown(false);
   };
 
+  // Navega para loja ao clicar em um último pedido
+  const handleClickUltimoPedido = () => {
+    let url = '/assistencia/loja';
+    const params = new URLSearchParams();
+
+    if (selectedSegmento) {
+      params.append('idSegmento', selectedSegmento);
+    }
+
+    const queryString = params.toString();
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+
+    logger.info('🔍 Navegando para loja a partir de último pedido:', url);
+    navigate(url);
+  };
+
+  // Navega para loja ao clicar em um favorito
+  const handleClickFavorito = (distribuidor) => {
+    let url = '/assistencia/loja';
+    const params = new URLSearchParams();
+
+    // Usa o idSegmento do próprio distribuidor (vem da API)
+    if (distribuidor.idSegmento) {
+      params.append('idSegmento', distribuidor.idSegmento);
+    }
+
+    // Adiciona o filtro por distribuidor
+    if (distribuidor.id) {
+      params.append('idDistribuidor', distribuidor.id);
+    }
+
+    const queryString = params.toString();
+    if (queryString) {
+      url += `?${queryString}`;
+    }
+
+    logger.info('🔍 Navegando para loja a partir de favorito:', url);
+    navigate(url);
+  };
+
   // Fecha dropdown ao clicar fora
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -386,128 +402,56 @@ function BuscaSegmentada() {
 
   return (
     <div className={styles.painelContainer}>
-
-      {/* Seção do Carrossel de Categorias */}
-      <div className={styles.carouselWrapper}>
-        <button className={styles.navButton} onClick={() => handleScroll(-250)}>
-          <ChevronLeft size={20} />
-        </button>
-        <div ref={carouselRef} className={styles.segmentosGrid}>
-          {segmentos.map((segmento) => {
-            const IconeSegmento = getIconeSegmento(segmento.nome);
-            return (
-              <button
-                key={segmento.id}
-                className={`${styles.segmentoBotao} ${selectedSegmento === segmento.id ? styles.selecionado : ''}`}
-                onClick={() => setSelectedSegmento(segmento.id)}
-              >
-                <IconeSegmento size={18} className={styles.segmentoIcon} />
-                <span>{segmento.nome}</span>
-              </button>
-            );
-          })}
-        </div>
-        <button className={styles.navButton} onClick={() => handleScroll(250)}>
-          <ChevronRight size={20} />
-        </button>
+      {/* Título da Seção */}
+      <div className={styles.sectionHeader}>
+        <Package size={24} />
+        <h2>Buscar Produtos</h2>
       </div>
 
-      {/* Seção de Interação - DUAS COLUNAS */}
-      <div className={styles.interacaoContainer}>
-        {/* COLUNA ESQUERDA: Últimos Pedidos + Favoritos (empilhados) */}
-        <div className={styles.colunaEsquerda}>
-          {/* Últimos Pedidos */}
-          <div className={styles.pedidosContainer}>
-            <h3 className={styles.colunaTitulo}>
-              <Clock size={20} />
-              Últimos Pedidos
-            </h3>
-            <div className={styles.listaWrapper}>
-              {isLoadingPedidos ? (
-                <p className={styles.listaVazia}>Carregando...</p>
-              ) : ultimosPedidos.length > 0 ? (
-                <ul className={styles.listaPedidos}>
-                  {ultimosPedidos.map((item) => (
-                    <li key={item.id}>
-                      {/* Exibe "FORNECEDOR - PRODUTO" em uma única linha */}
-                      <span>{item.fornecedor}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className={styles.listaVazia}>
-                  {userId
-                    ? 'Você ainda não fez nenhum pedido.'
-                    : 'Faça login para ver seus pedidos.'}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Distribuidores Favoritos */}
-          <div className={styles.pedidosContainer}>
-            <h3 className={styles.colunaTitulo}>
-              <Star size={20} />
-              Favoritos do Segmento
-            </h3>
-            <div className={styles.listaWrapper}>
-              {isLoadingFavoritos ? (
-                <p className={styles.listaVazia}>Carregando...</p>
-              ) : distribuidoresFavoritos.length > 0 ? (
-                <ul className={styles.listaPedidos}>
-                  {distribuidoresFavoritos.map((dist) => (
-                    <li key={dist.id}>
-                      <span>{dist.nome}</span>
-                      <span>{dist.cpfCnpj}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className={styles.listaVazia}>
-                  {userId
-                    ? 'Nenhum favorito neste segmento ainda.'
-                    : 'Faça login para ver favoritos.'}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* COLUNA DIREITA - Seleção de Distribuidor e Ações */}
-        <div className={styles.distribuidorContainer}>
-          {/* Busca de Distribuidor com Autocomplete */}
-          <div className={styles.distribuidorSelector} ref={searchInputRef}>
-            <label htmlFor="distribuidor-search" className={styles.distribuidorLabel}>
-              <Search size={18} />
-              Buscar Distribuidor:
-            </label>
-            <div className={styles.searchInputWrapper}>
-              <input
-                id="distribuidor-search"
-                type="text"
-                value={searchDistribuidor}
-                onChange={(e) => {
-                  setSearchDistribuidor(e.target.value);
-                  setShowDropdown(true);
-                  if (!e.target.value) {
-                    setSelectedDistribuidor('');
-                  }
-                }}
-                onFocus={() => setShowDropdown(true)}
-                placeholder="Digite para buscar ou deixe vazio para todos"
-                className={styles.distribuidorSearchInput}
-              />
-              {selectedDistribuidor && (
-                <button
-                  type="button"
-                  onClick={handleClearDistribuidor}
-                  className={styles.clearButton}
-                  title="Limpar seleção"
-                >
-                  ✕
-                </button>
-              )}
-            </div>
+      {/* Campo de Busca Único e Inteligente + Botão Ver Todos */}
+      <div className={styles.searchContainer}>
+        <div className={styles.searchRow}>
+          <div className={styles.searchWrapper} ref={searchInputRef}>
+            <Search className={styles.searchIcon} size={20} />
+            <input
+              type="text"
+              value={searchDistribuidor}
+              onChange={(e) => {
+                setSearchDistribuidor(e.target.value);
+                setShowDropdown(true);
+                if (!e.target.value) {
+                  setSelectedDistribuidor('');
+                }
+              }}
+              onFocus={() => setShowDropdown(true)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleNavigateToCategoria();
+                }
+              }}
+              placeholder="Buscar por categoria, distribuidor ou produto..."
+              className={styles.searchInput}
+            />
+            {selectedDistribuidor && (
+              <button
+                type="button"
+                onClick={handleClearDistribuidor}
+                className={styles.clearButton}
+                title="Limpar busca"
+              >
+                ✕
+              </button>
+            )}
+            {!selectedDistribuidor && (
+              <button
+                type="button"
+                onClick={handleNavigateToCategoria}
+                className={styles.searchButton}
+                title="Buscar"
+              >
+                <Search size={18} />
+              </button>
+            )}
 
             {/* Dropdown de sugestões */}
             {showDropdown && searchDistribuidor && filteredDistribuidores.length > 0 && (
@@ -518,6 +462,7 @@ function BuscaSegmentada() {
                     onClick={() => handleSelectDistribuidor(dist)}
                     className={styles.dropdownItem}
                   >
+                    <Package size={16} />
                     {dist.nome}
                   </li>
                 ))}
@@ -531,17 +476,167 @@ function BuscaSegmentada() {
             )}
           </div>
 
-          {/* Botões de Ação */}
-          <div className={styles.botoesDistribuidor}>
-            <button className={`${styles.botaoAcao} ${styles.primary}`} onClick={handleNavigateToCategoria}>
-              <Search size={16} />
-              Buscar na Categoria
-            </button>
-            <button className={styles.botaoAcao} onClick={handleNavigateToAllProducts}>
-              <ShoppingCart size={16} />
-              Ver Todos
-            </button>
+          <button
+            type="button"
+            onClick={() => navigate('/assistencia/loja')}
+            className={styles.viewAllButton}
+            title="Ver todos os produtos"
+          >
+            <ShoppingCart size={18} />
+            Ver Todos
+          </button>
+        </div>
+      </div>
+
+      {/* Categorias como Pills/Badges Clicáveis */}
+      <div className={styles.categoriasSection}>
+        <span className={styles.categoriasLabel}>Categorias:</span>
+        <div className={styles.carouselWrapper}>
+          <button className={styles.navButton} onClick={() => handleScroll(-250)}>
+            <ChevronLeft size={18} />
+          </button>
+          <div ref={carouselRef} className={styles.categoriasPills}>
+            {segmentos.map((segmento) => {
+              const IconeSegmento = getIconeSegmento(segmento.nome);
+              return (
+                <button
+                  key={segmento.id}
+                  className={`${styles.categoriaPill} ${selectedSegmento === segmento.id ? styles.pillActive : ''}`}
+                  onClick={() => {
+                    setSelectedSegmento(segmento.id);
+                  }}
+                >
+                  <IconeSegmento size={16} />
+                  <span>{segmento.nome}</span>
+                </button>
+              );
+            })}
           </div>
+          <button className={styles.navButton} onClick={() => handleScroll(250)}>
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Separador Visual */}
+      <div className={styles.divider}></div>
+
+      {/* Seção de Últimos Pedidos e Favoritos - CARROSSEL HORIZONTAL ESTILO IFOOD */}
+      <div className={styles.distribuidoresSection}>
+        {/* Últimos Pedidos - CARROSSEL */}
+        <div className={styles.distribuidorCard}>
+          <h3 className={styles.colunaTitulo}>
+            <Clock size={20} />
+            Últimos Pedidos
+          </h3>
+          {isLoadingPedidos ? (
+            <div className={styles.carrosselWrapper}>
+              <p className={styles.listaVazia}>Carregando...</p>
+            </div>
+          ) : ultimosPedidos.length > 0 ? (
+            <div className={styles.carrosselWrapper}>
+              <div className={styles.carrosselScroll}>
+                {ultimosPedidos.map((item) => (
+                  <div
+                    key={item.id}
+                    className={styles.distribuidorItem}
+                    onClick={handleClickUltimoPedido}
+                    style={{ cursor: 'pointer' }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleClickUltimoPedido();
+                      }
+                    }}
+                    title={`Ir para ${segmentos.find(s => s.id === selectedSegmento)?.nome || 'produtos'}`}
+                  >
+                    {/* Logo circular */}
+                    <div className={styles.distribuidorLogo}>
+                      <Package size={28} />
+                    </div>
+                    {/* Info do distribuidor */}
+                    <div className={styles.distribuidorInfo}>
+                      <span className={styles.distribuidorNome}>{item.fornecedor}</span>
+                      <span className={styles.distribuidorCategoria}>
+                        {selectedSegmento ? segmentos.find(s => s.id === selectedSegmento)?.nome : 'Produtos'}
+                      </span>
+                    </div>
+                    {/* Ícone de relógio */}
+                    <button className={styles.favoritoBtn} onClick={(e) => e.stopPropagation()}>
+                      <Clock size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className={styles.carrosselWrapper}>
+              <p className={styles.listaVazia}>
+                {userId
+                  ? 'Você ainda não fez nenhum pedido.'
+                  : 'Faça login para ver seus pedidos.'}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Distribuidores Favoritos - CARROSSEL */}
+        <div className={styles.distribuidorCard}>
+          <h3 className={styles.colunaTitulo}>
+            <Star size={20} />
+            Favoritos do Segmento
+          </h3>
+          {isLoadingFavoritos ? (
+            <div className={styles.carrosselWrapper}>
+              <p className={styles.listaVazia}>Carregando...</p>
+            </div>
+          ) : distribuidoresFavoritos.length > 0 ? (
+            <div className={styles.carrosselWrapper}>
+              <div className={styles.carrosselScroll}>
+                {distribuidoresFavoritos.map((dist) => (
+                  <div
+                    key={dist.id}
+                    className={styles.distribuidorItem}
+                    onClick={() => handleClickFavorito(dist)}
+                    style={{ cursor: 'pointer' }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleClickFavorito(dist);
+                      }
+                    }}
+                    title={`Ver produtos de ${dist.nome}`}
+                  >
+                    {/* Logo circular */}
+                    <div className={styles.distribuidorLogo}>
+                      <Star size={28} fill="currentColor" />
+                    </div>
+                    {/* Info do distribuidor */}
+                    <div className={styles.distribuidorInfo}>
+                      <span className={styles.distribuidorNome}>{dist.nome}</span>
+                      <span className={styles.distribuidorCategoria}>
+                        {selectedSegmento ? segmentos.find(s => s.id === selectedSegmento)?.nome : 'Produtos'}
+                      </span>
+                    </div>
+                    {/* Ícone de estrela preenchida (favorito) */}
+                    <button className={`${styles.favoritoBtn} ${styles.favorited}`} onClick={(e) => e.stopPropagation()}>
+                      <Star size={16} fill="currentColor" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className={styles.carrosselWrapper}>
+              <p className={styles.listaVazia}>
+                {userId
+                  ? 'Nenhum favorito neste segmento ainda.'
+                  : 'Faça login para ver favoritos.'}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

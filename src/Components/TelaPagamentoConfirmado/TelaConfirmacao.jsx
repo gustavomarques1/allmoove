@@ -1,6 +1,7 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './TelaConfirmacao.module.css';
+import logger from '../../utils/logger';
 import { CheckCircle } from 'lucide-react';
 
 // Importando os novos componentes filhos
@@ -27,7 +28,7 @@ function TelaConfirmacao() {
     metodoPagamento: 'N/A'
   };
 
-  console.log('📦 Pedido confirmado recebido:', pedido);
+  logger.info('📦 Pedido confirmado recebido:', pedido);
 
   return (
     <div className={styles.pageContainer}>
@@ -50,9 +51,11 @@ function TelaConfirmacao() {
       </main>
 
       <footer className={styles.footer}>
-        <button className={`${styles.actionButton} ${styles.primary}`} onClick={() => navigate('/assistencia/dashboard')}>
+        {/* VERSÃO FINAL: Background Laranja + Texto Branco AllMoove */}
+        <button className={`${styles.actionButton} ${styles.primaryAllmoove}`} onClick={() => navigate('/assistencia/dashboard')}>
           Voltar ao Dashboard
         </button>
+
         <button className={`${styles.actionButton} ${styles.secondary}`} onClick={() => navigate('/assistencia/loja')}>
           Fazer Novo Pedido
         </button>

@@ -1,5 +1,6 @@
 // CEPInput.jsx - Sistema integrado de múltiplos endereços
 import React, { useState, useEffect } from 'react';
+import logger from '../../../utils/logger';
 import { flushSync } from 'react-dom';
 import { MapPin, X, Loader, Edit2, Trash2, Plus, Check } from 'lucide-react';
 import styles from './CepInput.module.css';
@@ -230,7 +231,7 @@ function CepInput() {
           setCepError('');
         }
       } catch (error) {
-        console.error('Erro ao buscar CEP:', error);
+        logger.error('Erro ao buscar CEP:', error);
         setCepError('Erro ao buscar CEP. Tente novamente.');
         setCepSuccess(false);
       } finally {
@@ -304,7 +305,7 @@ function CepInput() {
       type: 'success'
     });
 
-    console.log('Endereço salvo:', enderecoSalvo);
+    logger.info('Endereço salvo:', enderecoSalvo);
   };
 
   const formatCep = (value) => {

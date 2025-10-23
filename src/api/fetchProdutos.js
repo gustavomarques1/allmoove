@@ -1,4 +1,5 @@
 import { buscarProdutosParaCarrinho, getProdutos, getProdutosPorCategoria } from './produtosServices';
+import logger from '../utils/logger';
 
 /**
  * Busca produtos da API com fallback para JSON estático
@@ -13,39 +14,40 @@ import { buscarProdutosParaCarrinho, getProdutos, getProdutosPorCategoria } from
  */
 async function fetchProducts(query = '') {
   try {
-    console.log('🔍 Buscando produtos...', query ? `Filtro: ${query}` : 'Todos');
+    logger.info('🔍 Buscando produtos...', query ? `Filtro: ${query}` : 'Todos');
 
-    // Temporariamente usando endpoint antigo até backend implementar o novo
+    // IMPORTANTE: /api/ProdutoEscolhaCarrinho retorna 401 (backend não implementado)
+    // Temporariamente usando endpoint antigo até backend corrigir autorização
     const produtos = query
       ? await getProdutosPorCategoria(query)
       : await getProdutos();
 
     if (produtos && produtos.length > 0) {
-      console.log('✅ Produtos carregados com sucesso:', produtos.length);
+      logger.info('✅ Produtos carregados com sucesso:', produtos.length);
       return produtos;
     }
 
     // Se não encontrar produtos e houver query, tenta buscar sem filtro
     if (query && (!produtos || produtos.length === 0)) {
-      console.log('⚠️ Nenhum produto encontrado com filtro. Buscando todos...');
+      logger.info('⚠️ Nenhum produto encontrado com filtro. Buscando todos...');
       const todosProdutos = await buscarProdutosParaCarrinho('');
       return todosProdutos;
     }
 
-    console.log('✅ Busca concluída:', produtos?.length || 0, 'produtos');
+    logger.info('✅ Busca concluída:', produtos?.length || 0, 'produtos');
     return produtos || [];
 
   } catch (error) {
-    console.error('❌ Erro ao carregar produtos da API:', error);
+    logger.error('❌ Erro ao carregar produtos da API:', error);
 
     // FALLBACK: Tenta carregar do JSON estático se API falhar
-    console.log('⚠️ Tentando fallback para dados locais...');
+    logger.info('⚠️ Tentando fallback para dados locais...');
     try {
       const response = await fetch('/data/products.json');
       const data = await response.json();
 
       if (!query) {
-        console.log('✅ Produtos carregados do JSON local (fallback)');
+        logger.info('✅ Produtos carregados do JSON local (fallback)');
         return data;
       }
 
@@ -55,10 +57,10 @@ async function fetchProducts(query = '') {
           item.categoria.toLowerCase().includes(query.toLowerCase())
       );
 
-      console.log(`✅ ${filtered.length} produtos filtrados do JSON local (fallback)`);
+      logger.info(`✅ ${filtered.length} produtos filtrados do JSON local (fallback)`);
       return filtered;
     } catch (fallbackError) {
-      console.error('❌ Fallback também falhou:', fallbackError);
+      logger.error('❌ Fallback também falhou:', fallbackError);
       return [];
     }
   }

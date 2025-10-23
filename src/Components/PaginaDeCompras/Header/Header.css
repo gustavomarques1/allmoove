@@ -9,7 +9,7 @@
   left: 0;
   width: 100%;
   z-index: var(--z-fixed);
-  padding: var(--spacing-4) var(--spacing-5);
+  padding: var(--spacing-4) 0;
   box-shadow: var(--shadow-md);
 }
 
@@ -17,16 +17,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-4);
+  gap: var(--spacing-8);
 
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header-logo {
+  height: 32px;
+  width: auto;
+  flex-shrink: 0;
+  margin-left: 0;
 }
 
 .search-section {
   display: flex;
   align-items: center;
-  gap: var(--spacing-6);
+  gap: var(--spacing-8);
   flex: 1;
 }
 
@@ -36,33 +44,69 @@
 
 @media (max-width: 768px) {
   .header {
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: 12px 0;
   }
 
   .header .container {
     flex-wrap: wrap;
-    gap: var(--spacing-3);
+    gap: 12px;
+    padding: 0 16px;
   }
 
-  .search-section {
-    flex-direction: column;
-    gap: var(--spacing-2);
-    width: 100%;
-    order: 2;
+  .header-logo {
+    height: 28px;
+    order: 0;
   }
 
   /* CartButton fica no topo direito no mobile */
   .header .container > :last-child {
     order: 1;
+    margin-left: auto;
+  }
+
+  .search-section {
+    flex-direction: row;
+    gap: 8px;
+    width: 100%;
+    order: 2;
+    flex-wrap: wrap;
+  }
+
+  /* SearchBar ocupa mais espaço no mobile */
+  .search-section > :first-child {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  /* CEP e Carrinho se ajustam */
+  .search-section > :nth-child(2),
+  .search-section > :nth-child(3) {
+    flex-shrink: 0;
   }
 }
 
 @media (max-width: 480px) {
   .header {
-    padding: var(--spacing-2) var(--spacing-3);
+    padding: 10px 0;
+  }
+
+  .header .container {
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .header-logo {
+    height: 24px;
   }
 
   .search-section {
-    gap: var(--spacing-2);
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Em telas muito pequenas, SearchBar e CEP ficam full width */
+  .search-section > :first-child,
+  .search-section > :nth-child(2) {
+    width: 100%;
   }
 }

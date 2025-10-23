@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Inicial.module.css";
+import logger from "../../utils/logger";
 import { Package, AlertCircle } from "lucide-react";
 import ModalRecuperarSenha from "../ModalSenha/ModalRecuperarSenha";
 import ModalContato from "./ModalContato";
@@ -27,12 +28,12 @@ function Inicial() {
     const result = await login(email, password);
 
     if (result.success) {
-      console.log('✅ Login bem-sucedido! Papel do usuário:', result.role);
+      logger.info('✅ Login bem-sucedido! Papel do usuário:', result.role);
 
       // Redireciona para o dashboard apropriado baseado no papel
       // IMPORTANTE: Usa result.role diretamente para evitar race condition
       const dashboardRoute = getDashboardRoute(result.role);
-      console.log('🔀 Redirecionando para:', dashboardRoute);
+      logger.info('🔀 Redirecionando para:', dashboardRoute);
       navigate(dashboardRoute);
     } else {
       // Exibe mensagem de erro
@@ -47,13 +48,12 @@ function Inicial() {
   return (
     <>
       <div className={styles.inicial_container}>
-        <Logo size={40} className={styles.inicial_icon} />
-        <h1 className={styles.inicial_title}>Delivery</h1>
-        <p className={styles.inicial_description}>
-          Sistema de Entregas - Portal do Entregador
-        </p>
-
         <form className={styles.inicial_form} onSubmit={handleLogin}>
+          <Logo size={40} className={styles.inicial_icon} />
+          <p className={styles.inicial_description}>
+            Peças de reposição. Peça AllMoove.
+          </p>
+
           <h2 className={styles.inicial_subtitle}>Fazer Login</h2>
           <p className={styles.inicial_info}>
             Entre com suas credenciais para acessar o sistema
@@ -96,7 +96,7 @@ function Inicial() {
             loading={isLoading}
             leftIcon={!isLoading && <Package size={18} />}
           >
-            {isLoading ? 'Entrando...' : 'Entrar no Sistema'}
+            {isLoading ? 'Entrando...' : 'Iniciar Sessão'}
           </Button>
           
           <div className={styles.inicial_contato}>

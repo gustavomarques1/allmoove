@@ -21,7 +21,7 @@
 .product-filters__count {
   font-size: 14px;
   font-weight: 600;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
 }
 
 .product-filters__controls {
@@ -41,7 +41,7 @@
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -89,7 +89,7 @@
   background: transparent;
   font-size: 14px;
   font-weight: 500;
-  color: #374151;
+  color: #18304C; /* Azul AllMoove */
   cursor: pointer;
   outline: none;
   padding: 0;

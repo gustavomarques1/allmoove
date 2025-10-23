@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styles from "./DistribuidorDashboard.module.css";
+import logger from "../../../utils/logger";
 // Importações dos ícones que você precisará (ex: de 'lucide-react')
 import {
   Package,
   CheckCircle,
   Clock,
   Plus,
-  Settings,
   TrendingUp,
   Tag,
   CircleCheck,
@@ -29,7 +29,7 @@ function DistribuidorDashboard() {
       alert('Pedido aceito com sucesso!');
       window.location.reload(); // Recarrega para atualizar a lista
     } catch (err) {
-      console.error('Erro ao aceitar pedido:', err);
+      logger.error('Erro ao aceitar pedido:', err);
       alert('Erro ao aceitar pedido. Tente novamente.');
     } finally {
       setProcessandoPedido(null);
@@ -39,19 +39,28 @@ function DistribuidorDashboard() {
   const handleGerenciarEstoque = () => {
     navigate('/distribuidor/estoque');
   };
+
+  // Função para obter saudação baseada na hora
+  const getSaudacao = () => {
+    const hora = new Date().getHours();
+    if (hora < 12) return 'Bom dia';
+    if (hora < 18) return 'Boa tarde';
+    return 'Boa noite';
+  };
+
   return (
     <div className={styles["distribuidor-page"]}>
-      {/* Cabeçalho principal */}
-      <div className={styles["distribuidor-main-header"]}>
-        <div className={styles["distribuidor-logo-section"]}>
-          <Package size={24} className={styles["distribuidor-logo-icon"]} />
-          <h1 className={styles["distribuidor-app-name"]}>Allmoove</h1>
-        </div>
-        <div className={styles["distribuidor-title-section"]}>
-          <h2 className={styles["distribuidor-main-title"]}>Distribuidor</h2>
-          <p className={styles["distribuidor-main-subtitle"]}>
-            Central de distribuição de peças
-          </p>
+      {/* Cabeçalho principal com saudação */}
+      <div className={styles["distribuidor-header-section"]}>
+        <div className={styles["distribuidor-header"]}>
+          <div className={styles["welcome-section"]}>
+            <h1 className={styles["welcome-title"]}>
+              {getSaudacao()}, <span className={styles["user-name"]}>Distribuidor Parceiro</span>!
+            </h1>
+            <p className={styles["welcome-subtitle"]}>
+              Painel de Controle e Gestão
+            </p>
+          </div>
         </div>
       </div>
 
@@ -110,23 +119,16 @@ function DistribuidorDashboard() {
         </div>
 
         {/* Card: Estoque */}
-        <div className={styles["distribuidor-top-card"]}>
-          <div className={styles["distribuidor-top-card-header"]}>
-            <h3 className={styles["distribuidor-top-card-title"]}>Estoque</h3>
-            <Settings
-              size={16}
-              className={styles["distribuidor-top-card-icon"]}
-            />
-          </div>
+        <div className={styles["distribuidor-top-card-estoque"]}>
           <button
             className={styles["distribuidor-stock-button"]}
             onClick={handleGerenciarEstoque}
           >
-            <Package size={16} /> {/* O ícone Package é adicionado aqui */}
-            Gerenciar
+            <Package size={18} />
+            Gerenciar Estoque
           </button>
           <p className={styles["distribuidor-stock-description"]}>
-            Controle de inventário
+            Controle de produtos
           </p>
         </div>
       </div>
@@ -153,11 +155,16 @@ function DistribuidorDashboard() {
             <div className={styles["distribuidor-fat-progress-bar"]}>
               <div
                 className={styles["distribuidor-fat-progress-fill-green"]}
-                style={{ width: "20%" }}
-              ></div>{" "}
-              {/* Exemplo de preenchimento */}
+                style={{
+                  width: indicadores.totalFaturamento > 0
+                    ? `${Math.round((indicadores.valorRecebido / indicadores.totalFaturamento) * 100)}%`
+                    : '0%'
+                }}
+              ></div>
             </div>
-            <p className={styles["distribuidor-fat-value"]}>R$ 35.75</p>
+            <p className={styles["distribuidor-fat-value"]}>
+              {formatCurrency(indicadores.valorRecebido, 'BRL')}
+            </p>
           </div>
 
           <div className={styles["distribuidor-fat-item"]}>
@@ -165,16 +172,23 @@ function DistribuidorDashboard() {
             <div className={styles["distribuidor-fat-progress-bar"]}>
               <div
                 className={styles["distribuidor-fat-progress-fill-orange"]}
-                style={{ width: "80%" }}
-              ></div>{" "}
-              {/* Exemplo de preenchimento */}
+                style={{
+                  width: indicadores.totalFaturamento > 0
+                    ? `${Math.round((indicadores.valorAReceber / indicadores.totalFaturamento) * 100)}%`
+                    : '0%'
+                }}
+              ></div>
             </div>
-            <p className={styles["distribuidor-fat-value"]}>R$ 130.50</p>
+            <p className={styles["distribuidor-fat-value"]}>
+              {formatCurrency(indicadores.valorAReceber, 'BRL')}
+            </p>
           </div>
 
           <div className={styles["distribuidor-fat-total"]}>
             <p className={styles["distribuidor-fat-label"]}>Total</p>
-            <p className={styles["distribuidor-fat-value-total"]}>R$ 166.25</p>
+            <p className={styles["distribuidor-fat-value-total"]}>
+              {formatCurrency(indicadores.totalFaturamento, 'BRL')}
+            </p>
           </div>
         </div>
 
@@ -193,58 +207,33 @@ function DistribuidorDashboard() {
             Distribuição por categoria
           </p>
 
-          <div className={styles["distribuidor-segment-item"]}>
-            <p className={styles["distribuidor-segment-label"]}>Eletrônicos</p>
-            <div className={styles["distribuidor-segment-progress-bar"]}>
-              <div
-                className={styles["distribuidor-segment-progress-fill"]}
-                style={{ width: "25%" }}
-              ></div>
+          {indicadores.pecasPorSegmento.length > 0 ? (
+            indicadores.pecasPorSegmento.slice(0, 4).map((segmento, index) => (
+              <div key={index} className={styles["distribuidor-segment-item"]}>
+                <p className={styles["distribuidor-segment-label"]}>{segmento.segmento}</p>
+                <div className={styles["distribuidor-segment-progress-bar"]}>
+                  <div
+                    className={styles["distribuidor-segment-progress-fill"]}
+                    style={{ width: `${segmento.percentual}%` }}
+                  ></div>
+                </div>
+                <p className={styles["distribuidor-segment-value"]}>
+                  {segmento.quantidade} ({segmento.percentual}%)
+                </p>
+              </div>
+            ))
+          ) : (
+            <div style={{ textAlign: 'center', padding: '1rem', color: '#666' }}>
+              <p>Nenhuma peça encontrada</p>
             </div>
-            <p className={styles["distribuidor-segment-value"]}>1 (25%)</p>
-          </div>
-
-          <div className={styles["distribuidor-segment-item"]}>
-            <p className={styles["distribuidor-segment-label"]}>Automotivo</p>
-            <div className={styles["distribuidor-segment-progress-bar"]}>
-              <div
-                className={styles["distribuidor-segment-progress-fill"]}
-                style={{ width: "25%" }}
-              ></div>
-            </div>
-            <p className={styles["distribuidor-segment-value"]}>1 (25%)</p>
-          </div>
-
-          <div className={styles["distribuidor-segment-item"]}>
-            <p className={styles["distribuidor-segment-label"]}>Informática</p>
-            <div className={styles["distribuidor-segment-progress-bar"]}>
-              <div
-                className={styles["distribuidor-segment-progress-fill"]}
-                style={{ width: "25%" }}
-              ></div>
-            </div>
-            <p className={styles["distribuidor-segment-value"]}>1 (25%)</p>
-          </div>
-
-          <div className={styles["distribuidor-segment-item"]}>
-            <p className={styles["distribuidor-segment-label"]}>
-              Eletrodomésticos
-            </p>
-            <div className={styles["distribuidor-segment-progress-bar"]}>
-              <div
-                className={styles["distribuidor-segment-progress-fill"]}
-                style={{ width: "25%" }}
-              ></div>
-            </div>
-            <p className={styles["distribuidor-segment-value"]}>1 (25%)</p>
-          </div>
+          )}
         </div>
       </div>
 
       {/* Seção Painel de Controle - Entregas de Peças */}
       <div className={styles["distribuidor-control-panel-section"]}>
         <h3 className={styles["distribuidor-control-panel-title"]}>
-          Painel de Controle - Entregas de Peças
+          Painel de Controle - Entregas
         </h3>
         <p className={styles["distribuidor-control-panel-subtitle"]}>
           Gerencie pedidos e gere códigos para entregadores

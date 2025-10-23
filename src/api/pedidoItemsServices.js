@@ -1,4 +1,5 @@
 import api from './api';
+import logger from '../utils/logger';
 
 /**
  * Serviço de Itens de Pedido - Nível 3 da hierarquia
@@ -23,7 +24,7 @@ export const getPedidoItems = async () => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Buscando todos os itens de pedidos');
+    logger.info('📡 Buscando todos os itens de pedidos');
 
     const response = await api.get('/api/PedidoItems', {
       headers: {
@@ -31,14 +32,14 @@ export const getPedidoItems = async () => {
       }
     });
 
-    console.log('✅ Itens de pedidos recebidos:', response.data);
+    logger.info('✅ Itens de pedidos recebidos:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao buscar itens de pedidos:', error);
+    logger.error('❌ Erro ao buscar itens de pedidos:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
     }
 
     throw error;
@@ -59,7 +60,7 @@ export const getPedidoItemPorId = async (id) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Buscando item de pedido:', id);
+    logger.info('📡 Buscando item de pedido:', id);
 
     const response = await api.get(`/api/PedidoItems/${id}`, {
       headers: {
@@ -67,13 +68,13 @@ export const getPedidoItemPorId = async (id) => {
       }
     });
 
-    console.log('✅ Item de pedido encontrado:', response.data);
+    logger.info('✅ Item de pedido encontrado:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao buscar item de pedido ${id}:`, error);
+    logger.error(`❌ Erro ao buscar item de pedido ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Item de pedido não encontrado.');
@@ -98,7 +99,7 @@ export const getPedidoItemsPorPedido = async (idPedido) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Buscando itens do pedido:', idPedido);
+    logger.info('📡 Buscando itens do pedido:', idPedido);
 
     const response = await api.get(`/api/PedidoItems/pedido/${idPedido}`, {
       headers: {
@@ -106,16 +107,16 @@ export const getPedidoItemsPorPedido = async (idPedido) => {
       }
     });
 
-    console.log(`✅ ${response.data.length} itens encontrados para o pedido ${idPedido}`);
+    logger.info(`✅ ${response.data.length} itens encontrados para o pedido ${idPedido}`);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao buscar itens do pedido ${idPedido}:`, error);
+    logger.error(`❌ Erro ao buscar itens do pedido ${idPedido}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
-        console.warn(`⚠️ Nenhum item encontrado para o pedido ${idPedido}`);
+        logger.warn(`⚠️ Nenhum item encontrado para o pedido ${idPedido}`);
         return []; // Retorna array vazio se não encontrar itens
       }
     }
@@ -193,7 +194,7 @@ export const createPedidoItem = async (dadosItem) => {
       situacaoRegistro: 'ATIVO'
     };
 
-    console.log('📡 Criando novo item de pedido:', payload);
+    logger.info('📡 Criando novo item de pedido:', payload);
 
     const response = await api.post('/api/PedidoItems', payload, {
       headers: {
@@ -202,14 +203,14 @@ export const createPedidoItem = async (dadosItem) => {
       }
     });
 
-    console.log('✅ Item de pedido criado com sucesso:', response.data);
+    logger.info('✅ Item de pedido criado com sucesso:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Erro ao criar item de pedido:', error);
+    logger.error('❌ Erro ao criar item de pedido:', error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
-      console.error('Dados:', error.response.data);
+      logger.error('Status:', error.response.status);
+      logger.error('Dados:', error.response.data);
 
       if (error.response.data?.details) {
         throw new Error(`Erro de validação: ${JSON.stringify(error.response.data.details)}`);
@@ -241,7 +242,7 @@ export const createMultiplosPedidoItems = async (idPedido, produtos) => {
   const itensCriados = [];
   const erros = [];
 
-  console.log(`📦 Criando ${produtos.length} itens para o pedido ${idPedido}`);
+  logger.info(`📦 Criando ${produtos.length} itens para o pedido ${idPedido}`);
 
   for (let i = 0; i < produtos.length; i++) {
     const produto = produtos[i];
@@ -257,9 +258,9 @@ export const createMultiplosPedidoItems = async (idPedido, produtos) => {
       });
 
       itensCriados.push(itemCriado);
-      console.log(`✅ Item ${i + 1}/${produtos.length} criado: ${produto.nome}`);
+      logger.info(`✅ Item ${i + 1}/${produtos.length} criado: ${produto.nome}`);
     } catch (error) {
-      console.error(`❌ Erro ao criar item ${i + 1}/${produtos.length}:`, error);
+      logger.error(`❌ Erro ao criar item ${i + 1}/${produtos.length}:`, error);
       erros.push({
         produto,
         erro: error.message
@@ -268,10 +269,10 @@ export const createMultiplosPedidoItems = async (idPedido, produtos) => {
   }
 
   if (erros.length > 0) {
-    console.warn(`⚠️ ${erros.length} erro(s) ao criar itens:`, erros);
+    logger.warn(`⚠️ ${erros.length} erro(s) ao criar itens:`, erros);
   }
 
-  console.log(`✅ Total de ${itensCriados.length}/${produtos.length} itens criados com sucesso`);
+  logger.info(`✅ Total de ${itensCriados.length}/${produtos.length} itens criados com sucesso`);
 
   return {
     itensCriados,
@@ -300,7 +301,7 @@ export const updatePedidoItem = async (id, dadosItem) => {
       ...dadosItem
     };
 
-    console.log('📡 Atualizando item de pedido:', id, payload);
+    logger.info('📡 Atualizando item de pedido:', id, payload);
 
     const response = await api.put(`/api/PedidoItems/${id}`, payload, {
       headers: {
@@ -309,13 +310,13 @@ export const updatePedidoItem = async (id, dadosItem) => {
       }
     });
 
-    console.log('✅ Item de pedido atualizado:', response.data);
+    logger.info('✅ Item de pedido atualizado:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao atualizar item de pedido ${id}:`, error);
+    logger.error(`❌ Erro ao atualizar item de pedido ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Item de pedido não encontrado.');
@@ -342,7 +343,7 @@ export const deletePedidoItem = async (id) => {
       throw new Error('Usuário não autenticado. Faça login novamente.');
     }
 
-    console.log('📡 Excluindo item de pedido:', id);
+    logger.info('📡 Excluindo item de pedido:', id);
 
     const response = await api.delete(`/api/PedidoItems/${id}`, {
       headers: {
@@ -350,13 +351,13 @@ export const deletePedidoItem = async (id) => {
       }
     });
 
-    console.log('✅ Item de pedido excluído:', response.data);
+    logger.info('✅ Item de pedido excluído:', response.data);
     return response.data;
   } catch (error) {
-    console.error(`❌ Erro ao excluir item de pedido ${id}:`, error);
+    logger.error(`❌ Erro ao excluir item de pedido ${id}:`, error);
 
     if (error.response) {
-      console.error('Status:', error.response.status);
+      logger.error('Status:', error.response.status);
 
       if (error.response.status === 404) {
         throw new Error('Item de pedido não encontrado.');

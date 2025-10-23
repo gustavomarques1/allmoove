@@ -14,10 +14,11 @@
 .header h1 {
   margin: 10px 0 5px;
   font-size: 1.8rem;
-  color: #16a34a; /* COR DO TÍTULO ALTERADA PARA VERDE */
+  color: #18304C; /* Azul AllMoove */
 }
 .header p {
-  color: #333; /* COR DO TEXTO ALTERADA */
+  color: #18304C; /* Azul AllMoove */
+  opacity: 0.8; /* Leve opacidade */
   font-size: 1rem;
 }
 .successIcon {
@@ -44,8 +45,23 @@
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.2s;
 }
 .actionButton:hover { opacity: 0.9; }
-.primary { background-color: #16a34a; color: white; border: none; }
-.secondary { background-color: white; color: #333; border: 1px solid #ccc; }
+
+/* VERSÃO FINAL: Background Laranja + Texto Branco (Cores Oficiais AllMoove) */
+.primaryAllmoove {
+  background-color: #FF3600 !important;
+  color: #F0F4EE !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+.primaryAllmoove:hover {
+  background-color: #E63000 !important;
+}
+
+.secondary {
+  background-color: white;
+  color: #18304C; /* Azul AllMoove */
+  border: 1px solid #ccc;
+}
