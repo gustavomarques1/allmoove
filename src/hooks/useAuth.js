@@ -127,10 +127,32 @@ export const useAuth = () => {
 
           const idPessoa = pessoa.id || pessoa.Id;
           const nomePessoa = pessoa.nome || pessoa.Nome || email;
+          const cpfCnpj = pessoa.cpfCnpj || pessoa.CpfCnpj;
 
           localStorage.setItem('idPessoa', idPessoa.toString());
           localStorage.setItem('userRole', role);
           localStorage.setItem('userName', nomePessoa);
+
+          // 🔧 SE for DISTRIBUIDOR, busca o idDistribuidor e salva no localStorage
+          if (role === 'DISTRIBUIDOR' && cpfCnpj) {
+            logger.info('🔍 Usuário é DISTRIBUIDOR, buscando idDistribuidor...');
+
+            try {
+              // Importa dinamicamente para evitar dependência circular
+              const { getDistribuidorIdByCpfCnpj } = await import('../api/distribuidorServices');
+              const idDistribuidor = await getDistribuidorIdByCpfCnpj(cpfCnpj);
+
+              if (idDistribuidor) {
+                localStorage.setItem('idDistribuidor', idDistribuidor.toString());
+                logger.info('✅ idDistribuidor salvo:', idDistribuidor);
+              } else {
+                logger.warn('⚠️ Não foi possível encontrar idDistribuidor para este usuário');
+              }
+            } catch (distribError) {
+              logger.error('❌ Erro ao buscar idDistribuidor:', distribError);
+              // Continua o login mesmo sem o idDistribuidor (fallback)
+            }
+          }
 
           setUserId(idPessoa);
           setUserRole(role);
@@ -211,6 +233,7 @@ export const useAuth = () => {
     localStorage.removeItem('expiration');
     localStorage.removeItem('email');
     localStorage.removeItem('idPessoa');
+    localStorage.removeItem('idDistribuidor'); // 🔧 Remove idDistribuidor
     localStorage.removeItem('userRole');
     localStorage.removeItem('userName');
 

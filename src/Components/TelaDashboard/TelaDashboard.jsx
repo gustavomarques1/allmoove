@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import styles from "./TelaDashboard.module.css";
 import logger from "../../utils/logger";
-import { Package, CheckCircle, Clock, AlertCircle, Loader, ChevronDown, ChevronUp, ShoppingBag, Plus, Truck, X, RefreshCw, Sparkles } from "lucide-react";
+import { Package, CheckCircle, Clock, AlertCircle, ChevronDown, ChevronUp, ShoppingBag, Plus, Truck, X, RefreshCw, Sparkles } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { usePedidos } from "../../hooks/usePedidos";
 import BuscaSegmentada from "../TelaDashboard/BuscaSegmentada/BuscaSegmentada";
 import Button from "../Shared/Button/Button";
 import Logo from "../Shared/Logo/Logo";
+import Loader from "../Shared/Loader/Loader";
 import SkeletonCard from "./SkeletonCard/SkeletonCard";
 // QuickActions removido - redundante com BuscaSegmentada
 import StatsCards from "./StatsCards/StatsCards";
@@ -191,8 +192,7 @@ function TelaDashboard() {
               </span>
               {searchTerm !== debouncedSearchTerm && (
                 <span className={styles["search-loading"]} aria-live="polite">
-                  <Loader size={14} className={styles["spinner-small"]} aria-hidden="true" />
-                  <span className="sr-only">Buscando...</span>
+                  <Loader size="sm" variant="primary" />
                 </span>
               )}
             </div>
@@ -242,8 +242,7 @@ function TelaDashboard() {
 
         {isLoading ? (
           <div className={styles["orders-mid"]}>
-            <Loader className={styles["spinner"]} />
-            <p>Carregando pedidos...</p>
+            <Loader size="lg" variant="primary" text="Carregando pedidos..." />
           </div>
         ) : error ? (
           <div className={styles["orders-mid"]}>

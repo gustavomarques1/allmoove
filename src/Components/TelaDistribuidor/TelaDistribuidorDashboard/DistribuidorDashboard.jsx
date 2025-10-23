@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { usePedidosDistribuidor } from "../../../hooks/usePedidosDistribuidor";
 import { updateStatusPedido } from "../../../api/pedidosServices";
 import formatCurrency from "../../../utils/formatCurrency";
+import Loader from "../../Shared/Loader/Loader";
 
 function DistribuidorDashboard() {
   const navigate = useNavigate();
@@ -242,7 +243,7 @@ function DistribuidorDashboard() {
         {/* Loading */}
         {isLoading && (
           <div style={{ textAlign: 'center', padding: '2rem' }}>
-            <p>Carregando pedidos...</p>
+            <Loader size="lg" variant="primary" text="Carregando pedidos..." />
           </div>
         )}
 

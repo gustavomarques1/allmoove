@@ -4,6 +4,7 @@ import { ArrowLeft, Package, AlertTriangle, DollarSign, Plus, Edit2, Trash2, Sea
 import logger from '../../../utils/logger';
 import Button from '../../Shared/Button/Button';
 import Logo from '../../Shared/Logo/Logo';
+import Loader from '../../Shared/Loader/Loader';
 import ModalCadastrarProduto from './ModalCadastrarProduto';
 import ModalEditarProduto from './ModalEditarProduto';
 import styles from './TelaEstoque.module.css';
@@ -162,8 +163,7 @@ function TelaEstoque() {
       {/* Loading State */}
       {isLoading && (
         <div style={{ textAlign: 'center', padding: '3rem' }}>
-          <Package size={48} style={{ color: '#ccc', marginBottom: '1rem' }} />
-          <p style={{ fontSize: '1.1rem', color: '#666' }}>Carregando estoque...</p>
+          <Loader size="xl" variant="primary" text="Carregando estoque..." />
         </div>
       )}
 

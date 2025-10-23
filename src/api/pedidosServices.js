@@ -21,7 +21,13 @@ import logger from '../utils/logger';
 export const getPedidosDoDistribuidor = async (idDistribuidor = null) => {
   try {
     const token = localStorage.getItem('token');
-    const id = idDistribuidor || localStorage.getItem('idPessoa');
+
+    // 🔧 IMPORTANTE: Prioriza idDistribuidor do localStorage, depois idPessoa
+    // O idDistribuidor é o ID correto da tabela DISTRIBUIDORES
+    // O idPessoa pode ser o ID da tabela PESSOAS (não é o mesmo!)
+    const id = idDistribuidor
+      || localStorage.getItem('idDistribuidor')
+      || localStorage.getItem('idPessoa');
 
     if (!token || !id) {
       logger.warn('⚠️ Token ou ID não encontrado. Token:', !!token, 'ID:', id);
@@ -29,6 +35,7 @@ export const getPedidosDoDistribuidor = async (idDistribuidor = null) => {
     }
 
     logger.info('📡 Buscando pedidos do distribuidor ID:', id);
+    logger.debug('🔐 Usando idDistribuidor:', localStorage.getItem('idDistribuidor'), 'ou idPessoa:', localStorage.getItem('idPessoa'));
 
     const response = await api.get(`/api/Pedidos/distribuidor/${id}`, {
       headers: {
