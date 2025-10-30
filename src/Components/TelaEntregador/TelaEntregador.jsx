@@ -10,17 +10,21 @@ import styles from "./TelaEntregador.module.css";
  * - Visualizar entregas atribuídas
  * - Atualizar status de entregas
  * - Visualizar histórico de entregas
+ * - Visualizar entregas disponíveis para aceitar
  */
 function TelaEntregador() {
   const { userName, userId } = useAuth();
   const [entregas, setEntregas] = useState([]);
+  const [entregasRecentes, setEntregasRecentes] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // TODO: Buscar entregas do backend quando endpoint estiver disponível
     // GET /api/pedidos/entregador/{idEntregador}
+    // GET /api/entregas/disponiveis/{idEntregador}
+    // GET /api/entregas/recentes/{idEntregador}
 
-    // Mock de dados para desenvolvimento
+    // Mock de dados para desenvolvimento - Entregas atribuídas
     const mockEntregas = [
       {
         id: 1,
@@ -31,21 +35,40 @@ function TelaEntregador() {
         status: 'PENDENTE',
         dataColeta: null,
         dataEntrega: null
+      }
+    ];
+
+    // Mock de entregas recentes
+    const mockRecentes = [
+      {
+        id: 101,
+        destino: 'SmartFix Assistência',
+        urgencia: 'Urgente',
+        distancia: 7.2,
+        valor: 88.00,
+        dataEntrega: '2025-10-29T14:30:00'
       },
       {
-        id: 2,
-        codigo: 'M8234X2',
-        assistencia: 'TechFix Assistência',
-        distribuidor: 'Distribuidora XYZ',
-        endereco: 'Av. Principal, 456 - Bairro Norte',
-        status: 'EM_TRANSITO',
-        dataColeta: '2025-10-11T10:30:00',
-        dataEntrega: null
+        id: 102,
+        destino: 'TecnoRepair Center',
+        urgencia: 'Normal',
+        distancia: 9.1,
+        valor: 72.50,
+        dataEntrega: '2025-10-29T11:15:00'
+      },
+      {
+        id: 103,
+        destino: 'Cell Express',
+        urgencia: 'Expressa',
+        distancia: 15.4,
+        valor: 110.00,
+        dataEntrega: '2025-10-28T16:45:00'
       }
     ];
 
     setTimeout(() => {
       setEntregas(mockEntregas);
+      setEntregasRecentes(mockRecentes);
       setLoading(false);
     }, 500);
   }, [userId]);
@@ -68,6 +91,28 @@ function TelaEntregador() {
     );
   };
 
+  const getUrgenciaBadge = (urgencia) => {
+    const urgenciaConfig = {
+      'Urgente': { color: '#FFA726', bg: '#FFF3E0' },
+      'Normal': { color: '#5C6BC0', bg: '#E8EAF6' },
+      'Expressa': { color: '#EF5350', bg: '#FFEBEE' }
+    };
+
+    const config = urgenciaConfig[urgencia] || urgenciaConfig.Normal;
+
+    return (
+      <span
+        className={styles.urgenciaBadge}
+        style={{
+          color: config.color,
+          backgroundColor: config.bg
+        }}
+      >
+        {urgencia}
+      </span>
+    );
+  };
+
   if (loading) {
     return (
       <div className={styles.loading}>
@@ -77,14 +122,25 @@ function TelaEntregador() {
     );
   }
 
+  const getSaudacao = () => {
+    const hora = new Date().getHours();
+    if (hora < 12) return 'Bom dia';
+    if (hora < 18) return 'Boa tarde';
+    return 'Boa noite';
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <Truck size={32} className={styles.headerIcon} />
           <div>
-            <h1 className={styles.title}>Dashboard do Entregador</h1>
-            <p className={styles.subtitle}>Bem-vindo, {userName || 'Entregador'}!</p>
+            <h1 className={styles.title}>
+              {getSaudacao()}, <span className={styles.userName}>Entregador parceiro!</span>
+            </h1>
+            <p className={styles.subtitle}>
+              Gerencie suas entregas e rotas de forma eficiente
+            </p>
           </div>
         </div>
       </header>
@@ -195,13 +251,42 @@ function TelaEntregador() {
         )}
       </section>
 
-      <div className={styles.infoBox}>
-        <p>
-          <strong>Nota:</strong> Esta é uma versão inicial do dashboard do entregador.
-          As funcionalidades de atualização de status serão implementadas assim que
-          os endpoints do backend estiverem disponíveis.
-        </p>
-      </div>
+      {/* Seção: Entregas Recentes */}
+      <section className={styles.section}>
+        <div className={styles.headerSection}>
+          <h2 className={styles.pageTitle}>Entregas Recentes</h2>
+          <p className={styles.pageSubtitle}>Histórico de entregas concluídas</p>
+        </div>
+
+        <div className={styles.entregasDisponiveisList}>
+          {entregasRecentes.length === 0 ? (
+            <div className={styles.emptyState}>
+              <Package size={64} />
+              <p>Nenhuma entrega recente</p>
+            </div>
+          ) : (
+            entregasRecentes.map((entrega) => (
+              <div key={entrega.id} className={styles.entregaDisponivelCard}>
+                <div className={styles.entregaIcon}>
+                  <Package size={24} />
+                </div>
+
+                <div className={styles.entregaInfo}>
+                  <h3 className={styles.entregaDestino}>{entrega.destino}</h3>
+                  <div className={styles.entregaMeta}>
+                    {getUrgenciaBadge(entrega.urgencia)}
+                    <span className={styles.distancia}>{entrega.distancia} km</span>
+                  </div>
+                </div>
+
+                <div className={styles.entregaValor}>
+                  R$ {entrega.valor.toFixed(2).replace('.', ',')}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </section>
     </div>
   );
 }

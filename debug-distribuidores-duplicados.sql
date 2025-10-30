@@ -1,0 +1,108 @@
+-- ========================================
+-- DEBUG: Verificar problema de distribuidores duplicados
+-- ========================================
+
+USE allmoove;
+GO
+
+-- 1. Ver todas as pessoas do tipo DISTRIBUIDOR
+PRINT '👥 PESSOAS DO TIPO DISTRIBUIDOR:';
+PRINT '';
+GO
+
+SELECT
+    ID as ID_PESSOA,
+    NOME,
+    LOGIN,
+    CPFCNPJ,
+    TIPO,
+    SITUACAO_REGISTRO
+FROM dbo.PESSOA
+WHERE TIPO = 'DISTRIBUIDOR'
+  AND SITUACAO_REGISTRO = 'ATIVO'
+ORDER BY ID;
+GO
+
+-- 2. Ver tabela DISTRIBUIDORES (se existir) e relacionamento
+PRINT '';
+PRINT '🏪 TABELA DISTRIBUIDORES (se existir):';
+PRINT '';
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DISTRIBUIDORES')
+BEGIN
+    SELECT
+        D.ID as ID_DISTRIBUIDOR,
+        D.ID_PESSOA,
+        P.NOME,
+        P.LOGIN,
+        P.CPFCNPJ,
+        P.TIPO
+    FROM dbo.DISTRIBUIDORES D
+    INNER JOIN dbo.PESSOA P ON D.ID_PESSOA = P.ID
+    WHERE P.SITUACAO_REGISTRO = 'ATIVO'
+    ORDER BY D.ID;
+END
+ELSE
+BEGIN
+    PRINT '⚠️ Tabela DISTRIBUIDORES não existe!';
+    PRINT 'Nesse caso, o ID_PESSOA é usado como ID_DISTRIBUIDOR';
+END
+GO
+
+-- 3. Ver dados do endpoint /api/Distribuidor/consulta (VIEW_DISTRIBUIDOR_CONSULTA)
+PRINT '';
+PRINT '📊 VIEW_DISTRIBUIDOR_CONSULTA (endpoint /api/Distribuidor/consulta):';
+PRINT '';
+GO
+
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.VIEWS WHERE TABLE_NAME = 'VIEW_DISTRIBUIDOR_CONSULTA')
+BEGIN
+    SELECT * FROM dbo.VIEW_DISTRIBUIDOR_CONSULTA
+    ORDER BY IdDistribuidor;
+END
+ELSE
+BEGIN
+    PRINT '⚠️ View VIEW_DISTRIBUIDOR_CONSULTA não existe!';
+END
+GO
+
+-- 4. Verificar se há CPF/CNPJ duplicados
+PRINT '';
+PRINT '⚠️ VERIFICANDO CPF/CNPJ DUPLICADOS:';
+PRINT '';
+GO
+
+SELECT
+    CPFCNPJ,
+    COUNT(*) as QUANTIDADE,
+    STRING_AGG(CAST(ID AS VARCHAR), ', ') as IDS_PESSOAS
+FROM dbo.PESSOA
+WHERE TIPO = 'DISTRIBUIDOR'
+  AND SITUACAO_REGISTRO = 'ATIVO'
+  AND CPFCNPJ IS NOT NULL
+GROUP BY CPFCNPJ
+HAVING COUNT(*) > 1;
+GO
+
+-- 5. Ver quantidade total
+PRINT '';
+PRINT '📊 RESUMO:';
+GO
+
+SELECT
+    'Total PESSOA DISTRIBUIDOR' as Tipo,
+    COUNT(*) as Total
+FROM dbo.PESSOA
+WHERE TIPO = 'DISTRIBUIDOR'
+  AND SITUACAO_REGISTRO = 'ATIVO'
+
+UNION ALL
+
+SELECT
+    'Total DISTRIBUIDORES (tabela)' as Tipo,
+    COUNT(*) as Total
+FROM dbo.DISTRIBUIDORES D
+INNER JOIN dbo.PESSOA P ON D.ID_PESSOA = P.ID
+WHERE P.SITUACAO_REGISTRO = 'ATIVO';
+GO

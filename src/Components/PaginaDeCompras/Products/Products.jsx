@@ -59,17 +59,39 @@ function Products() {
       const idSegmentoQuery = searchParams.get('idSegmento');
       const idDistribuidorQuery = searchParams.get('idDistribuidor');
 
+      // Mapeamento de idSegmento → categoria (para compatibilidade com JSON local)
+      const segmentoCategoriaMap = {
+        1: 'celulares',
+        2: 'notebooks',
+        3: 'telas',
+        4: 'acessorios',
+        5: 'display',
+        6: 'audio',
+        7: 'energia'
+      };
+
       // 1. Busca TODOS os produtos
       let fetchedProducts = await fetchProducts('');
 
       // 2. Filtra por idSegmento se especificado
       if (idSegmentoQuery) {
         const idSegmento = parseInt(idSegmentoQuery);
-        fetchedProducts = fetchedProducts.filter(
-          product => product.idSegmento === idSegmento
-        );
+        const categoriaNome = segmentoCategoriaMap[idSegmento];
 
-        logger.info(`📊 Filtrado por idSegmento ${idSegmento}:`, fetchedProducts.length, 'produtos');
+        // Tenta filtrar por idSegmento (API) OU categoria (JSON local)
+        fetchedProducts = fetchedProducts.filter(product => {
+          // Se produto tem idSegmento (vindo da API)
+          if (product.idSegmento !== undefined) {
+            return product.idSegmento === idSegmento;
+          }
+          // Se produto tem categoria (vindo do JSON local)
+          if (product.categoria && categoriaNome) {
+            return product.categoria.toLowerCase() === categoriaNome.toLowerCase();
+          }
+          return false;
+        });
+
+        logger.info(`📊 Filtrado por idSegmento ${idSegmento} (${categoriaNome}):`, fetchedProducts.length, 'produtos');
       }
 
       // 3. Filtra por idDistribuidor se especificado

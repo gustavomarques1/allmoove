@@ -1,0 +1,22 @@
+{
+  "name": "allmoove-api-tests",
+  "version": "1.0.0",
+  "description": "Testes automatizados para APIs do AllMoove",
+  "type": "module",
+  "scripts": {
+    "test": "node run-all-tests.js",
+    "test:auth": "node -e \"import('./auth.test.js').then(m => m.testLogin())\"",
+    "test:pedidos": "node -e \"import('./auth.test.js').then(m => m.testLogin()).then(token => import('./pedidos.test.js').then(p => p.testPedidos(token)))\"",
+    "test:produtos": "node -e \"import('./produtos.test.js').then(m => m.testProdutos())\""
+  },
+  "keywords": [
+    "api",
+    "testing",
+    "allmoove"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}

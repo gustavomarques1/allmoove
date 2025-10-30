@@ -8,6 +8,7 @@ import TelaEstoque from "./Components/TelaDistribuidor/TelaEstoque/TelaEstoque";
 import TelaEntrega from "./Components/TelaEntrega/TelaEntrega";
 import TelaPagamento from "./Components/TelaCheckout/TelaPagamento";
 import TelaConfirmacao from "./Components/TelaPagamentoConfirmado/TelaConfirmacao";
+import TesteProdutos from "./Components/TesteProdutos/TesteProdutos";
 import Layout from "./Components/Shared/Layout/Layout";
 // import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 // import NaoAutorizado from "./Components/NaoAutorizado/NaoAutorizado";
@@ -94,6 +95,9 @@ function App() {
             </Layout>
           }
         />
+
+        {/* ===== ROTA DE TESTE API (sem Navbar) ===== */}
+        <Route path="/teste-produtos" element={<TesteProdutos />} />
 
       </Routes>
     </Router>

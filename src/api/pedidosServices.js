@@ -253,16 +253,13 @@ export const updateStatusPedido = async (id, novoStatus, observacao = '') => {
 
     logger.info('📡 Atualizando status do pedido:', { id, novoStatus, observacao });
 
+    // ✅ CORRIGIDO: Usar endpoint correto do backend
     const response = await api.put(
-      `/api/Pedidos/${id}/status`,
-      {
-        novoStatus,
-        observacao
-      },
+      `/api/Pedidos/setsituacao/${id}?codigo=${encodeURIComponent(novoStatus)}`,
+      {},
       {
         headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          Authorization: `Bearer ${token}`
         }
       }
     );

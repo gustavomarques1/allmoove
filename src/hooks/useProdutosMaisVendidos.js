@@ -10,10 +10,21 @@ import logger from '../utils/logger';
  */
 export const useProdutosMaisVendidos = (topN = 10, idSegmento = null) => {
   const [produtosMaisVendidos, setProdutosMaisVendidos] = useState(new Set());
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // 🚫 DESABILITADO TEMPORARIAMENTE: Endpoints de pedidos não estão funcionando
+    // Quando os endpoints /api/Pedidos e /api/PedidoItems estiverem prontos, remova este return
+
+    logger.info('⚠️ Hook useProdutosMaisVendidos DESABILITADO - aguardando implementação dos endpoints de pedidos');
+    setProdutosMaisVendidos(new Set()); // Retorna Set vazio
+    setIsLoading(false);
+    setError(null);
+    return;
+
+    // CÓDIGO COMENTADO ATÉ QUE OS ENDPOINTS ESTEJAM PRONTOS:
+    /*
     const calcularProdutosMaisVendidos = async () => {
       try {
         setIsLoading(true);
@@ -22,12 +33,12 @@ export const useProdutosMaisVendidos = (topN = 10, idSegmento = null) => {
         const token = localStorage.getItem('token');
 
         if (!token) {
-          logger.warn('⚠️ Token não encontrado');
+          logger.warn('⚠️ Token não encontrado - funcionalidade de produtos mais vendidos desabilitada');
           setIsLoading(false);
           return;
         }
 
-        logger.info('📊 Calculando produtos mais vendidos...', idSegmento ? `Segmento: ${idSegmento}` : 'TODOS os segmentos');
+        logger.info('📊 Tentando calcular produtos mais vendidos...');
 
         // 🌍 Busca TODOS os pedidos (globalmente)
         const pedidosResponse = await api.get('/api/Pedidos', {
@@ -105,14 +116,21 @@ export const useProdutosMaisVendidos = (topN = 10, idSegmento = null) => {
         setProdutosMaisVendidos(idsTopProdutos);
 
       } catch (err) {
-        logger.error('❌ Erro ao calcular produtos mais vendidos:', err);
-        setError(err.message || 'Erro ao carregar dados de vendas');
+        // ⚠️ MUDANÇA: Não loga erro se for 400/404 - endpoints podem não estar prontos
+        if (err.response?.status === 400 || err.response?.status === 404) {
+          logger.warn('⚠️ Endpoints de pedidos não disponíveis - funcionalidade de produtos mais vendidos desabilitada');
+        } else {
+          logger.error('❌ Erro ao calcular produtos mais vendidos:', err);
+        }
+        setError(null); // Não propaga erro para o componente
+        setProdutosMaisVendidos(new Set()); // Retorna Set vazio
       } finally {
         setIsLoading(false);
       }
     };
 
     calcularProdutosMaisVendidos();
+    */
   }, [topN, idSegmento]); // Re-calcula quando mudar topN ou idSegmento
 
   return {

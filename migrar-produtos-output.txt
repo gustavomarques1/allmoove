@@ -1,0 +1,17 @@
+Contexto do banco de dados alterado para 'allmoove'.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 28
+Nome de coluna 'CATEGORIA' inválido.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 28
+Nome de coluna 'FORNECEDOR' inválido.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 28
+Nome de coluna 'CATEGORIA' inválido.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 28
+Nome de coluna 'FORNECEDOR' inválido.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 227
+Nome de coluna 'FORNECEDOR' inválido.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 222
+Nome de coluna 'FORNECEDOR' inválido.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 249
+Nome de coluna 'CATEGORIA' inválido.
+Mensagem 207, Nível 16, Estado 1, Servidor DESKTOP-8KVURGT\MSSQLSERVER01, Linha 245
+Nome de coluna 'CATEGORIA' inválido.

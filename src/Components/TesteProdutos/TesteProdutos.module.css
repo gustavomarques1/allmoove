@@ -1,0 +1,384 @@
+/* ========================================
+   Teste API Produtos - AllMoove Design System
+   Cores: #FF3600 (Laranja) | #18304C (Azul)
+   ======================================== */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  font-family: var(--font-primary);
+}
+
+/* Header */
+.header {
+  margin-bottom: 32px;
+  padding: 32px;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #18304C;
+  margin: 0 0 12px 0;
+}
+
+.header p {
+  font-size: 1rem;
+  color: #18304C;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Botões de Ação */
+.actions {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.actions button {
+  padding: 14px 24px;
+  background: #FF3600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 200px;
+}
+
+.actions button:hover:not(:disabled) {
+  background: #e63000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.4);
+}
+
+.actions button:active:not(:disabled) {
+  background: #cc2b00;
+  transform: translateY(0);
+}
+
+.actions button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #FF3600;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading p {
+  font-size: 1rem;
+  color: #18304C;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* Erro State */
+.erro {
+  background: #fef2f2;
+  border: 2px solid #ef4444;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.15);
+}
+
+.erro h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #991b1b;
+  margin: 0 0 12px 0;
+}
+
+.erro p {
+  font-size: 1rem;
+  color: #991b1b;
+  margin: 0;
+}
+
+/* Resultado */
+.resultado {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.resultado h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #10B981;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #10B981;
+}
+
+.resultado h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18304C;
+  margin: 32px 0 16px 0;
+}
+
+/* Info Box */
+.info {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border: 2px solid #3b82f6;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.info p {
+  margin: 0 0 8px 0;
+  font-size: 0.9375rem;
+  color: #18304C;
+  line-height: 1.6;
+}
+
+.info p:last-child {
+  margin-bottom: 0;
+}
+
+.info strong {
+  font-weight: 700;
+  color: #FF3600;
+}
+
+/* Campos (badges) */
+.campos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.campo {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #FF3600;
+  color: white;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+/* JSON Display */
+.json {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  font-family: 'Courier New', monospace;
+  line-height: 1.6;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+/* Table */
+.tableContainer {
+  overflow-x: auto;
+  margin: 16px 0;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.table thead {
+  background: #18304C;
+  color: white;
+}
+
+.table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9375rem;
+  color: #18304C;
+}
+
+.table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Badges de Status */
+.badgeSuccess {
+  display: inline-block;
+  padding: 4px 8px;
+  margin-left: 8px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badgeWarning {
+  display: inline-block;
+  padding: 4px 8px;
+  margin-left: 8px;
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Warning Message */
+.warning {
+  padding: 16px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  color: #92400e;
+  font-size: 1rem;
+  margin: 16px 0;
+}
+
+/* Details/Summary */
+details {
+  margin: 16px 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+summary {
+  padding: 16px;
+  background: #f8f9fa;
+  cursor: pointer;
+  font-weight: 600;
+  color: #18304C;
+  user-select: none;
+  transition: background 0.2s ease;
+}
+
+summary:hover {
+  background: #e5e7eb;
+}
+
+details[open] summary {
+  border-bottom: 1px solid #e5e7eb;
+  background: #18304C;
+  color: white;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px 16px;
+  }
+
+  .header {
+    padding: 24px;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
+  }
+
+  .resultado {
+    padding: 20px;
+  }
+
+  .resultado h2 {
+    font-size: 1.375rem;
+  }
+
+  .resultado h3 {
+    font-size: 1.125rem;
+  }
+
+  .tableContainer {
+    font-size: 0.8125rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 12px;
+  }
+
+  .header {
+    padding: 20px;
+  }
+
+  .header h1 {
+    font-size: 1.25rem;
+  }
+
+  .header p {
+    font-size: 0.875rem;
+  }
+
+  .resultado {
+    padding: 16px;
+  }
+}

@@ -129,22 +129,126 @@
   background: #f8f9fa !important;
 }
 
-/* Alert Box */
+/* Alert Box - Estoque Baixo */
 .alertBox {
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 8px;
-  padding: 16px 20px;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe8cc 100%);
+  border: 2px solid #FF3600;
+  border-radius: 16px;
+  padding: 24px;
   margin-bottom: 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #856404;
-  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.15);
+  animation: pulseAlert 2s ease-in-out infinite;
 }
 
-.alertBox svg {
+@keyframes pulseAlert {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(255, 54, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 6px 16px rgba(255, 54, 0, 0.25);
+  }
+}
+
+.alertHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.alertIcon {
   flex-shrink: 0;
+  color: #FF3600;
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.alertTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #18304C;
+  margin: 0 0 8px 0;
+}
+
+.alertMessage {
+  font-size: 14px;
+  color: #18304C;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.alertMessage strong {
+  color: #FF3600;
+  font-weight: 700;
+}
+
+.alertProducts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 54, 0, 0.2);
+}
+
+.alertProductItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #FF3600;
+  transition: all 0.2s ease;
+}
+
+.alertProductItem:hover {
+  transform: translateX(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alertProductInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alertProductName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #18304C;
+}
+
+.alertProductMarca {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.alertProductStatus {
+  flex-shrink: 0;
+}
+
+.statusBadgeSmall {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.alertMoreItems {
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  color: #FF3600;
+  font-weight: 600;
+  background: rgba(255, 54, 0, 0.05);
+  border-radius: 8px;
 }
 
 /* Filter Section */

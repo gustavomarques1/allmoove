@@ -16,6 +16,7 @@ import DetalhesPedido from '../TelaPagamentoConfirmado/DetalhesPedido/DetalhesPe
 // Importando services de pedidos (fluxo hierárquico)
 import { createPedido } from '../../api/pedidosServices';
 import { createPedidoGrupo, gerarCodigoTransacao } from '../../api/pedidoGruposServices';
+import { getDistribuidorIdPorNome } from '../../api/distribuidorServices';
 
 function TelaPagamento() {
   const navigate = useNavigate();
@@ -433,12 +434,23 @@ function TelaPagamento() {
         logger.info(`🚚 Frete: R$ ${valorFreteFornecedor.toFixed(2)}`);
         logger.info(`💳 Total: R$ ${totalPagoFornecedor.toFixed(2)}`);
 
-        // 🔹 3A. CRIAR PEDIDO + ITEMS (backend cria automaticamente)
+        // 🔹 3A. BUSCAR idDistribuidor pelo nome do fornecedor
+        logger.info(`\n🔍 Buscando idDistribuidor para: ${fornecedor}`);
+        const idDistribuidor = await getDistribuidorIdPorNome(fornecedor);
+
+        if (idDistribuidor) {
+          logger.info(`✅ idDistribuidor encontrado: ${idDistribuidor}`);
+        } else {
+          logger.warn(`⚠️ idDistribuidor não encontrado para "${fornecedor}". Pedido será criado sem vínculo ao distribuidor.`);
+        }
+
+        // 🔹 3B. CRIAR PEDIDO + ITEMS (backend cria automaticamente)
         logger.info(`\n🔹 Criando Pedido para ${fornecedor}...`);
 
         const dadosPedido = {
           idGrupoPedido: grupoId, // ⭐ VINCULA AO GRUPO
           idPessoa: parseInt(idPessoa),
+          idDistribuidor: idDistribuidor, // ⭐ VINCULA AO DISTRIBUIDOR
           valorFrete: valorFreteFornecedor,
           items: items // Backend cria os PedidoItems automaticamente
         };
@@ -476,6 +488,7 @@ function TelaPagamento() {
           localStorage.setItem(`pedido_${pedidoId}`, JSON.stringify({
             grupoId: grupoId,
             fornecedor: fornecedor,
+            idDistribuidor: idDistribuidor, // ⭐ Salva idDistribuidor no cache
             tipoEntrega: tipoEntrega,
             metodoPagamento: metodoPagamento,
             codigoEntrega: codigoEntrega,

@@ -1,0 +1,624 @@
+/* ========================================
+   SISTEMA DE CORES PARA STATUS DE PEDIDOS
+   AllMoove - Dashboard Distribuidor
+   ======================================== */
+
+/* ========================================
+   1. AGUARDANDO ACEITE - Laranja
+   Prioridade: MÁXIMA - Requer atenção imediata
+   ======================================== */
+
+.status-aguardando-aceite {
+  background: #FF3600;
+  color: #FFFFFF;
+  border: 2px solid #FF6B3D;
+  box-shadow: 0 2px 8px rgba(255, 54, 0, 0.15);
+}
+
+.status-aguardando-aceite-light {
+  background: #FFF4F0;
+  color: #C02900;
+  border: 2px solid #FFD4C4;
+}
+
+.status-aguardando-aceite-outline {
+  background: transparent;
+  color: #FF3600;
+  border: 2px solid #FF3600;
+}
+
+.status-aguardando-aceite-icon {
+  color: #FF3600;
+}
+
+/* Card com destaque aguardando aceite */
+.card-aguardando-aceite {
+  border-left: 4px solid #FF3600;
+  background: linear-gradient(to right, rgba(255, 54, 0, 0.05) 0%, transparent 100%);
+  box-shadow: 0 2px 8px rgba(255, 54, 0, 0.1);
+}
+
+.card-aguardando-aceite:hover {
+  background: linear-gradient(to right, rgba(255, 54, 0, 0.08) 0%, transparent 100%);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.15);
+}
+
+/* ========================================
+   2. ACEITO - Azul
+   Prioridade: ALTA - Processo iniciado
+   ======================================== */
+
+.status-aceito {
+  background: #3B82F6;
+  color: #FFFFFF;
+  border: 2px solid #60A5FA;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+}
+
+.status-aceito-light {
+  background: #EFF6FF;
+  color: #1E40AF;
+  border: 2px solid #BFDBFE;
+}
+
+.status-aceito-outline {
+  background: transparent;
+  color: #3B82F6;
+  border: 2px solid #3B82F6;
+}
+
+.status-aceito-icon {
+  color: #3B82F6;
+}
+
+.card-aceito {
+  border-left: 4px solid #3B82F6;
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+}
+
+.card-aceito:hover {
+  background: linear-gradient(to right, rgba(59, 130, 246, 0.08) 0%, transparent 100%);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+/* ========================================
+   3. EM SEPARAÇÃO - Roxo
+   Prioridade: MÉDIA-ALTA - Em processo ativo
+   ======================================== */
+
+.status-em-separacao {
+  background: #8B5CF6;
+  color: #FFFFFF;
+  border: 2px solid #A78BFA;
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.15);
+}
+
+.status-em-separacao-light {
+  background: #F5F3FF;
+  color: #6D28D9;
+  border: 2px solid #DDD6FE;
+}
+
+.status-em-separacao-outline {
+  background: transparent;
+  color: #8B5CF6;
+  border: 2px solid #8B5CF6;
+}
+
+.status-em-separacao-icon {
+  color: #8B5CF6;
+}
+
+.card-em-separacao {
+  border-left: 4px solid #8B5CF6;
+  background: linear-gradient(to right, rgba(139, 92, 246, 0.05) 0%, transparent 100%);
+}
+
+.card-em-separacao:hover {
+  background: linear-gradient(to right, rgba(139, 92, 246, 0.08) 0%, transparent 100%);
+  box-shadow: 0 2px 8px rgba(139, 92, 246, 0.1);
+}
+
+/* ========================================
+   4. AGUARDANDO RETIRADA - Âmbar
+   Prioridade: MÉDIA - Pronto para coleta
+   ======================================== */
+
+.status-aguardando-retirada {
+  background: #F59E0B;
+  color: #FFFFFF;
+  border: 2px solid #FBBF24;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+}
+
+.status-aguardando-retirada-light {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 2px solid #FDE68A;
+}
+
+.status-aguardando-retirada-outline {
+  background: transparent;
+  color: #F59E0B;
+  border: 2px solid #F59E0B;
+}
+
+.status-aguardando-retirada-icon {
+  color: #F59E0B;
+}
+
+.card-aguardando-retirada {
+  border-left: 4px solid #F59E0B;
+  background: linear-gradient(to right, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
+}
+
+.card-aguardando-retirada:hover {
+  background: linear-gradient(to right, rgba(245, 158, 11, 0.08) 0%, transparent 100%);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.1);
+}
+
+/* ========================================
+   5. EM TRÂNSITO / SAIU PARA ENTREGA - Ciano
+   Prioridade: MÉDIA-BAIXA - Em movimento
+   ======================================== */
+
+.status-em-transito {
+  background: #06B6D4;
+  color: #FFFFFF;
+  border: 2px solid #22D3EE;
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.15);
+}
+
+.status-em-transito-light {
+  background: #ECFEFF;
+  color: #0E7490;
+  border: 2px solid #A5F3FC;
+}
+
+.status-em-transito-outline {
+  background: transparent;
+  color: #06B6D4;
+  border: 2px solid #06B6D4;
+}
+
+.status-em-transito-icon {
+  color: #06B6D4;
+}
+
+.card-em-transito {
+  border-left: 4px solid #06B6D4;
+  background: linear-gradient(to right, rgba(6, 182, 212, 0.05) 0%, transparent 100%);
+}
+
+.card-em-transito:hover {
+  background: linear-gradient(to right, rgba(6, 182, 212, 0.08) 0%, transparent 100%);
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.1);
+}
+
+/* ========================================
+   6. ENTREGUE / CONCLUÍDO - Verde
+   Prioridade: BAIXA - Finalizado
+   ======================================== */
+
+.status-concluido {
+  background: #10B981;
+  color: #FFFFFF;
+  border: 2px solid #34D399;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+.status-concluido-light {
+  background: #F0FDF4;
+  color: #047857;
+  border: 2px solid #BBF7D0;
+}
+
+.status-concluido-outline {
+  background: transparent;
+  color: #10B981;
+  border: 2px solid #10B981;
+}
+
+.status-concluido-icon {
+  color: #10B981;
+}
+
+.card-concluido {
+  border-left: 4px solid #10B981;
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+}
+
+.card-concluido:hover {
+  background: linear-gradient(to right, rgba(16, 185, 129, 0.08) 0%, transparent 100%);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+}
+
+/* ========================================
+   BADGES/TAGS DE STATUS
+   ======================================== */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+/* Variantes de tamanho */
+.status-badge-sm {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+
+.status-badge-lg {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/* ========================================
+   INDICADORES DE PROGRESSO (Dots)
+   ======================================== */
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-dot-lg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Dots com pulse animation para status ativos */
+.status-dot-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Cores dos dots */
+.dot-aguardando-aceite {
+  background: #FF3600;
+  box-shadow: 0 0 0 3px rgba(255, 54, 0, 0.2);
+}
+
+.dot-aceito {
+  background: #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.dot-em-separacao {
+  background: #8B5CF6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+.dot-aguardando-retirada {
+  background: #F59E0B;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+.dot-em-transito {
+  background: #06B6D4;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+}
+
+.dot-concluido {
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+/* ========================================
+   TIMELINE DE PROGRESSO
+   ======================================== */
+
+.status-timeline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  position: relative;
+}
+
+.timeline-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  right: -50%;
+  height: 2px;
+  background: #e5e7eb;
+  z-index: -1;
+}
+
+.timeline-step.active:not(:last-child)::after {
+  background: linear-gradient(to right, currentColor 50%, #e5e7eb 50%);
+}
+
+.timeline-step.completed:not(:last-child)::after {
+  background: currentColor;
+}
+
+.timeline-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-step.active .timeline-dot {
+  width: 24px;
+  height: 24px;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.timeline-step.completed .timeline-dot {
+  background: #10B981;
+}
+
+.timeline-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  text-align: center;
+  max-width: 80px;
+}
+
+.timeline-step.active .timeline-label,
+.timeline-step.completed .timeline-label {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* ========================================
+   CONTADORES DE STATUS
+   ======================================== */
+
+.status-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.counter-aguardando-aceite {
+  background: #FF3600;
+  color: #FFFFFF;
+}
+
+.counter-aceito {
+  background: #3B82F6;
+  color: #FFFFFF;
+}
+
+.counter-em-separacao {
+  background: #8B5CF6;
+  color: #FFFFFF;
+}
+
+.counter-aguardando-retirada {
+  background: #F59E0B;
+  color: #FFFFFF;
+}
+
+.counter-em-transito {
+  background: #06B6D4;
+  color: #FFFFFF;
+}
+
+.counter-concluido {
+  background: #10B981;
+  color: #FFFFFF;
+}
+
+/* ========================================
+   ANIMAÇÕES DE TRANSIÇÃO
+   ======================================== */
+
+/* Fade in com slide */
+.status-fade-in {
+  animation: statusFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes statusFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bounce suave para novos pedidos */
+.status-bounce-in {
+  animation: statusBounceIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+@keyframes statusBounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-20px);
+  }
+  50% {
+    transform: scale(1.05) translateY(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Shake suave para chamar atenção */
+.status-shake {
+  animation: statusShake 0.5s ease-in-out;
+}
+
+@keyframes statusShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Glow effect para status urgentes */
+.status-glow {
+  animation: statusGlow 2s ease-in-out infinite;
+}
+
+@keyframes statusGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(255, 54, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 54, 0, 0.6);
+  }
+}
+
+/* ========================================
+   FILTROS DE STATUS (Botões)
+   ======================================== */
+
+.filter-btn-aguardando-aceite.active {
+  background: #FF3600;
+  border-color: #FF3600;
+  color: #FFFFFF;
+}
+
+.filter-btn-aceito.active {
+  background: #3B82F6;
+  border-color: #3B82F6;
+  color: #FFFFFF;
+}
+
+.filter-btn-em-separacao.active {
+  background: #8B5CF6;
+  border-color: #8B5CF6;
+  color: #FFFFFF;
+}
+
+.filter-btn-aguardando-retirada.active {
+  background: #F59E0B;
+  border-color: #F59E0B;
+  color: #FFFFFF;
+}
+
+.filter-btn-em-transito.active {
+  background: #06B6D4;
+  border-color: #06B6D4;
+  color: #FFFFFF;
+}
+
+.filter-btn-concluido.active {
+  background: #10B981;
+  border-color: #10B981;
+  color: #FFFFFF;
+}
+
+/* ========================================
+   ACESSIBILIDADE
+   ======================================== */
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .status-badge {
+    border-width: 3px;
+    font-weight: 700;
+  }
+
+  .status-dot {
+    border-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .status-badge,
+  .status-dot,
+  .timeline-dot,
+  .status-fade-in,
+  .status-bounce-in,
+  .status-shake,
+  .status-glow {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
+@media (max-width: 768px) {
+  .status-badge {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .status-timeline {
+    gap: 4px;
+  }
+
+  .timeline-label {
+    font-size: 10px;
+    max-width: 60px;
+  }
+
+  .timeline-dot {
+    width: 16px;
+    height: 16px;
+  }
+
+  .timeline-step.active .timeline-dot {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .status-badge {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .timeline-label {
+    display: none; /* Oculta labels em telas muito pequenas */
+  }
+}

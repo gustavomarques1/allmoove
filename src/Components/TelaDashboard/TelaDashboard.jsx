@@ -128,7 +128,7 @@ function TelaDashboard() {
         <div className={styles["dashboard-header"]}>
           <div className={styles["welcome-section"]}>
             <h1 className={styles["welcome-title"]}>
-              {getSaudacao()}, <span className={styles["user-name"]}>Assistência Parceira</span>!
+              {getSaudacao()}, <span className={styles["user-name"]}>Assistência Parceira!</span>
             </h1>
             <p className={styles["welcome-subtitle"]}>
               Veja o resumo dos seus pedidos e gerencie suas solicitações dos produtos

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Package, AlertTriangle, DollarSign, Plus, Edit2, Trash2, Search, Flame } from 'lucide-react';
 import logger from '../../../utils/logger';
@@ -26,6 +26,18 @@ function TelaEstoque() {
   const [modalCadastroAberto, setModalCadastroAberto] = useState(false);
   const [modalEdicaoAberto, setModalEdicaoAberto] = useState(false);
   const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+
+  // Log para debug dos produtos no estoque
+  useEffect(() => {
+    if (estoque && estoque.length > 0) {
+      logger.info('🛍️ Produtos no estoque:', estoque);
+      logger.info('📊 Primeiro produto detalhado:', {
+        produto: estoque[0],
+        valorUnitario: estoque[0]?.valorUnitario,
+        debug_precos: estoque[0]?._debug_precos
+      });
+    }
+  }, [estoque]);
 
   // Calcula métricas
   const totalItens = estoque.reduce((acc, item) => acc + item.quantidade, 0);
@@ -230,13 +242,41 @@ function TelaEstoque() {
         </div>
       </div>
 
-      {/* Alerta */}
+      {/* Alerta de Estoque Baixo */}
       {itensComAlerta > 0 && (
         <div className={styles.alertBox}>
-          <AlertTriangle size={20} />
-          <span>
-            Atenção: <strong>{itensComAlerta} item(ns)</strong> com estoque baixo ou zerado precisam de reposição.
-          </span>
+          <div className={styles.alertHeader}>
+            <AlertTriangle size={24} className={styles.alertIcon} />
+            <div>
+              <h3 className={styles.alertTitle}>Atenção: Estoque Baixo!</h3>
+              <p className={styles.alertMessage}>
+                <strong>{itensComAlerta} produto(s)</strong> com estoque baixo ou zerado precisam de reposição urgente.
+              </p>
+            </div>
+          </div>
+          <div className={styles.alertProducts}>
+            {estoque
+              .filter(item => item.status === 'estoque-baixo' || item.status === 'sem-estoque')
+              .slice(0, 5)
+              .map(item => (
+                <div key={item.id} className={styles.alertProductItem}>
+                  <div className={styles.alertProductInfo}>
+                    <span className={styles.alertProductName}>{item.nome}</span>
+                    <span className={styles.alertProductMarca}>({item.marca})</span>
+                  </div>
+                  <div className={styles.alertProductStatus}>
+                    <span className={`${styles.statusBadgeSmall} ${styles[item.status]}`}>
+                      {item.quantidade === 0 ? 'SEM ESTOQUE' : `${item.quantidade} un.`}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            {itensComAlerta > 5 && (
+              <div className={styles.alertMoreItems}>
+                + {itensComAlerta - 5} produto(s) a mais precisam de atenção
+              </div>
+            )}
+          </div>
         </div>
       )}
 

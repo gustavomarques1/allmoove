@@ -1,16 +1,23 @@
+/* ========================================
+   Tela Entregador - AllMoove Design System
+   Cores: #FF3600 (Laranja) | #18304C (Azul)
+   ======================================== */
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 24px;
+  font-family: var(--font-primary);
 }
 
+/* Header com gradiente laranja AllMoove */
 .header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 16px;
-  padding: 32px;
-  color: white;
   margin-bottom: 32px;
-  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+  padding: 32px;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
 }
 
 .headerContent {
@@ -21,20 +28,34 @@
 
 .headerIcon {
   flex-shrink: 0;
+  color: #18304C;
 }
 
 .title {
-  font-size: 28px;
+  font-size: 1.75rem;
   font-weight: 700;
+  color: #18304C;
   margin: 0 0 8px 0;
+  line-height: 1.3;
 }
 
 .subtitle {
-  font-size: 16px;
-  opacity: 0.9;
+  font-size: 1rem;
+  color: #18304C;
   margin: 0;
+  opacity: 0.9;
 }
 
+.userName {
+  color: #18304C;
+  font-weight: 700;
+  background-color: #F0F4EE;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Cards de Estatísticas */
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -50,32 +71,38 @@
   align-items: center;
   gap: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
 }
 
 .statCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  border-color: #FF3600;
 }
 
 .statCard svg {
-  color: #667eea;
+  color: #FF3600;
   flex-shrink: 0;
 }
 
 .statValue {
-  font-size: 32px;
+  font-size: 2rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #18304C;
   margin: 0 0 4px 0;
+  line-height: 1;
 }
 
 .statLabel {
-  font-size: 14px;
-  color: #718096;
+  font-size: 0.875rem;
+  color: #18304C;
+  opacity: 0.7;
   margin: 0;
+  font-weight: 500;
 }
 
+/* Seção de Entregas */
 .section {
   background: white;
   border-radius: 16px;
@@ -88,16 +115,19 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #18304C;
   margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #FF3600;
 }
 
 .sectionTitle svg {
-  color: #667eea;
+  color: #FF3600;
 }
 
+/* Lista de Entregas */
 .entregasList {
   display: flex;
   flex-direction: column;
@@ -105,15 +135,17 @@
 }
 
 .entregaCard {
-  border: 2px solid #e2e8f0;
+  border: 2px solid #e5e7eb;
   border-radius: 12px;
   padding: 24px;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  position: relative;
 }
 
 .entregaCard:hover {
-  border-color: #667eea;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  border-color: #FF3600;
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 .entregaHeader {
@@ -122,29 +154,31 @@
   align-items: flex-start;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .entregaCodigo {
-  font-size: 18px;
+  font-size: 1.125rem;
   font-weight: 700;
-  color: #2d3748;
+  color: #18304C;
   margin: 0 0 4px 0;
 }
 
 .entregaAssistencia {
-  font-size: 14px;
-  color: #718096;
+  font-size: 0.875rem;
+  color: #18304C;
+  opacity: 0.7;
   margin: 0;
 }
 
+/* Status Badges */
 .statusBadge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   color: white;
 }
@@ -153,6 +187,7 @@
   flex-shrink: 0;
 }
 
+/* Detalhes da Entrega */
 .entregaDetails {
   display: flex;
   flex-direction: column;
@@ -167,14 +202,15 @@
 }
 
 .entregaDetail svg {
-  color: #667eea;
+  color: #FF3600;
   flex-shrink: 0;
   margin-top: 2px;
 }
 
 .detailLabel {
-  font-size: 12px;
-  color: #718096;
+  font-size: 0.75rem;
+  color: #18304C;
+  opacity: 0.6;
   margin: 0 0 4px 0;
   text-transform: uppercase;
   font-weight: 600;
@@ -182,12 +218,13 @@
 }
 
 .detailValue {
-  font-size: 15px;
-  color: #2d3748;
+  font-size: 0.9375rem;
+  color: #18304C;
   margin: 0;
   font-weight: 500;
 }
 
+/* Botões de Ação */
 .entregaActions {
   display: flex;
   gap: 12px;
@@ -200,71 +237,92 @@
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   flex: 1;
   min-width: 120px;
 }
 
 .primaryButton {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #FF3600;
   color: white;
 }
 
 .primaryButton:hover {
+  background: #e63000;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 54, 0, 0.4);
+}
+
+.primaryButton:active {
+  background: #cc2b00;
+  transform: translateY(0);
 }
 
 .successButton {
-  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  background: #10B981;
   color: white;
 }
 
 .successButton:hover {
+  background: #059669;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.successButton:active {
+  background: #047857;
+  transform: translateY(0);
 }
 
 .secondaryButton {
   background: white;
-  color: #667eea;
-  border: 2px solid #667eea;
+  color: #18304C;
+  border: 2px solid #18304C;
 }
 
 .secondaryButton:hover {
-  background: #f7fafc;
+  background: #18304C;
+  color: white;
   transform: translateY(-2px);
 }
 
+.secondaryButton:active {
+  transform: translateY(0);
+}
+
+/* Estados Vazios */
 .emptyState {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  color: #718096;
+  color: #18304C;
+  opacity: 0.6;
 }
 
 .emptyState svg {
   margin-bottom: 16px;
   opacity: 0.5;
+  color: #FF3600;
 }
 
 .emptyState p {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 0;
 }
 
+/* Loading */
 .loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  color: #667eea;
+  color: #FF3600;
 }
 
 .loading svg {
@@ -282,13 +340,15 @@
 }
 
 .loading p {
-  font-size: 16px;
-  color: #718096;
+  font-size: 1rem;
+  color: #18304C;
+  opacity: 0.7;
 }
 
+/* Info Box */
 .infoBox {
-  background: #ebf8ff;
-  border: 1px solid #bee3f8;
+  background: linear-gradient(135deg, #fff5f0 0%, #ffe8dd 100%);
+  border: 1px solid #FFB399;
   border-radius: 12px;
   padding: 20px;
   margin-top: 24px;
@@ -296,15 +356,17 @@
 
 .infoBox p {
   margin: 0;
-  color: #2c5282;
-  font-size: 14px;
+  color: #18304C;
+  font-size: 0.875rem;
   line-height: 1.6;
 }
 
 .infoBox strong {
-  color: #2a4365;
+  color: #FF3600;
+  font-weight: 600;
 }
 
+/* Responsividade */
 @media (max-width: 768px) {
   .container {
     padding: 20px 16px;
@@ -314,12 +376,18 @@
     padding: 24px;
   }
 
+  .headerContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
   .title {
-    font-size: 22px;
+    font-size: 1.375rem;
   }
 
   .subtitle {
-    font-size: 14px;
+    font-size: 0.875rem;
   }
 
   .stats {
@@ -331,7 +399,7 @@
   }
 
   .sectionTitle {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 
   .entregaCard {
@@ -351,5 +419,217 @@
   .secondaryButton,
   .successButton {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 16px 12px;
+  }
+
+  .header {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .statValue {
+    font-size: 1.75rem;
+  }
+}
+
+/* ========================================
+   Nova Seção: Entregas Disponíveis/Recentes
+   ======================================== */
+
+.headerSection {
+  margin-bottom: 24px;
+}
+
+.pageTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #18304C;
+  margin: 0 0 8px 0;
+}
+
+.pageSubtitle {
+  font-size: 0.9375rem;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #E5E7EB;
+}
+
+.tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #6B7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  bottom: -2px;
+}
+
+.tab:hover {
+  color: #18304C;
+  background-color: #F9FAFB;
+}
+
+.tabActive {
+  color: #18304C;
+  border-bottom-color: #18304C;
+  background-color: #F9FAFB;
+}
+
+/* Lista de Entregas Disponíveis */
+.entregasDisponiveisList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.entregaDisponivelCard {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.entregaDisponivelCard:hover {
+  border-color: #FF3600;
+  box-shadow: 0 2px 8px rgba(255, 54, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.entregaIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #E3F2FD;
+  border-radius: 50%;
+  color: #2196F3;
+}
+
+.entregaInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.entregaDestino {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #18304C;
+  margin: 0 0 8px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.entregaMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.urgenciaBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.distancia {
+  font-size: 0.875rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.entregaValor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #10B981;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* Responsividade para nova seção */
+@media (max-width: 768px) {
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+
+  .entregaDisponivelCard {
+    flex-wrap: wrap;
+  }
+
+  .entregaValor {
+    flex-basis: 100%;
+    text-align: left;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid #E5E7EB;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageTitle {
+    font-size: 1.375rem;
+  }
+
+  .pageSubtitle {
+    font-size: 0.875rem;
+  }
+
+  .entregaDisponivelCard {
+    padding: 16px;
+  }
+
+  .entregaIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .entregaIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .entregaDestino {
+    font-size: 0.9375rem;
+  }
+
+  .entregaValor {
+    font-size: 1.125rem;
   }
 }

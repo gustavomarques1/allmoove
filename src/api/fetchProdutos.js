@@ -16,21 +16,20 @@ async function fetchProducts(query = '') {
   try {
     logger.info('🔍 Buscando produtos...', query ? `Filtro: ${query}` : 'Todos');
 
-    // IMPORTANTE: /api/ProdutoEscolhaCarrinho retorna 401 (backend não implementado)
-    // Temporariamente usando endpoint antigo até backend corrigir autorização
+    // Usa o endpoint /api/Produtos que agora está funcionando corretamente
     const produtos = query
       ? await getProdutosPorCategoria(query)
       : await getProdutos();
 
     if (produtos && produtos.length > 0) {
-      logger.info('✅ Produtos carregados com sucesso:', produtos.length);
+      logger.info('✅ Produtos carregados da API com sucesso:', produtos.length);
       return produtos;
     }
 
     // Se não encontrar produtos e houver query, tenta buscar sem filtro
     if (query && (!produtos || produtos.length === 0)) {
       logger.info('⚠️ Nenhum produto encontrado com filtro. Buscando todos...');
-      const todosProdutos = await buscarProdutosParaCarrinho('');
+      const todosProdutos = await getProdutos();
       return todosProdutos;
     }
 

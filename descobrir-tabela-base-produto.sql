@@ -1,0 +1,82 @@
+-- ========================================
+-- DESCOBRIR TABELA BASE DE PRODUTOS
+-- ========================================
+
+USE allmoove;
+GO
+
+-- 1. Ver definição completa da VIEW PRODUTOS
+PRINT '📋 DEFINIÇÃO DA VIEW PRODUTOS:';
+GO
+
+SELECT OBJECT_DEFINITION(OBJECT_ID('dbo.PRODUTOS')) AS ViewDefinition;
+GO
+
+-- 2. Listar todas as tabelas que começam com PRODUTO
+PRINT '';
+PRINT '📋 TABELAS RELACIONADAS A PRODUTOS:';
+GO
+
+SELECT
+    TABLE_NAME,
+    TABLE_TYPE
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_NAME LIKE 'PRODUTO%'
+ORDER BY TABLE_NAME;
+GO
+
+-- 3. Ver produtos existentes com distribuidor
+PRINT '';
+PRINT '📦 PRODUTOS ATUAIS COM DISTRIBUIDOR:';
+GO
+
+SELECT
+    P.ID,
+    P.NOME,
+    P.PRECO_VENDA,
+    P.ID_DISTRIBUIDOR,
+    P.ID_SEGMENTO,
+    PESSOA.NOME AS NomeDistribuidor,
+    P.SITUACAO_REGISTRO
+FROM dbo.PRODUTOS P
+LEFT JOIN dbo.PESSOA ON P.ID_DISTRIBUIDOR = PESSOA.ID
+WHERE P.SITUACAO_REGISTRO = 'ATIVO';
+GO
+
+-- 4. Verificar distribuidores cadastrados
+PRINT '';
+PRINT '🏪 DISTRIBUIDORES ATIVOS:';
+GO
+
+SELECT
+    P.ID,
+    P.NOME,
+    P.CPFCNPJ,
+    PP.PAPEL
+FROM dbo.PESSOA P
+INNER JOIN dbo.PESSOA_PAPEL PP ON P.ID = PP.ID_PESSOA
+WHERE PP.PAPEL = 'DISTRIBUIDOR'
+  AND P.SITUACAO_REGISTRO = 'ATIVO';
+GO
+
+-- 5. Contar produtos por segmento
+PRINT '';
+PRINT '📊 PRODUTOS POR SEGMENTO:';
+GO
+
+SELECT
+    ID_SEGMENTO,
+    COUNT(*) AS TotalProdutos
+FROM dbo.PRODUTOS
+WHERE SITUACAO_REGISTRO = 'ATIVO'
+GROUP BY ID_SEGMENTO
+ORDER BY ID_SEGMENTO;
+GO
+
+-- 6. Ver estrutura da tabela PRODUTO_SEGMENTOS
+PRINT '';
+PRINT '📋 SEGMENTOS DISPONÍVEIS:';
+GO
+
+SELECT * FROM dbo.PRODUTO_SEGMENTOS ORDER BY ID;
+GO

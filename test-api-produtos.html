@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste API Produtos - AllMoove</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #FF3600;
+            border-bottom: 3px solid #FF3600;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #18304C;
+            margin-top: 30px;
+        }
+        button {
+            background: #FF3600;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover {
+            background: #e63000;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .input-group {
+            margin: 20px 0;
+        }
+        input {
+            padding: 10px;
+            font-size: 14px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            width: 300px;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .success {
+            border-color: #10B981;
+            background: #f0fdf4;
+        }
+        .error {
+            border-color: #ef4444;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .campo {
+            display: inline-block;
+            background: #FF3600;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 2px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: #18304C;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Teste API Produtos - AllMoove</h1>
+
+        <div class="info">
+            <strong>ℹ️ Instruções:</strong> Este teste vai chamar a API de produtos e mostrar exatamente quais campos estão sendo retornados.
+        </div>
+
+        <div class="input-group">
+            <label for="token"><strong>Token de autenticação:</strong></label><br>
+            <input type="text" id="token" placeholder="Cole o token do localStorage aqui">
+            <button onclick="getTokenFromLocalStorage()">Buscar do localStorage</button>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button onclick="testarGetProdutos()">📦 Testar GET /api/Produtos</button>
+            <button onclick="testarGetProdutosDistribuidor()">🏢 Testar GET /api/Produtos/distribuidor/{id}</button>
+            <button onclick="testarGetProdutoEscolhaCarrinho()">🛒 Testar GET /api/ProdutoEscolhaCarrinho</button>
+            <button onclick="limparResultado()">🗑️ Limpar</button>
+        </div>
+
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://localhost:44370';
+
+        function getTokenFromLocalStorage() {
+            // Token fixo configurado
+            const tokenFixo = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpc3RAYWxsbW9vdmUuY29tIiwibWV1VG9rZW4iOiJ0b2tlbiBGOSIsImp0aSI6ImNmMzQyZTIxLTViMzMtNDBiNi05MjNkLTNiMGQ4NGViNzQ3YyIsImV4cCI6MTc2MTY5NzUxMSwiaXNzIjoiaHR0cDovL2Y5Lm5ldCIsImF1ZCI6Imh0dHA6Ly9mOS5uZXQifQ.JAEYx1-yOYDIm0_TD7BElU2OyrNyg1vSxZ4rRTQtRfw';
+
+            const token = localStorage.getItem('token') || tokenFixo;
+
+            if (token) {
+                document.getElementById('token').value = token;
+                mostrarSucesso('Token configurado com sucesso!');
+            } else {
+                mostrarErro('Erro ao configurar token.');
+            }
+        }
+
+        async function testarGetProdutos() {
+            const token = document.getElementById('token').value;
+            if (!token) {
+                mostrarErro('Por favor, insira o token de autenticação.');
+                return;
+            }
+
+            mostrarCarregando();
+
+            try {
+                const response = await fetch(`${API_BASE}/api/Produtos`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                mostrarResultado('GET /api/Produtos', data);
+            } catch (error) {
+                mostrarErro(`Erro: ${error.message}`);
+            }
+        }
+
+        async function testarGetProdutosDistribuidor() {
+            const token = document.getElementById('token').value;
+            if (!token) {
+                mostrarErro('Por favor, insira o token de autenticação.');
+                return;
+            }
+
+            // ID fixo do distribuidor (pode ajustar se necessário)
+            const idDistribuidor = localStorage.getItem('idDistribuidor') || localStorage.getItem('idPessoa') || '20';
+
+            mostrarCarregando();
+
+            try {
+                const response = await fetch(`${API_BASE}/api/Produtos/distribuidor/${idDistribuidor}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                mostrarResultado(`GET /api/Produtos/distribuidor/${idDistribuidor}`, data);
+            } catch (error) {
+                mostrarErro(`Erro: ${error.message}`);
+            }
+        }
+
+        async function testarGetProdutoEscolhaCarrinho() {
+            const token = document.getElementById('token').value;
+            if (!token) {
+                mostrarErro('Por favor, insira o token de autenticação.');
+                return;
+            }
+
+            mostrarCarregando();
+
+            try {
+                const response = await fetch(`${API_BASE}/api/ProdutoEscolhaCarrinho`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                mostrarResultado('GET /api/ProdutoEscolhaCarrinho', data);
+            } catch (error) {
+                mostrarErro(`Erro: ${error.message}`);
+            }
+        }
+
+        function mostrarResultado(endpoint, data) {
+            const resultado = document.getElementById('resultado');
+
+            let html = `
+                <h2>✅ Sucesso!</h2>
+                <div class="result success">
+                    <p><strong>Endpoint:</strong> ${endpoint}</p>
+                    <p><strong>Total de produtos:</strong> ${data.length}</p>
+            `;
+
+            if (data.length > 0) {
+                const primeiroProduto = data[0];
+                const campos = Object.keys(primeiroProduto);
+
+                html += `
+                    <h3 style="color: #18304C; margin-top: 20px;">📋 Campos Retornados (${campos.length}):</h3>
+                    <div style="margin: 10px 0;">
+                        ${campos.map(campo => `<span class="campo">${campo}</span>`).join(' ')}
+                    </div>
+
+                    <h3 style="color: #18304C; margin-top: 20px;">🔍 Primeiro Produto (exemplo):</h3>
+                    <pre>${JSON.stringify(primeiroProduto, null, 2)}</pre>
+
+                    <h3 style="color: #18304C; margin-top: 20px;">📊 Tabela de Produtos (primeiros 10):</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Quantidade</th>
+                                <th>Preço</th>
+                                <th>Distribuidor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.slice(0, 10).map(p => `
+                                <tr>
+                                    <td>${p.id || '-'}</td>
+                                    <td>${p.nome || 'Sem nome'}</td>
+                                    <td>
+                                        ${p.quantidade || 0}
+                                        ${p.quantidade > 10 ? '<span class="badge badge-success">OK</span>' : '<span class="badge badge-warning">Baixo</span>'}
+                                    </td>
+                                    <td>R$ ${(p.precoVenda || p.preco || 0).toFixed(2)}</td>
+                                    <td>${p.idDistribuidor || p.distribuidorId || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+
+                    <h3 style="color: #18304C; margin-top: 20px;">📄 JSON Completo (todos os produtos):</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } else {
+                html += `<p style="color: #f59e0b;">⚠️ Nenhum produto encontrado.</p>`;
+            }
+
+            html += `</div>`;
+            resultado.innerHTML = html;
+        }
+
+        function mostrarErro(mensagem) {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = `
+                <h2>❌ Erro</h2>
+                <div class="result error">
+                    <p>${mensagem}</p>
+                </div>
+            `;
+        }
+
+        function mostrarSucesso(mensagem) {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = `
+                <div class="result success">
+                    <p>✅ ${mensagem}</p>
+                </div>
+            `;
+        }
+
+        function mostrarCarregando() {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = `
+                <div class="result">
+                    <p>⏳ Carregando...</p>
+                </div>
+            `;
+        }
+
+        function limparResultado() {
+            document.getElementById('resultado').innerHTML = '';
+        }
+
+        // Configura token automaticamente ao carregar a página
+        window.onload = () => {
+            // Token fornecido diretamente (atualizado)
+            const tokenFornecido = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImRpc3RAYWxsbW9vdmUuY29tIiwibWV1VG9rZW4iOiJ0b2tlbiBGOSIsImp0aSI6ImNmMzQyZTIxLTViMzMtNDBiNi05MjNkLTNiMGQ4NGViNzQ3YyIsImV4cCI6MTc2MTY5NzUxMSwiaXNzIjoiaHR0cDovL2Y5Lm5ldCIsImF1ZCI6Imh0dHA6Ly9mOS5uZXQifQ.JAEYx1-yOYDIm0_TD7BElU2OyrNyg1vSxZ4rRTQtRfw';
+
+            // Sempre usa o token fornecido (não depende de localStorage)
+            document.getElementById('token').value = tokenFornecido;
+            console.log('✅ Token configurado automaticamente!');
+            console.log('📋 Token:', tokenFornecido.substring(0, 30) + '...');
+        };
+    </script>
+</body>
+</html>

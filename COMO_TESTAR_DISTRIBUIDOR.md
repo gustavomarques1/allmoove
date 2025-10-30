@@ -1,284 +1,255 @@
-# 🧪 Como Testar Login de Distribuidor
+# 🧪 Como Descobrir e Testar Usuário Distribuidor
 
-## Passo 1: Verificar dados no banco
-
-Execute no **SQL Server Management Studio**:
-
-```sql
-USE allmoove;
-GO
-
--- Ver todas as pessoas e seus tipos
-SELECT Id, Nome, Login, Email, Tipo
-FROM PESSOA
-ORDER BY Id;
-GO
-```
-
-**Anote:**
-- Um `Id` de uma pessoa que você quer transformar em distribuidor
-- O `Login` ou `Email` dessa pessoa (será usado para fazer login)
+Este guia mostra como testar se o **Dashboard do Distribuidor** está carregando os pedidos corretos para cada usuário/distribuidor que fizer login.
 
 ---
 
-## Passo 2: Transformar pessoa em DISTRIBUIDOR
+## 📋 Índice
+- [1. Consultar Distribuidores Existentes](#1-consultar-distribuidores-existentes)
+- [2. Criar Distribuidor de Teste](#2-criar-distribuidor-de-teste)
+- [3. Testar Login no Frontend](#3-testar-login-no-frontend)
+- [4. Validar Pedidos no Dashboard](#4-validar-pedidos-no-dashboard)
+- [5. Testar com Múltiplos Distribuidores](#5-testar-com-múltiplos-distribuidores)
+
+---
+
+## 1. Consultar Distribuidores Existentes
+
+### **Passo 1: Conectar ao SQL Server**
+
+Abra o **SQL Server Management Studio (SSMS)** ou seu cliente SQL preferido e conecte ao banco de dados AllMoove.
+
+### **Passo 2: Executar Query de Consulta**
+
+Execute o arquivo `consultar-distribuidores.sql`:
 
 ```sql
--- Substitua o número 2 pelo ID que você anotou
-UPDATE PESSOA
-SET Tipo = 'DISTRIBUIDOR'
-WHERE Id = 2;
-GO
-
--- Verificar se funcionou
-SELECT Id, Nome, Login, Email, Tipo
-FROM PESSOA
-WHERE Id = 2;
-GO
+-- LISTAR DISTRIBUIDORES COM SEUS IDs
+SELECT
+    D.ID as ID_DISTRIBUIDOR,
+    D.ID_PESSOA,
+    P.NOME,
+    P.LOGIN,
+    P.SENHA,
+    P.CPFCNPJ,
+    P.TIPO
+FROM DISTRIBUIDORES D
+INNER JOIN PESSOA P ON D.ID_PESSOA = P.ID
+WHERE P.SITUACAO_REGISTRO = 'ATIVO';
 ```
 
 **Resultado esperado:**
 ```
-Id  Nome                Login                    Email                    Tipo
-2   Maria Silva         maria@distribuidor.com   maria@distribuidor.com   DISTRIBUIDOR
+ID_DISTRIBUIDOR | ID_PESSOA | NOME                  | LOGIN        | SENHA
+----------------|-----------|----------------------|--------------|--------
+2               | 5         | João Distribuidor    | joao.dist    | 123456
+3               | 8         | Maria Distribuidora  | maria.dist   | 123456
+```
+
+✅ **Anote o `ID_DISTRIBUIDOR` e `LOGIN/SENHA`** - você usará para testar!
+
+---
+
+## 2. Criar Distribuidor de Teste
+
+Se a consulta acima **não retornou nenhum resultado**, você precisa criar um distribuidor de teste.
+
+Execute o arquivo `criar-distribuidor-teste.sql` no SQL Server.
+
+**Credenciais criadas:**
+```
+Login: distribuidor
+Senha: 123456
 ```
 
 ---
 
-## Passo 3: Criar senha para o usuário (se necessário)
+## 3. Testar Login no Frontend
 
-**⚠️ IMPORTANTE:** O usuário precisa ter uma senha cadastrada em `/api/account/LoginUser`
+### **Passo 1: Abrir o Sistema**
 
-Se o login falhar, pode ser que o usuário não tenha senha. Neste caso:
+1. Inicie o backend ASP.NET: certifique-se que está rodando em `https://localhost:44370/`
+2. Inicie o frontend: `npm run dev`
+3. Acesse: `http://localhost:5173`
 
-1. **Opção A:** Use um usuário que você já sabe o login/senha
-2. **Opção B:** Crie um novo usuário distribuidor completo (próximo passo)
+### **Passo 2: Fazer Login**
+
+Use as credenciais encontradas:
+```
+Login: distribuidor (ou outro login encontrado)
+Senha: 123456
+```
+
+### **Passo 3: Verificar no Console do Navegador**
+
+Após fazer login, abra o **Console (F12)** e digite:
+
+```javascript
+console.log({
+  token: localStorage.getItem('token'),
+  idPessoa: localStorage.getItem('idPessoa'),
+  idDistribuidor: localStorage.getItem('idDistribuidor'),
+  userRole: localStorage.getItem('userRole')
+});
+```
+
+**Resultado esperado:**
+```javascript
+{
+  token: "eyJhbGciOiJIUzI1...",
+  idPessoa: "5",
+  idDistribuidor: "2",              // ✅ Deve ter um número!
+  userRole: "DISTRIBUIDOR"
+}
+```
+
+✅ Se `idDistribuidor` tem um número (não é null), **funcionou**!
 
 ---
 
-## Passo 4: (ALTERNATIVA) Criar novo distribuidor do zero
+## 4. Validar Pedidos no Dashboard
 
-Se preferir criar um usuário novo em vez de modificar um existente:
+Agora você está no **Dashboard do Distribuidor** (`/distribuidor/dashboard`). Vamos validar se os pedidos mostrados são realmente deste distribuidor.
+
+### **Passo 1: Ver o que está aparecendo no Painel**
+
+Observe o "Painel de Controle - Entregas":
+- Quantos pedidos estão aparecendo?
+- Quais os IDs dos pedidos?
+- Qual o status de cada um?
+
+### **Passo 2: Verificar no Console quais pedidos foram buscados**
+
+Abra o Console (F12) e procure por logs que começam com:
+```
+📡 Buscando pedidos do distribuidor ID: 2
+✅ Pedidos do distribuidor recebidos: [...]
+```
+
+**Exemplo de log esperado:**
+```
+🔐 Usando idDistribuidor: 2 ou idPessoa: 5
+📡 Buscando pedidos do distribuidor ID: 2
+✅ Pedidos do distribuidor recebidos: [
+  { id: 101, status: "Aguardando Aceite", totalPago: 1500.00 },
+  { id: 102, status: "Aceito", totalPago: 2300.00 }
+]
+```
+
+### **Passo 3: Validar no Banco de Dados**
+
+Execute esta query no SQL Server para confirmar que os pedidos mostrados pertencem ao distribuidor:
 
 ```sql
--- 1. Criar a pessoa
-INSERT INTO PESSOA (Nome, Login, Email, Tipo, Ativo, DataCriacao)
-VALUES (
-    'Distribuidora Teste LTDA',
-    'distribuidor@teste.com',
-    'distribuidor@teste.com',
-    'DISTRIBUIDOR',
-    1,
-    GETDATE()
-);
-GO
+-- Substitua '2' pelo ID_DISTRIBUIDOR do usuário logado
+DECLARE @ID_DISTRIBUIDOR INT = 2;
 
--- 2. Ver o ID criado
-SELECT Id, Nome, Login, Email, Tipo
-FROM PESSOA
-WHERE Email = 'distribuidor@teste.com';
-GO
+SELECT
+    P.ID as ID_PEDIDO,
+    P.ID_DISTRIBUIDOR,
+    P.STATUS,
+    P.DATA_PEDIDO,
+    P.VALOR_FRETE,
+    (
+        SELECT SUM(PI.PRECO * PI.QUANTIDADE)
+        FROM PEDIDO_ITEM PI
+        WHERE PI.ID_PEDIDO = P.ID
+    ) as VALOR_PRODUTOS
+FROM PEDIDO P
+WHERE P.ID_DISTRIBUIDOR = @ID_DISTRIBUIDOR
+ORDER BY P.DATA_PEDIDO DESC;
 ```
 
-**Depois você precisará:**
-- Criar a senha no sistema de autenticação (backend)
-- OU usar um usuário existente que já tem senha
+**O que validar:**
+- ✅ Os pedidos mostrados no dashboard devem ter o mesmo `ID_DISTRIBUIDOR` que você logou
+- ✅ Os valores devem bater (total pago, status, quantidade de items)
+- ✅ Se não houver pedidos no banco para esse distribuidor, o dashboard deve mostrar "Nenhum pedido encontrado"
 
 ---
 
-## Passo 5: Fazer login no frontend
+## 5. Testar com Múltiplos Distribuidores
 
-1. **Limpe o cache do navegador:**
-   - Abra DevTools (F12)
-   - Vá em **Application** > **Local Storage**
-   - Delete todas as chaves
-   - OU use modo anônimo
+Para garantir que cada distribuidor vê **apenas seus próprios pedidos**, teste com 2 distribuidores diferentes:
 
-2. **Acesse:** `http://localhost:5176/`
+### **Cenário de Teste:**
 
-3. **Faça login com:**
-   - Email: `maria@distribuidor.com` (ou o login que você configurou)
-   - Senha: `[senha do usuário]`
+1. **Criar 2 distribuidores de teste** (se ainda não existirem)
+2. **Criar pedidos para cada um** no banco de dados:
 
-4. **Abra o Console (F12)** e procure por estas linhas:
-   ```
-   🔍 Buscando pessoa no array de pessoas...
-   📧 Email de busca: maria@distribuidor.com
-   📊 Total de pessoas retornadas: XX
-   👤 Pessoa encontrada na API: { tipo: "DISTRIBUIDOR", ... }
-   ✅ Login concluído com sucesso! Role: DISTRIBUIDOR
-   🔀 Redirecionando para: /distribuidor/dashboard
-   ```
+```sql
+-- Inserir pedido para Distribuidor 1 (ID_DISTRIBUIDOR = 2)
+INSERT INTO PEDIDO (EMPRESA, ESTABELECIMENTO, ID_GRUPO_PEDIDO, ID_PESSOA, ID_DISTRIBUIDOR, VALOR_FRETE, STATUS, DATA_PEDIDO)
+VALUES (1, 1, 27, 1, 2, 15.00, 'Aguardando Aceite', GETDATE());
 
-5. **Verifique o localStorage:**
-   - DevTools > Application > Local Storage
-   - Procure a chave `userRole`
-   - Deve estar: `"DISTRIBUIDOR"`
+-- Inserir pedido para Distribuidor 2 (ID_DISTRIBUIDOR = 3)
+INSERT INTO PEDIDO (EMPRESA, ESTABELECIMENTO, ID_GRUPO_PEDIDO, ID_PESSOA, ID_DISTRIBUIDOR, VALOR_FRETE, STATUS, DATA_PEDIDO)
+VALUES (1, 1, 27, 1, 3, 20.00, 'Aguardando Aceite', GETDATE());
+```
+
+3. **Testar Login com Distribuidor 1:**
+   - Faça login com credenciais do distribuidor 1
+   - Verifique se aparece APENAS o pedido com `ID_DISTRIBUIDOR = 2`
+   - Anote quantos pedidos aparecem
+
+4. **Fazer Logout e Login com Distribuidor 2:**
+   - Faça logout
+   - Faça login com credenciais do distribuidor 2
+   - Verifique se aparece APENAS o pedido com `ID_DISTRIBUIDOR = 3`
+   - Confirme que os pedidos do distribuidor 1 NÃO aparecem
+
+### **Checklist de Validação:**
+
+- [ ] Cada distribuidor vê apenas seus próprios pedidos
+- [ ] Os indicadores (Novos Pedidos, Em Andamento, Concluídos) são calculados corretamente para cada distribuidor
+- [ ] O faturamento mostrado corresponde aos pedidos daquele distribuidor específico
+- [ ] Ao aceitar um pedido, apenas aquele distribuidor consegue aceitá-lo
+- [ ] Trocar de conta mostra pedidos diferentes
 
 ---
 
-## Passo 6: Diagnosticar problemas
+## 🐛 Troubleshooting
 
-### Problema 1: Sempre vai para /assistencia/dashboard
+### **Problema: `idDistribuidor` é `null` no localStorage**
 
-**Causa:** Campo `Tipo` está NULL ou vazio
+**Causa:** O hook `useAuth` não conseguiu encontrar o distribuidor na tabela `DISTRIBUIDORES`.
 
 **Solução:**
+1. Execute a query:
 ```sql
--- Ver o tipo da pessoa
-SELECT Id, Nome, Tipo FROM PESSOA WHERE Login = 'maria@distribuidor.com';
-
--- Se estiver NULL, atualizar
-UPDATE PESSOA SET Tipo = 'DISTRIBUIDOR' WHERE Login = 'maria@distribuidor.com';
+SELECT * FROM DISTRIBUIDORES WHERE ID_PESSOA = 5; -- Substitua 5 pelo idPessoa
 ```
-
-### Problema 2: Console mostra "Pessoa não encontrada"
-
-**Causa:** A busca não encontrou o usuário no array de pessoas
-
-**Logs esperados:**
-```
-🔍 Buscando pessoa no array de pessoas...
-📧 Email de busca: maria@distribuidor.com
-📊 Total de pessoas retornadas: 150
-⚠️ Pessoa não encontrada na API. Usando dados mock.
-```
-
-**Solução:** Verificar se o `Login` ou `Email` no banco corresponde exatamente ao que você digitou:
-
+2. Se não retornar nada, crie o registro:
 ```sql
--- Ver login e email exatos
-SELECT Id, Nome, Login, Email, Tipo
-FROM PESSOA
-WHERE Login LIKE '%maria%' OR Email LIKE '%maria%';
-```
-
-**Possíveis problemas:**
-- Login é `maria` mas você digitou `maria@distribuidor.com`
-- Email tem espaços extras: `maria@teste.com ` (com espaço no final)
-- Login é case-sensitive (Maria vs maria)
-
-### Problema 3: API /api/pessoas retorna erro
-
-**Logs esperados:**
-```
-❌ Erro ao buscar dados da pessoa: [erro]
-⚠️ Usando dados mock. Role: ASSISTENCIA_TECNICA
-```
-
-**Solução:** Verificar se a API está funcionando:
-
-1. Abra a aba **Network** no DevTools
-2. Faça login
-3. Procure pela requisição `GET /api/pessoas`
-4. Veja o status code:
-   - **200 OK:** API funcionou, problema é na busca
-   - **401 Unauthorized:** Token inválido
-   - **404 Not Found:** Endpoint não existe
-   - **500 Internal Server Error:** Erro no backend
-
----
-
-## Passo 7: Testar cada jornada
-
-### Teste 1: Distribuidor
-
-**Dados de teste:**
-```sql
-UPDATE PESSOA SET Tipo = 'DISTRIBUIDOR' WHERE Id = 2;
-```
-
-**Login:** `maria@distribuidor.com`
-
-**Resultado esperado:**
-- Redireciona para `/distribuidor/dashboard`
-- localStorage.userRole = `"DISTRIBUIDOR"`
-- Navbar mostra opções de distribuidor (Dashboard, Estoque)
-
-### Teste 2: Assistência Técnica
-
-**Dados de teste:**
-```sql
-UPDATE PESSOA SET Tipo = 'ASSISTENCIA_TECNICA' WHERE Id = 3;
-```
-
-**Login:** `joao@assistencia.com`
-
-**Resultado esperado:**
-- Redireciona para `/assistencia/dashboard`
-- localStorage.userRole = `"ASSISTENCIA_TECNICA"`
-- Navbar mostra opções de assistência (Dashboard, Loja)
-
-### Teste 3: Entregador
-
-**Dados de teste:**
-```sql
-UPDATE PESSOA SET Tipo = 'ENTREGADOR' WHERE Id = 4;
-```
-
-**Login:** `carlos@entregador.com`
-
-**Resultado esperado:**
-- Redireciona para `/entregador/dashboard`
-- localStorage.userRole = `"ENTREGADOR"`
-- Navbar mostra opções de entregador
-
----
-
-## 📋 Checklist Rápido
-
-- [ ] Verificou que pessoa existe no banco
-- [ ] Campo `Tipo` está preenchido com `DISTRIBUIDOR`
-- [ ] Campo `Login` ou `Email` corresponde ao que você vai digitar
-- [ ] Usuário tem senha cadastrada (consegue fazer login)
-- [ ] Limpou localStorage antes de testar
-- [ ] Console mostra logs detalhados do login
-- [ ] userRole no localStorage está correto
-- [ ] Foi redirecionado para dashboard correto
-
----
-
-## 🐛 Script de Diagnóstico Completo
-
-Execute este script para ver todos os dados relevantes:
-
-```sql
-USE allmoove;
-GO
-
--- 1. Ver todos os tipos e quantidades
-SELECT Tipo, COUNT(*) as Total
-FROM PESSOA
-GROUP BY Tipo
-ORDER BY Total DESC;
-GO
-
--- 2. Ver exemplos de cada tipo
-SELECT TOP 3 Id, Nome, Login, Email, Tipo
-FROM PESSOA
-WHERE Tipo = 'DISTRIBUIDOR';
-GO
-
-SELECT TOP 3 Id, Nome, Login, Email, Tipo
-FROM PESSOA
-WHERE Tipo = 'ASSISTENCIA_TECNICA';
-GO
-
-SELECT TOP 3 Id, Nome, Login, Email, Tipo
-FROM PESSOA
-WHERE Tipo = 'ENTREGADOR';
-GO
-
--- 3. Ver pessoas sem tipo
-SELECT Id, Nome, Login, Email, Tipo
-FROM PESSOA
-WHERE Tipo IS NULL OR Tipo = ''
-ORDER BY Id;
-GO
+INSERT INTO DISTRIBUIDORES (EMPRESA, ESTABELECIMENTO, ID_PESSOA, RAZAO_SOCIAL, SITUACAO_REGISTRO)
+VALUES (1, 1, 5, 'Distribuidor Teste LTDA', 'ATIVO');
 ```
 
 ---
 
-**Boa sorte com os testes! 🚀**
+### **Problema: Dashboard mostra pedidos de TODOS os distribuidores**
 
-Se continuar dando problema, me mande os logs do console e eu te ajudo a diagnosticar.
+**Causa:** O endpoint da API pode estar retornando todos os pedidos ao invés de filtrar por distribuidor.
+
+**Solução:**
+1. Verifique o endpoint no backend: `GET /api/Pedidos/distribuidor/{id}`
+2. Confirme que está filtrando por `ID_DISTRIBUIDOR = {id}` e não por `ID_PESSOA`
+
+---
+
+### **Problema: "Nenhum pedido encontrado" mas existem pedidos no banco**
+
+**Causa:** Os pedidos no banco têm `ID_DISTRIBUIDOR` NULL ou diferente do distribuidor logado.
+
+**Solução:**
+1. Execute:
+```sql
+SELECT ID, ID_DISTRIBUIDOR, STATUS FROM PEDIDO WHERE ID_DISTRIBUIDOR IS NULL;
+```
+2. Atualize os pedidos para ter o distribuidor correto:
+```sql
+UPDATE PEDIDO SET ID_DISTRIBUIDOR = 2 WHERE ID IN (101, 102); -- IDs dos pedidos
+```
+
+---
+
+**Última atualização:** 23/10/2025

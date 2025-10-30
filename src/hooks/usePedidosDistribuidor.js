@@ -149,7 +149,14 @@ export const usePedidosDistribuidor = () => {
             })
           );
 
-          setPedidos(pedidosComItems);
+          // ✅ Ordena pedidos por data (mais recentes primeiro)
+          const pedidosOrdenados = pedidosComItems.sort((a, b) => {
+            const dataA = new Date(a.dataPedido || a.dataHoraCriacaoRegistro);
+            const dataB = new Date(b.dataPedido || b.dataHoraCriacaoRegistro);
+            return dataB - dataA; // Decrescente (mais recente primeiro)
+          });
+
+          setPedidos(pedidosOrdenados);
 
           // Usa indicadores da API de Dashboard se disponíveis, senão calcula localmente
           if (dashboardData && dashboardData.length > 0) {
@@ -299,10 +306,127 @@ export const usePedidosDistribuidor = () => {
     });
   };
 
+  // ✅ Função para recarregar pedidos manualmente
+  const recarregarPedidos = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const token = localStorage.getItem('token');
+      const idPessoa = localStorage.getItem('idPessoa');
+
+      // Busca dados do dashboard
+      let dashboardData = [];
+      try {
+        dashboardData = await getDashboardData('DISTRIBUIDOR', idPessoa);
+      } catch (dashError) {
+        logger.warn('⚠️ Dashboard API não disponível');
+      }
+
+      // Busca segmentos
+      const segmentosMap = {};
+      try {
+        const segmentosResponse = await api.get('/api/ProdutoSegmentos', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const segmentos = segmentosResponse.data;
+        if (Array.isArray(segmentos) && segmentos.length > 0) {
+          segmentos.forEach(seg => {
+            const nomeSegmento = seg.nome || seg.descricao;
+            if (seg.id && nomeSegmento) {
+              segmentosMap[seg.id] = nomeSegmento;
+            }
+          });
+        }
+      } catch (segError) {
+        logger.warn('⚠️ Erro ao buscar segmentos');
+      }
+
+      // Busca pedidos
+      const data = await getPedidosDoDistribuidor();
+
+      if (data && data.length > 0) {
+        const pedidosComItems = await Promise.all(
+          data.map(async (pedido) => {
+            try {
+              const itemsResponse = await api.get(`/api/PedidoItems/pedido/${pedido.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
+
+              let items = itemsResponse.data || [];
+
+              items = await Promise.all(
+                items.map(async (item) => {
+                  try {
+                    const produtoResponse = await api.get(`/api/Produtos/${item.idProduto}`, {
+                      headers: { Authorization: `Bearer ${token}` }
+                    });
+
+                    const produto = produtoResponse.data;
+                    let categoria = 'Outros';
+
+                    if (produto.idSegmento && segmentosMap[produto.idSegmento]) {
+                      categoria = segmentosMap[produto.idSegmento];
+                    }
+
+                    return {
+                      ...item,
+                      nomeProduto: produto.nome,
+                      categoria,
+                      precoProduto: produto.preco
+                    };
+                  } catch (produtoError) {
+                    return { ...item, categoria: 'Outros' };
+                  }
+                })
+              );
+
+              const totalProdutos = items.reduce((total, item) => {
+                return total + (item.preco || 0) * (item.quantidade || 0);
+              }, 0);
+
+              const totalPago = totalProdutos + (pedido.valorFrete || 0);
+
+              return {
+                ...pedido,
+                items,
+                totalProdutos,
+                totalPago,
+                dataPedido: pedido.dataHoraCriacaoRegistro
+              };
+            } catch (error) {
+              return { ...pedido, items: [], totalPago: 0 };
+            }
+          })
+        );
+
+        // ✅ Ordena pedidos por data (mais recentes primeiro)
+        const pedidosOrdenados = pedidosComItems.sort((a, b) => {
+          const dataA = new Date(a.dataPedido || a.dataHoraCriacaoRegistro);
+          const dataB = new Date(b.dataPedido || b.dataHoraCriacaoRegistro);
+          return dataB - dataA; // Decrescente (mais recente primeiro)
+        });
+
+        setPedidos(pedidosOrdenados);
+        calcularIndicadores(pedidosOrdenados);
+      } else {
+        setPedidos([]);
+        calcularIndicadores([]);
+      }
+    } catch (err) {
+      logger.error('❌ Erro ao recarregar pedidos:', err);
+      setError(err.message || 'Erro ao carregar pedidos');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     pedidos,
     isLoading,
     error,
-    indicadores
+    indicadores,
+    recarregarPedidos // ✅ NOVA FUNÇÃO EXPORTADA
   };
 };
