@@ -2,6 +2,8 @@
 
 Sistema de gestão de pedidos e entregas para assistências técnicas.
 
+Plataforma web para gerenciamento de pedidos, conectando Assistências Técnicas, Distribuidores e Entregadores.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
