@@ -1,8 +1,15 @@
 import axios from "axios";
+import tokenService from '../services/tokenService';
+
+// Usa variável de ambiente em produção, localhost em desenvolvimento
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://localhost:44370/";
 
 const api = axios.create({
-    baseURL : "https://localhost:44370/",
+    baseURL: API_BASE_URL,
 })
+
+// Log da URL sendo usada (útil para debug)
+console.log(`🌐 API Base URL: ${API_BASE_URL}`);
 
 // ============================================
 // SISTEMA DE MONITORAMENTO DE APIs EM TEMPO REAL
@@ -284,10 +291,22 @@ window.apiMonitor = apiMonitor;
 
 // Interceptor para adicionar token e registrar requests
 api.interceptors.request.use(
-  (config) => {
-    // Adiciona token
-    const token = localStorage.getItem('token');
-    if (token) {
+  async (config) => {
+    // Só tenta renovar se houver refresh token disponível
+    const hasRefreshToken = tokenService.getRefreshToken();
+
+    if (hasRefreshToken && !config.url.includes('/RefreshToken') && tokenService.isTokenExpired()) {
+      console.log('%c⚠️ Token expirado, renovando antes da requisição...', 'color: #FF9800');
+      try {
+        await tokenService.refreshToken();
+      } catch (error) {
+        console.error('Falha ao renovar token antes da requisição:', error);
+      }
+    }
+
+    // Adiciona token atualizado
+    const token = tokenService.getAccessToken() || localStorage.getItem('token');
+    if (token && !config.url.includes('/RefreshToken')) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
@@ -334,7 +353,9 @@ api.interceptors.response.use(
 
     return response;
   },
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
+
     if (error.config && error.config.metadata) {
       const duration = Date.now() - error.config.metadata.startTime;
       const url = error.config.url.replace(error.config.baseURL || '', '');
@@ -357,6 +378,42 @@ api.interceptors.response.use(
         'color: #FFC107',
         'color: #f44336; font-weight: bold'
       );
+    }
+
+    // Se erro 401 e não é o próprio refresh token endpoint
+    // Só tenta renovar se houver refresh token disponível
+    const hasRefreshToken = tokenService.getRefreshToken();
+
+    if (error.response?.status === 401 && !originalRequest.url.includes('/RefreshToken') && hasRefreshToken) {
+      // Marca que já tentamos fazer retry para evitar loop infinito
+      if (!originalRequest._retry) {
+        originalRequest._retry = true;
+
+        console.log('%c🔄 Token expirado (401), tentando renovar...', 'color: #FF9800');
+
+        try {
+          // Tenta renovar o token
+          const newToken = await tokenService.refreshToken();
+
+          // Atualiza o header da requisição original com o novo token
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+          // Refaz a requisição original
+          console.log('%c🔁 Refazendo requisição com novo token...', 'color: #2196F3');
+          return api(originalRequest);
+
+        } catch (refreshError) {
+          console.error('%c❌ Falha ao renovar token, redirecionando para login...', 'color: #f44336');
+          tokenService.clearTokens();
+          window.location.href = '/';
+          return Promise.reject(refreshError);
+        }
+      }
+    } else if (error.response?.status === 401 && !hasRefreshToken) {
+      // Se não tem refresh token e deu 401, apenas redireciona para login
+      console.log('%c⚠️ Sessão expirada (401), redirecionando para login...', 'color: #FF9800');
+      localStorage.clear();
+      window.location.href = '/';
     }
 
     return Promise.reject(error);

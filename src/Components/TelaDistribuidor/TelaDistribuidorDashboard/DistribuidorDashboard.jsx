@@ -31,6 +31,7 @@ function DistribuidorDashboard() {
   const [statusFilter, setStatusFilter] = useState('todos');
   const [mostrarTodosPedidos, setMostrarTodosPedidos] = useState(false);
   const [pedidosLocal, setPedidosLocal] = useState([]);
+  const [periodoSelecionado, setPeriodoSelecionado] = useState('dia'); // 'dia', 'mes' ou 'mesAnterior'
 
   // Sincroniza pedidos do hook com estado local
   React.useEffect(() => {
@@ -240,75 +241,108 @@ function DistribuidorDashboard() {
               Painel de Controle e Gestão
             </p>
           </div>
+          <div className={styles["header-actions"]}>
+            <button
+              type="button"
+              className={styles["distribuidor-stock-button-header"]}
+              onClick={handleGerenciarEstoque}
+            >
+              <Package size={18} />
+              Gerenciar Estoque
+            </button>
+            <p className={styles["header-actions-description"]}>
+              Controle de produtos
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Seção de Cards Superiores (Novos Pedidos, Em Andamento, Concluídos, Estoque) */}
-      <div className={styles["distribuidor-top-cards-grid"]}>
-        {/* Card: Novos Pedidos */}
-        <div className={styles["distribuidor-top-card"]}>
-          <div className={styles["distribuidor-top-card-header"]}>
-            <h3 className={styles["distribuidor-top-card-title"]}>
-              Novos Pedidos
-            </h3>
-            <Plus size={16} className={styles["distribuidor-top-card-icon"]} />
-          </div>
-          <p className={styles["distribuidor-top-card-number"]}>
-            {isLoading ? '...' : indicadores.novosPedidos}
-          </p>
-          <p className={styles["distribuidor-top-card-description"]}>
-            Aguardando aceite
-          </p>
-        </div>
-
-        {/* Card: Em Andamento */}
-        <div className={styles["distribuidor-top-card"]}>
-          <div className={styles["distribuidor-top-card-header"]}>
-            <h3 className={styles["distribuidor-top-card-title"]}>
-              Em Andamento
-            </h3>
-            <Clock size={16} className={styles["distribuidor-top-card-icon"]} />
-          </div>
-          <p className={styles["distribuidor-top-card-number"]}>
-            {isLoading ? '...' : indicadores.emAndamento}
-          </p>
-          <p className={styles["distribuidor-top-card-description"]}>
-            Aceitos ou em trânsito
-          </p>
-        </div>
-
-        {/* Card: Concluídos */}
-        <div className={styles["distribuidor-top-card"]}>
-          <div className={styles["distribuidor-top-card-header"]}>
-            <h3 className={styles["distribuidor-top-card-title"]}>
-              Concluídos
-            </h3>
-            <CircleCheck
-              size={16}
-              className={styles["distribuidor-top-card-icon-green"]}
-            />{" "}
-            {/* Ícone verde */}
-          </div>
-          <p className={styles["distribuidor-top-card-number"]}>
-            {isLoading ? '...' : indicadores.concluidos}
-          </p>
-          <p className={styles["distribuidor-top-card-description"]}>
-            Entregas finalizadas
-          </p>
-        </div>
-
-        {/* Card: Estoque */}
-        <div className={styles["distribuidor-top-card-estoque"]}>
+      {/* Seletor de Período */}
+      <div className={styles["periodo-selector-container"]}>
+        <div className={styles["periodo-selector"]}>
           <button
             type="button"
-            className={styles["distribuidor-stock-button"]}
-            onClick={handleGerenciarEstoque}
+            className={`${styles["periodo-button"]} ${periodoSelecionado === 'dia' ? styles["periodo-button-active"] : ''}`}
+            onClick={() => setPeriodoSelecionado('dia')}
           >
-            <Package size={18} />
-            Gerenciar Estoque
+            Relatório Diário
           </button>
-          <p className={styles["distribuidor-stock-description"]}>
-            Controle de produtos
+          <button
+            type="button"
+            className={`${styles["periodo-button"]} ${periodoSelecionado === 'mes' ? styles["periodo-button-active"] : ''}`}
+            onClick={() => setPeriodoSelecionado('mes')}
+          >
+            Relatório Mensal
+          </button>
+          <button
+            type="button"
+            className={`${styles["periodo-button"]} ${periodoSelecionado === 'mesAnterior' ? styles["periodo-button-active"] : ''}`}
+            onClick={() => setPeriodoSelecionado('mesAnterior')}
+          >
+            Mês Anterior
+          </button>
+        </div>
+      </div>
+
+      {/* Seção de Cards Superiores (Métricas) */}
+      <div className={styles["distribuidor-top-cards-grid"]}>
+        {/* Card: Ticket Médio */}
+        <div className={styles["distribuidor-top-card"]}>
+          <div className={styles["distribuidor-top-card-header"]}>
+            <h3 className={styles["distribuidor-top-card-title"]}>
+              Ticket Médio
+            </h3>
+          </div>
+          <p className={styles["distribuidor-top-card-number"]}>
+            {isLoading ? '...' : formatCurrency(indicadores[periodoSelecionado]?.ticketMedio || 0, 'BRL')}
+          </p>
+          <p className={styles["distribuidor-top-card-description"]}>
+            Valor médio por pedido
+          </p>
+        </div>
+
+        {/* Card: Valor */}
+        <div className={styles["distribuidor-top-card"]}>
+          <div className={styles["distribuidor-top-card-header"]}>
+            <h3 className={styles["distribuidor-top-card-title"]}>
+              Valor
+            </h3>
+          </div>
+          <p className={styles["distribuidor-top-card-number"]}>
+            {isLoading ? '...' : formatCurrency(indicadores[periodoSelecionado]?.valorTotal || 0, 'BRL')}
+          </p>
+          <p className={styles["distribuidor-top-card-description"]}>
+            Faturamento total
+          </p>
+        </div>
+
+        {/* Card: Volume */}
+        <div className={styles["distribuidor-top-card"]}>
+          <div className={styles["distribuidor-top-card-header"]}>
+            <h3 className={styles["distribuidor-top-card-title"]}>
+              Volume
+            </h3>
+          </div>
+          <p className={styles["distribuidor-top-card-number"]}>
+            {isLoading ? '...' : indicadores[periodoSelecionado]?.volumeTotal || 0}
+          </p>
+          <p className={styles["distribuidor-top-card-description"]}>
+            Itens vendidos
+          </p>
+        </div>
+
+        {/* Card: Pedidos */}
+        <div className={styles["distribuidor-top-card"]}>
+          <div className={styles["distribuidor-top-card-header"]}>
+            <h3 className={styles["distribuidor-top-card-title"]}>
+              Pedidos
+            </h3>
+          </div>
+          <p className={styles["distribuidor-top-card-number"]}>
+            {isLoading ? '...' : indicadores[periodoSelecionado]?.totalPedidos || 0}
+          </p>
+          <p className={styles["distribuidor-top-card-description"]}>
+            Total de pedidos
           </p>
         </div>
       </div>

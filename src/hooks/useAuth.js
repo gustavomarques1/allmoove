@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/api';
 import logger from '../utils/logger';
+import tokenService from '../services/tokenService';
 
 /**
  * Hook customizado para gerenciar autenticação e roles/papéis do usuário
@@ -74,20 +75,35 @@ export const useAuth = () => {
         password
       });
 
-      const { token, expiration } = loginResponse.data;
+      // Backend pode retornar Token (antigo) ou token (novo)
+      const tokenData = loginResponse.data;
+      const accessToken = tokenData.token || tokenData.Token;
+      const refreshToken = tokenData.refreshToken || tokenData.RefreshToken;
+      const expiration = tokenData.expiration || tokenData.Expiration;
+      const expiresIn = tokenData.expiresIn || tokenData.ExpiresIn;
 
-      // Salvar token e expiration
-      localStorage.setItem('token', token);
-      localStorage.setItem('expiration', expiration);
+      // Se refresh token estiver disponível, usa tokenService
+      if (refreshToken) {
+        tokenService.setTokens({
+          token: accessToken,
+          refreshToken: refreshToken,
+          expiresIn: expiresIn || 3600,
+          expiration: expiration
+        });
+      } else {
+        // Fallback: modo antigo sem refresh token
+        console.warn('⚠️ Backend não retornou refresh token, usando modo compatibilidade');
+        localStorage.setItem('token', accessToken);
+        localStorage.setItem('expiration', expiration || new Date(Date.now() + 3600000).toISOString());
+      }
+
+      // Salva email separadamente
       localStorage.setItem('email', email);
 
       // 2. Buscar dados da pessoa para obter o papel (role)
       try {
-        const pessoasResponse = await api.get('/api/pessoas', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        // O token já é adicionado automaticamente pelo interceptor do api.js
+        const pessoasResponse = await api.get('/api/pessoas');
 
         // Buscar pessoa pelo email ou login
         const pessoas = pessoasResponse.data;
@@ -229,13 +245,8 @@ export const useAuth = () => {
    * Realiza logout do usuário
    */
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('expiration');
-    localStorage.removeItem('email');
-    localStorage.removeItem('idPessoa');
-    localStorage.removeItem('idDistribuidor'); // 🔧 Remove idDistribuidor
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userName');
+    // Usa tokenService para limpar tudo, incluindo refresh token e timers
+    tokenService.clearTokens();
 
     setIsAuthenticated(false);
     setUserRole(null);

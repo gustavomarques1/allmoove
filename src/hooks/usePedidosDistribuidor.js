@@ -17,7 +17,28 @@ export const usePedidosDistribuidor = () => {
     totalFaturamento: 0,
     valorRecebido: 0,
     valorAReceber: 0,
-    pecasPorSegmento: []
+    pecasPorSegmento: [],
+    // Métricas diárias
+    dia: {
+      ticketMedio: 0,
+      valorTotal: 0,
+      volumeTotal: 0,
+      totalPedidos: 0
+    },
+    // Métricas mensais
+    mes: {
+      ticketMedio: 0,
+      valorTotal: 0,
+      volumeTotal: 0,
+      totalPedidos: 0
+    },
+    // Métricas do mês anterior
+    mesAnterior: {
+      ticketMedio: 0,
+      valorTotal: 0,
+      volumeTotal: 0,
+      totalPedidos: 0
+    }
   });
 
   useEffect(() => {
@@ -207,6 +228,65 @@ export const usePedidosDistribuidor = () => {
     carregarPedidos();
   }, []);
 
+  // Função auxiliar para filtrar pedidos do dia
+  const filtrarPedidosDoDia = (listaPedidos) => {
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    return listaPedidos.filter(pedido => {
+      const dataPedido = new Date(pedido.dataPedido || pedido.dataHoraCriacaoRegistro);
+      dataPedido.setHours(0, 0, 0, 0);
+      return dataPedido.getTime() === hoje.getTime();
+    });
+  };
+
+  // Função auxiliar para filtrar pedidos do mês
+  const filtrarPedidosDoMes = (listaPedidos) => {
+    const hoje = new Date();
+    const mesAtual = hoje.getMonth();
+    const anoAtual = hoje.getFullYear();
+
+    return listaPedidos.filter(pedido => {
+      const dataPedido = new Date(pedido.dataPedido || pedido.dataHoraCriacaoRegistro);
+      return dataPedido.getMonth() === mesAtual && dataPedido.getFullYear() === anoAtual;
+    });
+  };
+
+  // Função auxiliar para filtrar pedidos do mês anterior
+  const filtrarPedidosDoMesAnterior = (listaPedidos) => {
+    const hoje = new Date();
+    const mesAnterior = hoje.getMonth() - 1;
+    const anoAnterior = mesAnterior < 0 ? hoje.getFullYear() - 1 : hoje.getFullYear();
+    const mesAjustado = mesAnterior < 0 ? 11 : mesAnterior;
+
+    return listaPedidos.filter(pedido => {
+      const dataPedido = new Date(pedido.dataPedido || pedido.dataHoraCriacaoRegistro);
+      return dataPedido.getMonth() === mesAjustado && dataPedido.getFullYear() === anoAnterior;
+    });
+  };
+
+  // Função auxiliar para calcular métricas de um período
+  const calcularMetricasPeriodo = (listaPedidos) => {
+    const totalPedidos = listaPedidos.length;
+    const valorTotal = listaPedidos
+      .filter(p => p.status !== 'Cancelado' && p.status !== 'Recusado')
+      .reduce((acc, p) => acc + (p.totalPago || 0), 0);
+    const ticketMedio = totalPedidos > 0 ? valorTotal / totalPedidos : 0;
+    const volumeTotal = listaPedidos.reduce((total, pedido) => {
+      if (Array.isArray(pedido.items)) {
+        return total + pedido.items.reduce((acc, item) => acc + (item.quantidade || 0), 0);
+      }
+      return total;
+    }, 0);
+
+    return {
+      ticketMedio,
+      valorTotal,
+      volumeTotal,
+      totalPedidos
+    };
+  };
+
   // Função auxiliar para calcular peças por segmento
   const calcularPecasPorSegmento = (listaPedidos) => {
     if (!Array.isArray(listaPedidos) || listaPedidos.length === 0) {
@@ -247,7 +327,25 @@ export const usePedidosDistribuidor = () => {
         totalFaturamento: 0,
         valorRecebido: 0,
         valorAReceber: 0,
-        pecasPorSegmento: []
+        pecasPorSegmento: [],
+        dia: {
+          ticketMedio: 0,
+          valorTotal: 0,
+          volumeTotal: 0,
+          totalPedidos: 0
+        },
+        mes: {
+          ticketMedio: 0,
+          valorTotal: 0,
+          volumeTotal: 0,
+          totalPedidos: 0
+        },
+        mesAnterior: {
+          ticketMedio: 0,
+          valorTotal: 0,
+          volumeTotal: 0,
+          totalPedidos: 0
+        }
       });
       return;
     }
@@ -295,6 +393,15 @@ export const usePedidosDistribuidor = () => {
     // Peças por Segmento: usa função auxiliar
     const pecasPorSegmento = calcularPecasPorSegmento(listaPedidos);
 
+    // Métricas por período (dia, mês e mês anterior)
+    const pedidosDoDia = filtrarPedidosDoDia(listaPedidos);
+    const pedidosDoMes = filtrarPedidosDoMes(listaPedidos);
+    const pedidosDoMesAnterior = filtrarPedidosDoMesAnterior(listaPedidos);
+
+    const metricasDia = calcularMetricasPeriodo(pedidosDoDia);
+    const metricasMes = calcularMetricasPeriodo(pedidosDoMes);
+    const metricasMesAnterior = calcularMetricasPeriodo(pedidosDoMesAnterior);
+
     setIndicadores({
       novosPedidos: novos,
       emAndamento: emAndamento,
@@ -302,7 +409,10 @@ export const usePedidosDistribuidor = () => {
       totalFaturamento: faturamento,
       valorRecebido: recebido,
       valorAReceber: aReceber,
-      pecasPorSegmento
+      pecasPorSegmento,
+      dia: metricasDia,
+      mes: metricasMes,
+      mesAnterior: metricasMesAnterior
     });
   };
 
