@@ -211,7 +211,8 @@ function BuscaSegmentada() {
 
       try {
         // API com filtro por segmento: /api/Pedidos/ultimos-produtos/{idAssistencia}/segmento/{idSegmento}
-        const response = await fetch(`https://localhost:44370/api/Pedidos/ultimos-produtos/${userId}/segmento/${selectedSegmento}`, {
+        const API_BASE_URL = import.meta.env.VITE_API_URL || "https://localhost:44370/";
+        const response = await fetch(`${API_BASE_URL}api/Pedidos/ultimos-produtos/${userId}/segmento/${selectedSegmento}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
