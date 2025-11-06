@@ -32,11 +32,23 @@ function DistribuidorDashboard() {
   const [mostrarTodosPedidos, setMostrarTodosPedidos] = useState(false);
   const [pedidosLocal, setPedidosLocal] = useState([]);
   const [periodoSelecionado, setPeriodoSelecionado] = useState('dia'); // 'dia', 'mes' ou 'mesAnterior'
+  const [atualizadorTempo, setAtualizadorTempo] = useState(0); // Para forçar re-render dos tempos
 
   // Sincroniza pedidos do hook com estado local
   React.useEffect(() => {
     setPedidosLocal(pedidos);
   }, [pedidos]);
+
+  // Atualiza os tempos "Há X min" automaticamente a cada 60 segundos
+  // Isso força o componente a re-renderizar e recalcular todos os tempos
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setAtualizadorTempo(prev => prev + 1);
+    }, 60000); // 60 segundos = 1 minuto
+
+    // Cleanup: limpa o interval quando o componente desmontar
+    return () => clearInterval(interval);
+  }, []);
 
   const handleAceitarPedido = async (e, pedidoId) => {
     if (e) {
