@@ -524,7 +524,7 @@ function DistribuidorDashboard() {
                   <p className={styles["distribuidor-order-plate"]}>
                     Pedido #{pedido.id}
                   </p>
-                  <span className={styles["tempo-decorrido"]}>
+                  <span className={styles["tempo-decorrido"]} data-refresh={atualizadorTempo}>
                     <Clock size={14} />
                     {getTempoDecorrido(pedido.dataPedido || pedido.dataHoraCriacaoRegistro)}
                   </span>
