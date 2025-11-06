@@ -206,7 +206,8 @@ function DistribuidorDashboard() {
   // Função para calcular tempo decorrido
   const getTempoDecorrido = (dataPedido) => {
     const agora = new Date();
-    // Garante que a data seja interpretada corretamente independente do formato
+
+    // Interpreta a data como está (hora local do servidor/banco)
     const data = new Date(dataPedido);
 
     // Se a data for inválida, retorna mensagem padrão
@@ -235,18 +236,20 @@ function DistribuidorDashboard() {
   // Função para verificar se pedido é novo (últimas 24h)
   const isPedidoNovo = (dataPedido) => {
     const agora = new Date();
+
+    // Interpreta a data como está (hora local do servidor/banco)
     const data = new Date(dataPedido);
 
-    // Se a data for inválida ou no futuro, não é considerado novo
+    // Se a data for inválida, não é considerado novo
     if (isNaN(data.getTime())) {
       return false;
     }
 
     const diffMs = agora - data;
 
-    // Se for negativo (futuro), não é novo
+    // Se for negativo (futuro), considera como novo (acabou de ser criado)
     if (diffMs < 0) {
-      return true; // Considera como novo se acabou de ser criado
+      return true;
     }
 
     const diffHoras = diffMs / 3600000;
