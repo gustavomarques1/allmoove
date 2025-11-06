@@ -207,36 +207,31 @@ function DistribuidorDashboard() {
   const getTempoDecorrido = (dataPedido) => {
     const agora = new Date();
 
-    // DEBUG: Log para ver o formato da data que vem do backend
-    console.log('🔍 DEBUG - Data bruta do pedido:', dataPedido);
+    // Fix: Azure salva datas em UTC mas sem o 'Z' no final
+    // Precisamos adicionar o 'Z' para forçar interpretação como UTC
+    let dataString = dataPedido;
+    if (dataString && typeof dataString === 'string' &&
+        dataString.includes('T') && !dataString.endsWith('Z')) {
+      dataString = dataString + 'Z';
+    }
 
-    // Interpreta a data como está (hora local do servidor/banco)
-    const data = new Date(dataPedido);
-
-    console.log('🔍 DEBUG - Data parseada:', data);
-    console.log('🔍 DEBUG - Data agora:', agora);
+    const data = new Date(dataString);
 
     // Se a data for inválida, retorna mensagem padrão
     if (isNaN(data.getTime())) {
-      console.log('⚠️ DEBUG - Data inválida!');
       return 'Agora mesmo';
     }
 
     const diffMs = agora - data;
-    console.log('🔍 DEBUG - Diferença em ms:', diffMs);
 
     // Se a diferença for negativa (data no futuro), considera como "agora mesmo"
     if (diffMs < 0) {
-      console.log('⚠️ DEBUG - Diferença negativa (futuro)');
       return 'Agora mesmo';
     }
 
     const diffMinutos = Math.floor(diffMs / 60000);
     const diffHoras = Math.floor(diffMs / 3600000);
     const diffDias = Math.floor(diffMs / 86400000);
-
-    console.log('🔍 DEBUG - Diferença em minutos:', diffMinutos);
-    console.log('🔍 DEBUG - Diferença em horas:', diffHoras);
 
     if (diffMinutos < 1) return 'Agora mesmo';
     if (diffMinutos < 60) return `Há ${diffMinutos} min`;
@@ -249,8 +244,15 @@ function DistribuidorDashboard() {
   const isPedidoNovo = (dataPedido) => {
     const agora = new Date();
 
-    // Interpreta a data como está (hora local do servidor/banco)
-    const data = new Date(dataPedido);
+    // Fix: Azure salva datas em UTC mas sem o 'Z' no final
+    // Precisamos adicionar o 'Z' para forçar interpretação como UTC
+    let dataString = dataPedido;
+    if (dataString && typeof dataString === 'string' &&
+        dataString.includes('T') && !dataString.endsWith('Z')) {
+      dataString = dataString + 'Z';
+    }
+
+    const data = new Date(dataString);
 
     // Se a data for inválida, não é considerado novo
     if (isNaN(data.getTime())) {
