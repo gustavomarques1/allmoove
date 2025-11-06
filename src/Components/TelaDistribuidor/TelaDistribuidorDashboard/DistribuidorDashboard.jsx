@@ -194,12 +194,26 @@ function DistribuidorDashboard() {
   // Função para calcular tempo decorrido
   const getTempoDecorrido = (dataPedido) => {
     const agora = new Date();
+    // Garante que a data seja interpretada corretamente independente do formato
     const data = new Date(dataPedido);
+
+    // Se a data for inválida, retorna mensagem padrão
+    if (isNaN(data.getTime())) {
+      return 'Agora mesmo';
+    }
+
     const diffMs = agora - data;
+
+    // Se a diferença for negativa (data no futuro), considera como "agora mesmo"
+    if (diffMs < 0) {
+      return 'Agora mesmo';
+    }
+
     const diffMinutos = Math.floor(diffMs / 60000);
     const diffHoras = Math.floor(diffMs / 3600000);
     const diffDias = Math.floor(diffMs / 86400000);
 
+    if (diffMinutos < 1) return 'Agora mesmo';
     if (diffMinutos < 60) return `Há ${diffMinutos} min`;
     if (diffHoras < 24) return `Há ${diffHoras}h`;
     if (diffDias === 1) return 'Há 1 dia';
@@ -210,7 +224,20 @@ function DistribuidorDashboard() {
   const isPedidoNovo = (dataPedido) => {
     const agora = new Date();
     const data = new Date(dataPedido);
-    const diffHoras = (agora - data) / 3600000;
+
+    // Se a data for inválida ou no futuro, não é considerado novo
+    if (isNaN(data.getTime())) {
+      return false;
+    }
+
+    const diffMs = agora - data;
+
+    // Se for negativo (futuro), não é novo
+    if (diffMs < 0) {
+      return true; // Considera como novo se acabou de ser criado
+    }
+
+    const diffHoras = diffMs / 3600000;
     return diffHoras <= 24;
   };
 
